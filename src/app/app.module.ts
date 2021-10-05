@@ -8,7 +8,6 @@ import {SignUpComponent} from './sign-up/sign-up.component';
 import {RecoverPasswordComponent} from './recover-password/recover-password.component';
 import {ReactiveFormsModule} from "@angular/forms";
 import {HttpClientModule} from "@angular/common/http";
-import {HomeComponent} from "./create/home/home.component";
 import {AngularMaterialModule} from "./angular-material.module";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {FlexLayoutModule} from "@angular/flex-layout";
@@ -19,7 +18,6 @@ import {FlexLayoutModule} from "@angular/flex-layout";
     LoginComponent,
     SignUpComponent,
     RecoverPasswordComponent,
-    HomeComponent
   ],
   imports: [
     BrowserModule,

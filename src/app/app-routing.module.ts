@@ -6,7 +6,7 @@ import {LoginComponent} from "./login/login.component";
 const routes: Routes = [
   {
     path:'',
-    canActivate:[AuthGuard],
+    // canActivate:[AuthGuard],
     loadChildren: ()=> import('./trello/trello.module').then(module => module.TrelloModule)
   },
   {
