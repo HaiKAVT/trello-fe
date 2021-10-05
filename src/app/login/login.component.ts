@@ -1,8 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {FormControl, FormGroup} from "@angular/forms";
-import {User} from "../model/user";
-import {AuthenticationService} from "../service/authentication/authentication.service";
-import {Router} from "@angular/router";
+import {FormControl, FormGroup, Validators} from "@angular/forms";
 
 @Component({
   selector: 'app-login',
@@ -10,20 +7,34 @@ import {Router} from "@angular/router";
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-
   loginForm: FormGroup = new FormGroup({
-    username: new FormControl(),
-    password: new FormControl()
+      username: new FormControl('', [Validators.required, Validators.pattern('^[a-zA-z0-9]+$')]),
+      password: new FormControl('', [Validators.required, Validators.pattern('^[a-zA-z0-9]+$')])
     }
-
   )
-
-  constructor(private authenticationService: AuthenticationService,
-              private router: Router) {
+  show:Boolean = false;
+  validation_message = {
+    username: [
+      {type: 'required', message: 'Trường bắt buộc'},
+      {type: 'pattern',message: 'Chỉ nhập chữ hoặc số'}
+    ],
+    password: [
+      {type: 'required', message: 'Trường bắt buộc'},
+      {type: 'pattern',message: 'Chỉ nhập chữ hoặc số'}
+    ]
   }
 
-  ngOnInit() {
+  constructor() {
+  }
+
+  ngOnInit(): void {
+  }
+
+  onSubmit() {
 
   }
 
+  showPassword(){
+    this.show = !this.show
+  }
 }

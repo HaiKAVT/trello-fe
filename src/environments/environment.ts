@@ -3,7 +3,12 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
+<<<<<<< HEAD
+  production: false,
+  apiURL: 'http://localhost:8080'
+=======
   production: false
+>>>>>>> d7250c9 (initial commit)
 };
 
 /*

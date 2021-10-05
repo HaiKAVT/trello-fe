@@ -1,17 +1,11 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
-  "cli": {
-    "analytics": "0d60eb92-4833-4983-86d8-565cfd04d092"
-  },
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "CaseStudyModule6": {
+    "trello-FrontEnd": {
       "projectType": "application",
       "schematics": {
-        "@schematics/angular:component": {
-          "style": "scss"
-        },
         "@schematics/angular:application": {
           "strict": true
         }
@@ -23,18 +17,17 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/CaseStudyModule6",
+            "outputPath": "dist/trello-FrontEnd",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
-            "inlineStyleLanguage": "scss",
             "assets": [
               "src/favicon.ico",
               "src/assets"
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles.css"
             ],
             "scripts": []
           },
@@ -75,10 +68,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "CaseStudyModule6:build:production"
+              "browserTarget": "trello-FrontEnd:build:production"
             },
             "development": {
-              "browserTarget": "CaseStudyModule6:build:development"
+              "browserTarget": "trello-FrontEnd:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -86,7 +79,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "CaseStudyModule6:build"
+            "browserTarget": "trello-FrontEnd:build"
           }
         },
         "test": {
@@ -96,13 +89,12 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.spec.json",
             "karmaConfig": "karma.conf.js",
-            "inlineStyleLanguage": "scss",
             "assets": [
               "src/favicon.ico",
               "src/assets"
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles.css"
             ],
             "scripts": []
           }
@@ -110,5 +102,5 @@
       }
     }
   },
-  "defaultProject": "CaseStudyModule6"
+  "defaultProject": "trello-FrontEnd"
 }
