@@ -11,6 +11,7 @@ import {HttpClientModule} from "@angular/common/http";
 import {AngularMaterialModule} from "./angular-material.module";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {FlexLayoutModule} from "@angular/flex-layout";
+import { NavBarComponent } from './nav-bar/nav-bar.component';
 
 @NgModule({
   declarations: [
@@ -18,6 +19,7 @@ import {FlexLayoutModule} from "@angular/flex-layout";
     LoginComponent,
     SignUpComponent,
     RecoverPasswordComponent,
+    NavBarComponent,
   ],
   imports: [
     BrowserModule,

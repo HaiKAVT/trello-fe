@@ -169,7 +169,7 @@ a.article:hover {
 }
 
 .section-board {
-  width: 80rem;
+  width: fit-content;
   display: flex;
   flex-wrap: wrap;
 }
