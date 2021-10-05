@@ -3,7 +3,7 @@ import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {environment} from "../../environments/environment";
 import {Observable} from "rxjs";
 
-const API_URL = `${environment.api_url}`;
+const API_URL = `${environment.apiURL}`;
 const httpOptions = {
   headers: new HttpHeaders({'Content-Type': 'application/json'})
 };

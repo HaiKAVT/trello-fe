@@ -12,6 +12,17 @@ export class LoginComponent implements OnInit {
       password: new FormControl('', [Validators.required, Validators.pattern('^[a-zA-z0-9]+$')])
     }
   )
+  show:Boolean = false;
+  validation_message = {
+    username: [
+      {type: 'required', message: 'Trường bắt buộc'},
+      {type: 'pattern',message: 'Chỉ nhập chữ hoặc số'}
+    ],
+    password: [
+      {type: 'required', message: 'Trường bắt buộc'},
+      {type: 'pattern',message: 'Chỉ nhập chữ hoặc số'}
+    ]
+  }
 
   constructor() {
   }
@@ -24,6 +35,6 @@ export class LoginComponent implements OnInit {
   }
 
   showPassword(){
-
+    this.show = !this.show
   }
 }
