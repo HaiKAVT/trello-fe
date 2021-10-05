@@ -1,1 +1,41 @@
-<p>login works!</p>
+<div class="container">
+  <div class="form-container sign-in-container">
+    <form (ngSubmit)="onSubmit()" [formGroup]="loginForm">
+      <h1>Đăng Nhập</h1>
+      <div class="form-group">
+        <input formControlName="username" placeholder="username" type="text">
+        <div *ngFor="let validation of validation_message.username" class="text-danger">
+          <div
+            *ngIf="loginForm.get('username')?.hasError(validation.type) && (loginForm.get('username')?.touched || loginForm.get('username')?.dirty)">
+            {{validation.message}}
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <input [type]="show ? 'text':'password'" formControlName="password" placeholder="password">
+        <div *ngFor="let validation of validation_message.password" class="text-danger">
+          <div
+            *ngIf="loginForm.get('password')?.hasError(validation.type) && (loginForm.get('password')?.touched||loginForm.get('password')?.dirty)">
+            {{validation.message}}
+          </div>
+        </div>
+        <label><input (click)="showPassword()" type="checkbox">Hiện mật khẩu</label>
+      </div>
+      <a href="#">Quên mật khẩu</a>
+      <div class="form-group">
+        <button class="btn btn-primary" type="submit">
+          Đăng nhập
+        </button>
+      </div>
+    </form>
+  </div>
+  <div class="overlay-container">
+    <div class="overlay">
+      <div class="overlay-panel overlay-right">
+        <h1>Chưa có tài khoản?</h1>
+        <p>Bấm đăng ký ngay thôi</p>
+        <button class="ghost" type="submit">Đăng ký</button>
+      </div>
+    </div>
+  </div>
+</div>
