@@ -10,6 +10,7 @@ import { FooterComponent } from './share/footer/footer.component';
 import { ModalComponent } from './share/modal/modal.component';
 import { NavbarBoardHeaderComponent } from './share/navbar-board-header/navbar-board-header.component';
 import { NavbarComponent } from './share/navbar/navbar.component';
+import {FormsModule} from "@angular/forms";
 
 @NgModule({
   declarations: [
@@ -22,10 +23,11 @@ import { NavbarComponent } from './share/navbar/navbar.component';
     NavbarBoardHeaderComponent,
     NavbarComponent
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        FormsModule
+    ],
   providers: [],
   bootstrap: [AppComponent]
 })
