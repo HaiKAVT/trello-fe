@@ -20,6 +20,7 @@ import {FlexLayoutModule} from "@angular/flex-layout";
 // import {NavbarComponent} from './share/navbar/navbar.component';
 import {FormsModule} from "@angular/forms";
 import {ShareModule} from "./share/share.module";
+import {AuthGuard} from "./helper/auth.guard";
 // import {tokenInterceptorProvider} from "./helper/token.interceptor";
 
 @NgModule({
@@ -44,6 +45,7 @@ import {ShareModule} from "./share/share.module";
         BrowserAnimationsModule,
         FlexLayoutModule,
         ShareModule,
+
     ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true},

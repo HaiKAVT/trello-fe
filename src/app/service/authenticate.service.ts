@@ -5,7 +5,7 @@ import {Observable,BehaviorSubject} from "rxjs";
 import {UserToken} from "../model/user-token";
 import {map} from "rxjs/operators";
 
-const API_URL = `${environment.api_url}`;
+const API_URL = `${environment.apiURL}`;
 @Injectable({
   providedIn: 'root'
 })

@@ -3,10 +3,10 @@
     <form (ngSubmit)="onSubmit()" [formGroup]="loginForm">
       <h1>Đăng Nhập</h1>
       <div class="form-group">
-        <input formControlName="username" placeholder="username" type="text">
-        <div *ngFor="let validation of validation_message.username" class="text-danger">
+        <input formControlName="userName" placeholder="userName" type="text">
+        <div *ngFor="let validation of validation_message.userName" class="text-danger">
           <div
-            *ngIf="loginForm.get('username')?.hasError(validation.type) && (loginForm.get('username')?.touched || loginForm.get('username')?.dirty)">
+            *ngIf="loginForm.get('userName')?.hasError(validation.type) && (loginForm.get('userName')?.touched || loginForm.get('userName')?.dirty)">
             {{validation.message}}
           </div>
         </div>
@@ -18,6 +18,8 @@
             *ngIf="loginForm.get('password')?.hasError(validation.type) && (loginForm.get('password')?.touched||loginForm.get('password')?.dirty)">
             {{validation.message}}
           </div>
+        </div>
+        <div class="text-danger">
           <label><input type="checkbox" (click)="showPassword()">Hiện mật khẩu</label>
         </div>
         <a href="#">Quên mật khẩu</a>
