@@ -1,0 +1,150 @@
+<!--<div class="nav">-->
+<!--  <span class="icon-item">-->
+<!--      <a routerLink="/trello" class="icon-link"><i class="fas fa-home"></i></a>-->
+<!--  </span>-->
+<!--  <div id="search-section">-->
+<!--    <div style="position: relative" id="search-results">-->
+<!--      <div *ngIf="searchResults.length" style="position: absolute; top: 40px; width: 300px; z-index: 1"-->
+<!--           class="dropdown-content">-->
+<!--        <span class="dropdown-item" style="font-weight: bold">CARDS:</span>-->
+<!--        <a routerLink="/trello/boards/{{searchResult.board.id}}" (click)="clearSearch(searchResult)"-->
+<!--           *ngFor="let searchResult of this.searchResults" class="dropdown-item">-->
+<!--          <ul>-->
+<!--            <li>-->
+<!--              <span class="search-result-primary">{{searchResult.card.title}}</span>-->
+<!--              <span> in </span><span class="search-result-secondary">{{searchResult.column.title}}</span>-->
+<!--            </li>-->
+<!--            <li>-->
+<!--              <span> on </span><span class="search-result-secondary">{{searchResult.board.title}}</span>-->
+<!--              <span> by @</span><span class="search-result-secondary">{{searchResult.board.owner.username}}</span>-->
+<!--            </li>-->
+<!--            <li>-->
+<!--              <span class="search-result-preview-secondary">"{{searchResult.preview[0]}}</span>-->
+<!--              <span class="search-result-preview-primary">{{searchResult.preview[1]}}</span>-->
+<!--              <span class="search-result-preview-secondary">{{searchResult.preview[2]}}"</span>-->
+<!--            </li>-->
+<!--          </ul>-->
+<!--        </a>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--    <input id="search-input" class="input" type="text" placeholder="Search..." style="width: 200px"-->
+<!--           [(ngModel)]="searchString" (keyup)="search()">-->
+<!--  </div>-->
+<!--  <div class="nav-brand-start">-->
+<!--    <div class="nav-item-start">-->
+<!--      <h1><i class="fab fa-trello logo-icon"></i>Trello Hope</h1>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--  <div class="icon-item" *ngIf="currentUser">-->
+<!--    <div class="dropdown is-hoverable is-right">-->
+<!--      <div class="dropdown-trigger">-->
+<!--        <a class="icon-link"><i class="fas fa-bell"></i></a>-->
+<!--        <span class="header__cart-notice">{{notificationService.unreadNotice}}</span>-->
+<!--      </div>-->
+<!--      <div class="dropdown-menu" id="dropdown-menu5" role="menu">-->
+<!--        <div class="dropdown-content" style="padding: 0">-->
+<!--          <div class="header__navbar-item header__navbar-item&#45;&#45;has-notify">-->
+<!--            <div class="header__notify">-->
+<!--              <header class="header__notify-header">-->
+<!--                <h3>Notifications</h3>-->
+<!--                <a (click)="markAllAsRead()"-->
+<!--                   style="color: white; font-size: 14px; margin-right: 16px; border-bottom: 1px solid">Mark all as-->
+<!--                  read</a>-->
+<!--              </header>-->
+<!--              <ul class="header__notify-list">-->
+<!--                <li class="header__notify-item" *ngFor="let notification of notificationService.notification"-->
+<!--                    (click)="markReadNotification(notification)" [class.mark-read]="notification.status">-->
+<!--                  <a class="header__notify-link" routerLink="{{notification.url}}">-->
+<!--                    <img src="https://dizibrand.com/wp-content/uploads/2019/07/trello-la-gi-dizibrand-1.png" alt=""-->
+<!--                         class="header__notify-img">-->
+<!--                    <div class="header__notify-info">-->
+<!--                      <span class="header__notify-name">{{notification.title}}</span>-->
+<!--                      <span class="header__notify-description">{{notification.content}}</span>-->
+<!--                    </div>-->
+<!--                  </a>-->
+<!--                </li>-->
+<!--              </ul>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--  <div class="icon-item" *ngIf="currentUser">-->
+<!--    <div class="dropdown is-hoverable is-right">-->
+<!--      <div class="dropdown-trigger">-->
+<!--        <a class="icon-link" aria-haspopup="true" aria-controls="dropdown-menu4">-->
+<!--          <img [src]="navbarService.user.image" class="img-circle"/>-->
+<!--        </a>-->
+<!--      </div>-->
+<!--      <div class="dropdown-menu" id="dropdown-menu4" role="menu">-->
+<!--        <div class="dropdown-content">-->
+<!--          <div href="#" class="dropdown-item">-->
+<!--            <div>-->
+<!--              <img [src]="navbarService.user.image" class="img-circle"/>-->
+<!--            </div>-->
+<!--            <div class="user">-->
+<!--              <div class="username">-->
+<!--                {{navbarService.user.username}}-->
+<!--              </div>-->
+<!--              <span class="nickname">-->
+<!--                {{navbarService.user.nickname}}-->
+<!--              </span>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--          <a (click)="openModalUpdate()" class="dropdown-item">-->
+<!--            Modifiers-->
+<!--          </a>-->
+<!--          <hr class="dropdown-divider">-->
+<!--          <a class="dropdown-item" (click)="logout()">-->
+<!--            Logout-->
+<!--          </a>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</div>-->
+
+<!--&lt;!&ndash;Modal update user&ndash;&gt;-->
+<!--<div class="modal modal-update-user" id="modal-update-user">-->
+<!--  <div class="modal-background" (click)="closeModalUpdate()"></div>-->
+<!--  <div class="modal-card modal-card-user" id="updateForm">-->
+<!--    <div class="login-card">-->
+<!--      <header class="modal-card-head">-->
+<!--        <p class="modal-card-title">Information</p>-->
+<!--        <button class="delete" aria-label="close" (click)="closeModalUpdate()"></button>-->
+<!--      </header>-->
+<!--      <td class="update-image"><img class="img-user" [src]="imgSrc" (click)="preview.click()"></td>-->
+<!--      <div class="content">-->
+<!--        <form #updateForm="ngForm" (ngSubmit)="updateUserInfo()">-->
+<!--          <div class="update-info">-->
+<!--            &lt;!&ndash;upload file&ndash;&gt;-->
+<!--            <div class="file">-->
+<!--              <label class="file-label">-->
+<!--                <input class="file-input" type="file" #preview (change)="showPreview($event)">-->
+<!--                <span class="file-cta">-->
+<!--                  <span class="file-icon">-->
+<!--                    <i class="fas fa-upload"></i>-->
+<!--                  </span>-->
+<!--                  <span class="file-label">-->
+<!--                    Choose a file…-->
+<!--                  </span>-->
+<!--                </span>-->
+<!--              </label>-->
+<!--            </div>-->
+<!--            &lt;!&ndash;            user name&ndash;&gt;-->
+<!--            <input type="text" class="input input-user-name" name="nickname" #nickname="ngModel" required-->
+<!--                   [(ngModel)]="user.nickname" placeholder="Nick name">-->
+<!--            <td *ngIf="updateForm.invalid && updateForm.touched && isSubmitted">-->
+<!--              <p class="notification" *ngIf="nickname.errors?.required">Can not blank</p>-->
+<!--            </td>-->
+<!--          </div>-->
+<!--          <div class="div-update">-->
+<!--            <button class="button is-success is-light button-update">Update</button>-->
+<!--            <button class="button is-danger is-light button-cancel" (click)="closeModalUpdate()" type="button">Cancel</button>-->
+<!--          </div>-->
+<!--        </form>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</div>-->

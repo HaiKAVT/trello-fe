@@ -1,10 +1,10 @@
 <div class="container">
   <div class="form-container sign-in-container">
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+    <form (ngSubmit)="onSubmit()" [formGroup]="loginForm">
       <h1>Đăng Nhập</h1>
       <div class="form-group">
-        <input type="text" formControlName="username" placeholder="username">
-        <div class="text-danger" *ngFor="let validation of validation_message.username">
+        <input formControlName="username" placeholder="username" type="text">
+        <div *ngFor="let validation of validation_message.username" class="text-danger">
           <div
             *ngIf="loginForm.get('username')?.hasError(validation.type) && (loginForm.get('username')?.touched || loginForm.get('username')?.dirty)">
             {{validation.message}}
@@ -13,7 +13,7 @@
       </div>
       <div class="form-group">
         <input [type]="show ? 'text':'password'" formControlName="password" placeholder="password">
-        <div class="text-danger" *ngFor="let validation of validation_message.password">
+        <div *ngFor="let validation of validation_message.password" class="text-danger">
           <div
             *ngIf="loginForm.get('password')?.hasError(validation.type) && (loginForm.get('password')?.touched||loginForm.get('password')?.dirty)">
             {{validation.message}}
