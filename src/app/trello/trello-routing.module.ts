@@ -6,7 +6,6 @@ import {HomeComponent} from "./home/home.component";
 const routes: Routes = [
   {
     path: '',
-    // canActivate:[AuthGuard],
     component: HomeComponent
   }
 ];

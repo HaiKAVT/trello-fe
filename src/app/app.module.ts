@@ -6,10 +6,13 @@ import {AppComponent} from './app.component';
 import {LoginComponent} from './login/login.component';
 import {SignUpComponent} from './sign-up/sign-up.component';
 import {RecoverPasswordComponent} from './recover-password/recover-password.component';
-import {ReactiveFormsModule} from "@angular/forms";
-import {HttpClientModule} from "@angular/common/http";
+import {ReactiveFormsModule, FormGroup} from "@angular/forms";
+import {HttpClientModule, HTTP_INTERCEPTORS} from "@angular/common/http";
+import {HomeComponent} from "./create/home/home.component";
 import {AngularMaterialModule} from "./angular-material.module";
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {ErrorInterceptor} from "./helper/error.interceptor";
+import {JwtInterceptor} from "./helper/jwt.interceptor";
 import {FlexLayoutModule} from "@angular/flex-layout";
 // import {FooterComponent} from './share/footer/footer.component';
 // import {ModalComponent} from './share/modal/modal.component';
@@ -25,6 +28,7 @@ import {ShareModule} from "./share/share.module";
     LoginComponent,
     SignUpComponent,
     RecoverPasswordComponent,
+    HomeComponent
     // FooterComponent,
     // ModalComponent,
     // NavbarBoardHeaderComponent,
@@ -41,8 +45,12 @@ import {ShareModule} from "./share/share.module";
         FlexLayoutModule,
         ShareModule,
     ],
-  providers: [],
+  providers: [
+    {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true},
+    {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true}
+  ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+}
 

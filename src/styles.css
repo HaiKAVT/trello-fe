@@ -1,4 +1,8 @@
 
+html, body {
+  height: 100%;
+}
+
 @import url('https://fonts.googleapis.com/css?family=Nunito:400,700|Lato:400,800,900');
 @import url(https://fonts.googleapis.com/css?family=Courgette);
 

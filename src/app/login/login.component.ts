@@ -1,5 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
+import {AuthenticateService} from "../service/authenticate.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-login',
@@ -24,15 +26,17 @@ export class LoginComponent implements OnInit {
     ]
   }
 
-  constructor() {
+  constructor(private authenticationService: AuthenticateService,
+              private router: Router) {
   }
 
   ngOnInit(): void {
   }
 
   onSubmit() {
-    const {userName, password} = this.loginForm.value;
-
+    this.authenticationService.login(this.loginForm.get('username')?.value, this.loginForm.get('password')?.value).subscribe(() =>
+    {alert("Login success");
+    this.router.navigate(['/trello'])})
   }
 
   showPassword() {

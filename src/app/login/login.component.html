@@ -18,14 +18,14 @@
             *ngIf="loginForm.get('password')?.hasError(validation.type) && (loginForm.get('password')?.touched||loginForm.get('password')?.dirty)">
             {{validation.message}}
           </div>
+          <label><input type="checkbox" (click)="showPassword()">Hiện mật khẩu</label>
         </div>
-        <label><input (click)="showPassword()" type="checkbox">Hiện mật khẩu</label>
-      </div>
-      <a href="#">Quên mật khẩu</a>
-      <div class="form-group">
-        <button class="btn btn-primary" type="submit">
-          Đăng nhập
-        </button>
+        <a href="#">Quên mật khẩu</a>
+        <div class="form-group">
+          <button class="btn btn-primary" type="submit">
+            Đăng nhập
+          </button>
+        </div>
       </div>
     </form>
   </div>
@@ -34,7 +34,7 @@
       <div class="overlay-panel overlay-right">
         <h1>Chưa có tài khoản?</h1>
         <p>Bấm đăng ký ngay thôi</p>
-        <button class="ghost" type="submit">Đăng ký</button>
+        <button type="submit" class="ghost">Đăng ký</button>
       </div>
     </div>
   </div>
