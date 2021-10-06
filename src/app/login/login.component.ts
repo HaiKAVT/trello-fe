@@ -43,7 +43,9 @@ export class LoginComponent implements OnInit {
       .subscribe(() => {
         this.navbarService.getCurrentUser();
         this.router.navigate(['/trello']);
-        // this.toastService.showMessage('Đăng nhập thành công',"is-success")
+        this.toastService.showMessage('Đăng nhập thành công',"is-success")
+      }, error => {
+        this.toastService.showMessage('Đăng nhập không thành công',"is-warning")
       })
   }
 
