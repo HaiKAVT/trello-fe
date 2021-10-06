@@ -8,4 +8,5 @@ export interface Board {
   owner: User;
   columns: Column[];
   tags?: Tag[];
+  status?:string;
 }

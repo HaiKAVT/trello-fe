@@ -2,8 +2,8 @@ import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {AuthenticateService} from "../service/authenticate.service";
 import {Router} from "@angular/router";
+import {NavbarService} from "../service/navbar/navbar.service";
 import {ToastService} from "../service/toast/toast.service";
-
 
 @Component({
   selector: 'app-login',
@@ -30,18 +30,22 @@ export class LoginComponent implements OnInit {
 
   constructor(private authenticationService: AuthenticateService,
               private router: Router,
-              private toastService: ToastService) {
+              private navbarService:NavbarService,
+              private toastService:ToastService) {
   }
 
   ngOnInit(): void {
   }
 
   onSubmit() {
-    this.authenticationService.login(this.loginForm.get('userName')?.value, this.loginForm.get('password')?.value).subscribe(() => {
-      this.router.navigateByUrl('/trello')
-    }, error => {
-      this.toastService.messageSuccess("Nhập sai thông tin tài khoản hoặc mật khẩu !", "is-warning")
-    })
+    this.authenticationService.login(this.loginForm.get('userName')?.value, this.loginForm.get('password')?.value)
+      .subscribe(() => {
+        this.navbarService.getCurrentUser();
+        this.router.navigate(['/trello']);
+        this.toastService.showMessage('Đăng nhập thành công',"is-success")
+      }, error => {
+        this.toastService.showMessage('Đăng nhập không thành công',"is-warning")
+      })
   }
 
   showPassword() {

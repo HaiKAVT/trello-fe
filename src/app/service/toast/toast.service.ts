@@ -9,7 +9,7 @@ export class ToastService {
   constructor() {
   }
 
-  messageSuccess(message: string, type: any) {
+  showMessage(message: string, type: any) {
     toast({
       message: message,
       type: type,
