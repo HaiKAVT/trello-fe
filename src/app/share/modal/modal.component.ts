@@ -35,15 +35,6 @@ export class ModalComponent implements OnInit {
       this.toastService.showMessage("Board Created","is-success");
       this.resetInput();
     })
-
-    //create new board
-    // this.board.owner.id = this.modalService.currentUser.id;
-    // this.boardService.addNewBoard(this.board).subscribe(board => {
-    //     this.board = board;
-    //     this.createNotificationBoard()
-    //     this.loadDto();
-    //   }
-    // )
   }
 
   resetInput(){

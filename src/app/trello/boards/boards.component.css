@@ -409,3 +409,6 @@ h1.app-name {
   margin: inherit;
   text-align: center;
 }
+.modal-card {
+  margin-left: auto;
+}

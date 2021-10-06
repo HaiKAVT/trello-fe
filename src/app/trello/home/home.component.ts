@@ -4,6 +4,7 @@ import {Board} from "../../model/board";
 import {BoardService} from "../../service/board/board.service";
 import {AuthenticateService} from "../../service/authenticate.service";
 import {UserToken} from "../../model/user-token";
+import {ToastService} from "../../service/toast/toast.service";
 
 @Component({
   selector: 'app-home',
@@ -13,10 +14,19 @@ import {UserToken} from "../../model/user-token";
 export class HomeComponent implements OnInit {
   boards: Board[] = [];
   loggedInUser!: UserToken;
+  newBoard: Board = {
+    title: '',
+    owner: {
+      id: -1,
+    },
+    columns: [],
+    type:'',
+  };
 
   constructor(private modalService: ModalService,
               private boardService: BoardService,
-              private authenticateService: AuthenticateService) {
+              private authenticateService: AuthenticateService,
+              private toastService:ToastService) {
   }
 
   ngOnInit(): void {
@@ -25,12 +35,34 @@ export class HomeComponent implements OnInit {
   }
 
   getBoards() {
-    this.boardService.getAllBoard().subscribe(data => {
+    this.boardService.getOwnedBoard(this.loggedInUser.id!).subscribe(data => {
       this.boards = data
     })
   }
 
   displayAddBoardModal() {
-    this.modalService.show()
+    document.getElementById('create-board')!.classList.add('is-active');
+  }
+
+  createNewBoard() {
+    this.modalService.close();
+    this.newBoard.owner = this.loggedInUser;
+    this.boardService.addBoard(this.newBoard).subscribe(()=>{
+      this.toastService.showMessage("Board Created","is-success");
+      this.resetInput();
+    })
+  }
+  resetInput(){
+    this.newBoard = {
+      title: '',
+      owner: {
+        id: -1,
+      },
+      columns: [],
+      type:''
+    };
+  }
+  hideCreateBoard(){
+    document.getElementById('create-board')!.classList.remove('is-active');
   }
 }

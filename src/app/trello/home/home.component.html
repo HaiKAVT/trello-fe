@@ -1,4 +1,4 @@
-<div class="wrapper">
+<section class="main-content columns is-fullheight" xmlns="http://www.w3.org/1999/html">
   <app-side-bar></app-side-bar>
   <div class="container column is-10" #top style="padding: 10px 13px 13px 106px;">
     <!--    Board-->
@@ -73,4 +73,54 @@
       </div>
     </div>
   </div>
+</section>
+
+
+<div class="modal" id="create-board">
+  <div class="modal-background" (click)="hideCreateBoard()"></div>
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <p class="modal-card-title">Creating new board</p>
+      <button class="delete" aria-label="close" (click)="hideCreateBoard()"></button>
+    </header>
+    <section class="modal-card-body">
+      <div class="field columns" style="position: relative">
+        <label class="label">Title</label>
+        <div class="control">
+          <input class="input" type="text" required [(ngModel)]="newBoard.title" #boardTitle="ngModel">
+        </div>
+        <div *ngIf="boardTitle.invalid && boardTitle.touched" class="alert">
+          <div *ngIf="boardTitle.errors?.required">Title is required.</div>
+        </div>
+      </div>
+      <br>
+      <div class="field columns">
+        <label class="label">Type</label>
+        <div class="control">
+          <select class="select" [(ngModel)]="newBoard.type">
+            <option value="Private">Private</option>
+            <option value="Public">Public</option>
+          </select>
+        </div>
+      </div>
+      <div class="field columns">
+        <div class="column is-one-fifth">
+          <label class="label">Owner</label>
+          <div class="control">
+            <div class="button is-info user-button is-light">{{loggedInUser.username}}</div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <footer class="modal-card-foot">
+      <div *ngIf="boardTitle.invalid" class="alert">
+        <button class="button is-dark is-light" disabled>Save changes</button>
+      </div>
+      <div *ngIf="!boardTitle.invalid" class="alert">
+        <button class="button is-success is-light" (click)="createNewBoard()">Save changes</button>
+      </div>
+      <button class="button is-light" (click)="hideCreateBoard()">Cancel</button>
+    </footer>
+  </div>
 </div>
+

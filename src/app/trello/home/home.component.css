@@ -1,4 +1,3 @@
-
 a,
 a:hover,
 a:focus {
@@ -165,6 +164,7 @@ a.article:hover {
   margin: 20px;
   height: 150px;
 }
+
 .root {
   display: flex;
   flex-direction: column;
@@ -296,34 +296,38 @@ h1.app-name {
   flex-direction: column;
   flex-grow: 1;
   height: 210%;
-min-width: 0;
-  min-height: 0;}
+  min-width: 0;
+  min-height: 0;
+}
 
 .board-wrapper {
   display: flex;
   flex-grow: 1;
-  overflow-x: auto;}
+  overflow-x: auto;
+}
 
 .board-columns {
   display: flex;
-  flex-grow: 1;}
+  flex-grow: 1;
+}
 
 .board-column {
   display: flex;
   flex-direction: column;
   flex-grow: 1;
   flex-basis: 0;
-min-width: 300px;
+  min-width: 300px;
   margin: 50px;
   padding: 25px;
 
   border-radius: 4px;
 
-  background: #ffffff;}
+  background: #ffffff;
+}
 
 :not(:first-child) {
-   margin-left: 0;
- }
+  margin-left: 0;
+}
 
 .column-title {
   color: #523535;
@@ -400,12 +404,16 @@ min-width: 300px;
   margin-right: 5px;
 }
 
-.fa-plus-circle{
+.fa-plus-circle {
   font-size: 50px;
   margin-top: 30px;
 }
 
-.img-circle-add-board{
+.img-circle-add-board {
   margin: inherit;
   text-align: center;
+}
+
+.modal-card {
+  margin-left: auto;
 }

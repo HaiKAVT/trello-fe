@@ -35,12 +35,20 @@ export class BoardService {
     return this.http.delete<Board>(`${API_URL}boards/${id}`)
   }
 
-  getBoardAvailableToUser(UserId:any):Observable<Board[]>{
+  getBoardAvailableToUser(UserId: any): Observable<Board[]> {
     return this.http.get<Board[]>(`${API_URL}boards/available-to/${UserId}`)
   }
 
-  getBoardByType(type:string):Observable<Board[]>{
+  getBoardByType(type: string): Observable<Board[]> {
     return this.http.get<Board[]>(`${API_URL}boards/type/${type}`)
+  }
+
+  getBoardByTypeAndUser(type: string, id: number): Observable<Board[]> {
+    return this.http.get<Board[]>(`${API_URL}boards/owned/${type}/${id}`)
+  }
+
+  getOwnedBoard(id:number):Observable<Board[]>{
+    return this.http.get<Board[]>(`${API_URL}boards/${id}/owned-boards`)
   }
 
 }
