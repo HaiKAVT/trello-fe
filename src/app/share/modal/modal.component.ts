@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {ModalService} from "../../service/modal/modal.service";
 import {Board} from "../../model/board";
 import {ToastService} from "../../service/toast/toast.service";
-import {BoardService} from "../../service/board.service";
+import {BoardService} from "../../service/board/board.service";
 
 @Component({
   selector: 'app-modal',

@@ -1,7 +1,7 @@
-<!--<div class="nav">-->
-<!--  <span class="icon-item">-->
-<!--      <a routerLink="/trello" class="icon-link"><i class="fas fa-home"></i></a>-->
-<!--  </span>-->
+<div class="nav">
+  <span class="icon-item">
+      <a routerLink="/" class="icon-link"><i class="fas fa-home"></i></a>
+  </span>
 <!--  <div id="search-section">-->
 <!--    <div style="position: relative" id="search-results">-->
 <!--      <div *ngIf="searchResults.length" style="position: absolute; top: 40px; width: 300px; z-index: 1"-->
@@ -30,11 +30,11 @@
 <!--    <input id="search-input" class="input" type="text" placeholder="Search..." style="width: 200px"-->
 <!--           [(ngModel)]="searchString" (keyup)="search()">-->
 <!--  </div>-->
-<!--  <div class="nav-brand-start">-->
-<!--    <div class="nav-item-start">-->
-<!--      <h1><i class="fab fa-trello logo-icon"></i>Trello Hope</h1>-->
-<!--    </div>-->
-<!--  </div>-->
+  <div class="nav-brand-start">
+    <div class="nav-item-start">
+      <h1><i class="fab fa-trello logo-icon"></i>Trellot</h1>
+    </div>
+  </div>
 <!--  <div class="icon-item" *ngIf="currentUser">-->
 <!--    <div class="dropdown is-hoverable is-right">-->
 <!--      <div class="dropdown-trigger">-->
@@ -70,42 +70,31 @@
 <!--      </div>-->
 <!--    </div>-->
 <!--  </div>-->
-<!--  <div class="icon-item" *ngIf="currentUser">-->
-<!--    <div class="dropdown is-hoverable is-right">-->
-<!--      <div class="dropdown-trigger">-->
-<!--        <a class="icon-link" aria-haspopup="true" aria-controls="dropdown-menu4">-->
-<!--          <img [src]="navbarService.user.image" class="img-circle"/>-->
-<!--        </a>-->
-<!--      </div>-->
-<!--      <div class="dropdown-menu" id="dropdown-menu4" role="menu">-->
-<!--        <div class="dropdown-content">-->
-<!--          <div href="#" class="dropdown-item">-->
-<!--            <div>-->
-<!--              <img [src]="navbarService.user.image" class="img-circle"/>-->
-<!--            </div>-->
-<!--            <div class="user">-->
-<!--              <div class="username">-->
-<!--                {{navbarService.user.username}}-->
-<!--              </div>-->
-<!--              <span class="nickname">-->
-<!--                {{navbarService.user.nickname}}-->
-<!--              </span>-->
-<!--            </div>-->
-<!--          </div>-->
-<!--          <a (click)="openModalUpdate()" class="dropdown-item">-->
-<!--            Modifiers-->
-<!--          </a>-->
-<!--          <hr class="dropdown-divider">-->
-<!--          <a class="dropdown-item" (click)="logout()">-->
-<!--            Logout-->
-<!--          </a>-->
-<!--        </div>-->
-<!--      </div>-->
-<!--    </div>-->
-<!--  </div>-->
-<!--</div>-->
+  <div class="icon-item" *ngIf="currentUser">
+    <div class="dropdown is-hoverable is-right">
+      <div class="dropdown-trigger">
+        <a class="icon-link" aria-haspopup="true" aria-controls="dropdown-menu4">
+          <img [src]="navbarService.loggedInUser.image" class="img-circle"/>
+        </a>
+      </div>
+      <div class="dropdown-menu" id="dropdown-menu4" role="menu">
+        <div class="dropdown-content">
+          <div href="#" class="dropdown-item">
+          </div>
+          <a class="dropdown-item">
+            Modifiers
+          </a>
+          <hr class="dropdown-divider">
+          <a class="dropdown-item" (click)="logout()">
+            Logout
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
-<!--&lt;!&ndash;Modal update user&ndash;&gt;-->
+<!--Modal update user-->
 <!--<div class="modal modal-update-user" id="modal-update-user">-->
 <!--  <div class="modal-background" (click)="closeModalUpdate()"></div>-->
 <!--  <div class="modal-card modal-card-user" id="updateForm">-->

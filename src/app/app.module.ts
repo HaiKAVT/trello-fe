@@ -14,14 +14,9 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {ErrorInterceptor} from "./helper/error.interceptor";
 import {JwtInterceptor} from "./helper/jwt.interceptor";
 import {FlexLayoutModule} from "@angular/flex-layout";
-// import {FooterComponent} from './share/footer/footer.component';
-// import {ModalComponent} from './share/modal/modal.component';
-// import {NavbarBoardHeaderComponent} from './share/navbar-board-header/navbar-board-header.component';
-// import {NavbarComponent} from './share/navbar/navbar.component';
 import {FormsModule} from "@angular/forms";
 import {ShareModule} from "./share/share.module";
-import {AuthGuard} from "./helper/auth.guard";
-// import {tokenInterceptorProvider} from "./helper/token.interceptor";
+
 
 @NgModule({
   declarations: [
@@ -30,10 +25,7 @@ import {AuthGuard} from "./helper/auth.guard";
     SignUpComponent,
     RecoverPasswordComponent,
     HomeComponent
-    // FooterComponent,
-    // ModalComponent,
-    // NavbarBoardHeaderComponent,
-    // NavbarComponent
+
   ],
     imports: [
         BrowserModule,

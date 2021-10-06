@@ -1,11 +1,11 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {HttpClient} from "@angular/common/http";
 import {environment} from "../../environments/environment";
 import {Observable,BehaviorSubject} from "rxjs";
 import {UserToken} from "../model/user-token";
 import {map} from "rxjs/operators";
 
-const API_URL = `${environment.apiURL}`;
+const API_URL = `${environment.api_url}`;
 @Injectable({
   providedIn: 'root'
 })
@@ -27,7 +27,6 @@ export class AuthenticateService {
         return user;
       }))
   }
-
 
   logout() {
     localStorage.removeItem('user');

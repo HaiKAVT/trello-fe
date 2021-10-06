@@ -2,6 +2,8 @@ import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {AuthenticateService} from "../service/authenticate.service";
 import {Router} from "@angular/router";
+import {NavbarService} from "../service/navbar/navbar.service";
+import {ToastService} from "../service/toast/toast.service";
 
 @Component({
   selector: 'app-login',
@@ -27,7 +29,9 @@ export class LoginComponent implements OnInit {
   }
 
   constructor(private authenticationService: AuthenticateService,
-              private router: Router) {
+              private router: Router,
+              private navbarService:NavbarService,
+              private toastService:ToastService) {
   }
 
   ngOnInit(): void {
@@ -37,7 +41,9 @@ export class LoginComponent implements OnInit {
 
     this.authenticationService.login(this.loginForm.get('userName')?.value, this.loginForm.get('password')?.value)
       .subscribe(() => {
-        this.router.navigate(['/'])
+        this.navbarService.getCurrentUser();
+        this.router.navigate(['/trello']);
+        // this.toastService.showMessage('Đăng nhập thành công',"is-success")
       })
   }
 

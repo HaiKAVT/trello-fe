@@ -1,23 +1,25 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-// import { NavbarComponent } from './navbar/navbar.component';
+
 // import { NavbarBoardHeaderComponent } from './navbar-board-header/navbar-board-header.component';
 import { ModalComponent } from './modal/modal.component';
 import {FormsModule} from "@angular/forms";
 import {RouterModule} from "@angular/router";
 import { SideBarComponent } from './side-bar/side-bar/side-bar.component';
+import {NavbarComponent} from "./navbar/navbar.component";
+import {MatListModule} from "@angular/material/list";
 // import { FooterComponent } from './footer/footer.component';
 
 @NgModule({
   declarations: [
-    // NavbarComponent,
+    NavbarComponent,
     // NavbarBoardHeaderComponent,
     ModalComponent,
     SideBarComponent,
     // FooterComponent
   ],
     exports: [
-        // NavbarComponent,
+        NavbarComponent,
         // NavbarBoardHeaderComponent,
         ModalComponent,
         SideBarComponent,
@@ -26,7 +28,8 @@ import { SideBarComponent } from './side-bar/side-bar/side-bar.component';
   imports: [
     CommonModule,
     FormsModule,
-    RouterModule
+    RouterModule,
+    MatListModule
   ]
 })
 export class ShareModule { }
