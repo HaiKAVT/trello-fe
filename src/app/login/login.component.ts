@@ -31,6 +31,7 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit() {
+    const {userName, password} = this.loginForm.value;
 
   }
 

@@ -16,6 +16,7 @@ import {FlexLayoutModule} from "@angular/flex-layout";
 // import {NavbarBoardHeaderComponent} from './share/navbar-board-header/navbar-board-header.component';
 // import {NavbarComponent} from './share/navbar/navbar.component';
 import {FormsModule} from "@angular/forms";
+import {ShareModule} from "./share/share.module";
 // import {tokenInterceptorProvider} from "./helper/token.interceptor";
 
 @NgModule({
@@ -29,16 +30,17 @@ import {FormsModule} from "@angular/forms";
     // NavbarBoardHeaderComponent,
     // NavbarComponent
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    FormsModule,
-    ReactiveFormsModule,
-    HttpClientModule,
-    AngularMaterialModule,
-    BrowserAnimationsModule,
-    FlexLayoutModule,
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        FormsModule,
+        ReactiveFormsModule,
+        HttpClientModule,
+        AngularMaterialModule,
+        BrowserAnimationsModule,
+        FlexLayoutModule,
+        ShareModule,
+    ],
   providers: [],
   bootstrap: [AppComponent]
 })

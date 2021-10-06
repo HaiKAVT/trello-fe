@@ -1,48 +1,5 @@
 <div class="wrapper">
-  <nav id="sidebar">
-    <div class="sidebar-header">
-      <h3>Bootstrap Sidebar</h3>
-    </div>
-
-    <ul class="list-unstyled components">
-      <li>
-        <a href="#">Trang chủ</a>
-      </li>
-      <li class="active">
-        <a aria-expanded="false" class="dropdown-toggle" data-toggle="collapse" href="#homeSubmenu">Bảng</a>
-        <ul class="collapse list-unstyled" id="homeSubmenu">
-          <li>
-            <a href="#">Home 1</a>
-          </li>
-          <li>
-            <a href="#">Home 2</a>
-          </li>
-          <li>
-            <a href="#">Home 3</a>
-          </li>
-        </ul>
-      </li>
-      <li>
-        <a aria-expanded="false" class="dropdown-toggle" data-toggle="collapse" href="#pageSubmenu">Nhóm</a>
-        <ul class="collapse list-unstyled" id="pageSubmenu">
-          <li>
-            <a aria-expanded="false" class="dropdown-toggle" data-toggle="collapse" href="#sub1">Page 1</a>
-            <ul class="collapse list-unstyled" id="sub1">
-              <li></li>
-            </ul>
-          </li>
-          <li>
-            <a href="#">Page 2</a>
-          </li>
-          <li>
-            <a href="#">Page 3</a>
-          </li>
-        </ul>
-      </li>
-    </ul>
-    Dự án C0421K1 <br>
-    Dự án CodeGym
-  </nav>
+  <app-side-bar></app-side-bar>
   <div class="container column is-10" #top style="padding: 10px 13px 13px 106px;">
     <!--    Board-->
     <div class="title-board">
@@ -51,10 +8,10 @@
     <div class="section-board">
       <div class="card">
         <div class="img-circle-add-board">
-          <a ><i class="fas fa-plus-circle"></i></a>
+          <a (click)="displayAddBoardModal()"><i class="fas fa-plus-circle"></i></a>
         </div>
       </div>
-      <div class="card"  >
+      <div class="card">
         <div class="card-header"><p class="card-header-title">A</p></div>
         <div class="card-content">
           <div class="content">
@@ -69,7 +26,7 @@
       <h1><i class="far fa-clipboard"></i>Shared with you</h1>
     </div>
     <div class="section-board">
-      <div class="card" >
+      <div class="card">
         <div class="card-header"><p class="card-header-title">D</p></div>
         <div class="card-content">
           <div class="content">
@@ -85,13 +42,13 @@
       <h1><i class="fas fa-briefcase"></i>Your Workspace</h1>
     </div>
     <div class="section-board">
-      <div class="card" >
+      <div class="card">
         <div class="img-circle-add-board">
           <a><i class="fas fa-plus-circle"></i></a>
         </div>
       </div>
-      <div >
-        <div class="card" >
+      <div>
+        <div class="card">
           <div class="card-header"><p class="card-header-title">A</p></div>
           <div class="card-content">
             <span style="font-size: small"><b>Id: </b>F</span> <br>
@@ -105,8 +62,8 @@
       <h1><i class="fas fa-briefcase"></i>Workspace Shared With You</h1>
     </div>
     <div class="section-board">
-      <div >
-        <div class="card" >
+      <div>
+        <div class="card">
           <div class="card-header"><p class="card-header-title">T</p></div>
           <div class="card-content">
             <span style="font-size: small"><b>Id: </b>R</span> <br>
