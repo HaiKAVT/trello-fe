@@ -15,6 +15,10 @@ export class UserService {
     return this.http.get<User>(`${API_URL}users`);
   }
 
+  register(user: User): Observable<User>{
+    return this.http.post(`${API_URL}users`,user);
+  }
+
   getUserById(id: number): Observable<User> {
     return this.http.get<User>(`${API_URL}users/${id}`);
   }

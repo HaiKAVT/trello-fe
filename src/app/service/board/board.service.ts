@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Board} from "../../model/board";
 import {Observable} from "rxjs";
+import {HttpClient} from "@angular/common/http";
 
 @Injectable({
   providedIn: 'root'
@@ -8,7 +9,7 @@ import {Observable} from "rxjs";
 export class BoardService {
   board: Observable<Board[]> = new Observable<Board[]>()
 
-  constructor() {
+  constructor(private http:HttpClient) {
   }
 
   getAllBoard(): Observable<Board[]> {

@@ -1,0 +1,62 @@
+<div class="wrapper">
+  <app-side-bar></app-side-bar>
+  <div class="container column is-10" #top style="padding: 10px 13px 13px 106px;">
+    <!--    Board-->
+    <div class="title-board">
+      <h1><i class="far fa-clipboard"></i>Bảng của bạn</h1>
+    </div>
+    <div class="section-board">
+      <div class="card">
+        <div class="img-circle-add-board">
+          <a (click)="displayAddBoardModal()"><i class="fas fa-plus-circle"></i></a>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><p class="card-header-title">A</p></div>
+        <div class="card-content">
+          <div class="content">
+            <span style="font-size: small"><b>Id: </b>B</span> <br>
+            <span style="font-size: small"><b>Owner: </b>CC</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="title-board">
+      <h1><i class="far fa-clipboard"></i>Bảng nhóm</h1>
+    </div>
+    <div class="section-board">
+      <div class="card">
+        <div class="card-header"><p class="card-header-title">D</p></div>
+        <div class="card-content">
+          <div class="content">
+            <span style="font-size: small"><b>Id: </b>E</span> <br>
+            <span style="font-size: small"><b>Owner: </b>F</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!--    Work Space-->
+    <div class="title-board" #target>
+      <h1><i class="far fa-clipboard"></i>Bảng công khai</h1>
+    </div>
+    <div class="section-board">
+      <div class="card">
+        <div class="img-circle-add-board">
+          <a><i class="fas fa-plus-circle"></i></a>
+        </div>
+      </div>
+      <div>
+        <div class="card">
+          <div class="card-header"><p class="card-header-title">A</p></div>
+          <div class="card-content">
+            <span style="font-size: small"><b>Id: </b>F</span> <br>
+            <span style="font-size: small"><b>Owner: </b>R</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

@@ -4,11 +4,13 @@ import {CommonModule} from '@angular/common';
 import {TrelloRoutingModule} from './trello-routing.module';
 import {HomeComponent} from './home/home.component';
 import {ShareModule} from "../share/share.module";
+import { BoardsComponent } from './boards/boards.component';
 
 
 @NgModule({
   declarations: [
-    HomeComponent
+    HomeComponent,
+    BoardsComponent,
   ],
     imports: [
         CommonModule,
