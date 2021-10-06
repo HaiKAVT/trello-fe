@@ -11,11 +11,12 @@ import {HttpClientModule} from "@angular/common/http";
 import {AngularMaterialModule} from "./angular-material.module";
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {FlexLayoutModule} from "@angular/flex-layout";
-import {FooterComponent} from './share/footer/footer.component';
-import {ModalComponent} from './share/modal/modal.component';
-import {NavbarBoardHeaderComponent} from './share/navbar-board-header/navbar-board-header.component';
-import {NavbarComponent} from './share/navbar/navbar.component';
+// import {FooterComponent} from './share/footer/footer.component';
+// import {ModalComponent} from './share/modal/modal.component';
+// import {NavbarBoardHeaderComponent} from './share/navbar-board-header/navbar-board-header.component';
+// import {NavbarComponent} from './share/navbar/navbar.component';
 import {FormsModule} from "@angular/forms";
+// import {tokenInterceptorProvider} from "./helper/token.interceptor";
 
 @NgModule({
   declarations: [
@@ -23,10 +24,10 @@ import {FormsModule} from "@angular/forms";
     LoginComponent,
     SignUpComponent,
     RecoverPasswordComponent,
-    FooterComponent,
-    ModalComponent,
-    NavbarBoardHeaderComponent,
-    NavbarComponent
+    // FooterComponent,
+    // ModalComponent,
+    // NavbarBoardHeaderComponent,
+    // NavbarComponent
   ],
   imports: [
     BrowserModule,

@@ -43,120 +43,75 @@
     Dự án C0421K1 <br>
     Dự án CodeGym
   </nav>
-  <div>
-    <h2>Các bảng của bạn</h2>
-    <div class="section-board">
-      <div class="mat-card">
-        <div class="mat-card-title">Bảng 1</div>
-        <div class="mat-card-content">
-          Chủ sở hữu: Không
-        </div>
-      </div>
-      <div class="mat-card">
-        <div class="mat-card-title">Bảng 2</div>
-        <div class="mat-card-content">
-          Chủ sở hữu: Không
-        </div>
-      </div>
-      <div class="mat-card">
-        <div class="mat-card-title">Bảng 3</div>
-        <div class="mat-card-content">
-          Chủ sở hữu: Không
-        </div>
-      </div>
-      <div class="mat-card">
-        <div class="mat-card-title">Bảng 4</div>
-        <div class="mat-card-content">
-          Chủ sở hữu: Không
-        </div>
-      </div>
+  <div class="container column is-10" #top style="padding: 10px 13px 13px 106px;">
+    <!--    Board-->
+    <div class="title-board">
+      <h1><i class="far fa-clipboard"></i>Your Boards</h1>
     </div>
-    <div class="line"></div>
-
-    <h2>Bảng được chia sẻ với bạn</h2>
     <div class="section-board">
-      <div class="mat-card">
-        <div class="mat-card-title">Bảng 1</div>
-        <div class="mat-card-content">
-          Chủ sở hữu: Không
+      <div class="card">
+        <div class="img-circle-add-board">
+          <a ><i class="fas fa-plus-circle"></i></a>
         </div>
       </div>
-      <div class="mat-card">
-        <div class="mat-card-title">Bảng 2</div>
-        <div class="mat-card-content">
-          Chủ sở hữu: Không
-        </div>
-      </div>
-      <div class="mat-card">
-        <div class="mat-card-title">Bảng 3</div>
-        <div class="mat-card-content">
-          Chủ sở hữu: Không
-        </div>
-      </div>
-      <div class="mat-card">
-        <div class="mat-card-title">Bảng 4</div>
-        <div class="mat-card-content">
-          Chủ sở hữu: Không
+      <div class="card"  >
+        <div class="card-header"><p class="card-header-title">A</p></div>
+        <div class="card-content">
+          <div class="content">
+            <span style="font-size: small"><b>Id: </b>B</span> <br>
+            <span style="font-size: small"><b>Owner: </b>CC</span>
+          </div>
         </div>
       </div>
     </div>
 
-    <div class="line"></div>
-
-    <h2>Nhóm của bạn</h2>
+    <div class="title-board">
+      <h1><i class="far fa-clipboard"></i>Shared with you</h1>
+    </div>
     <div class="section-board">
-      <div class="mat-card">
-        <div class="mat-card-title">Bảng 1</div>
-        <div class="mat-card-content">
-          Chủ sở hữu: Không
-        </div>
-      </div>
-      <div class="mat-card">
-        <div class="mat-card-title">Bảng 2</div>
-        <div class="mat-card-content">
-          Chủ sở hữu: Không
-        </div>
-      </div>
-      <div class="mat-card">
-        <div class="mat-card-title">Bảng 3</div>
-        <div class="mat-card-content">
-          Chủ sở hữu: Không
-        </div>
-      </div>
-      <div class="mat-card">
-        <div class="mat-card-title">Bảng 4</div>
-        <div class="mat-card-content">
-          Chủ sở hữu: Không
+      <div class="card" >
+        <div class="card-header"><p class="card-header-title">D</p></div>
+        <div class="card-content">
+          <div class="content">
+            <span style="font-size: small"><b>Id: </b>E</span> <br>
+            <span style="font-size: small"><b>Owner: </b>F</span>
+          </div>
         </div>
       </div>
     </div>
 
-    <div class="line"></div>
-
-    <h2>Nhóm được chia sẻ với bạn</h2>
+    <!--    Work Space-->
+    <div class="title-board" #target>
+      <h1><i class="fas fa-briefcase"></i>Your Workspace</h1>
+    </div>
     <div class="section-board">
-      <div class="mat-card">
-        <div class="mat-card-title">Bảng 1</div>
-        <div class="mat-card-content">
-          Chủ sở hữu: Không
+      <div class="card" >
+        <div class="img-circle-add-board">
+          <a><i class="fas fa-plus-circle"></i></a>
         </div>
       </div>
-      <div class="mat-card">
-        <div class="mat-card-title">Bảng 2</div>
-        <div class="mat-card-content">
-          Chủ sở hữu: Không
+      <div >
+        <div class="card" >
+          <div class="card-header"><p class="card-header-title">A</p></div>
+          <div class="card-content">
+            <span style="font-size: small"><b>Id: </b>F</span> <br>
+            <span style="font-size: small"><b>Owner: </b>R</span>
+          </div>
         </div>
       </div>
-      <div class="mat-card">
-        <div class="mat-card-title">Bảng 3</div>
-        <div class="mat-card-content">
-          Chủ sở hữu: Không
-        </div>
-      </div>
-      <div class="mat-card">
-        <div class="mat-card-title">Bảng 4</div>
-        <div class="mat-card-content">
-          Chủ sở hữu: Không
+
+    </div>
+    <div class="title-board">
+      <h1><i class="fas fa-briefcase"></i>Workspace Shared With You</h1>
+    </div>
+    <div class="section-board">
+      <div >
+        <div class="card" >
+          <div class="card-header"><p class="card-header-title">T</p></div>
+          <div class="card-content">
+            <span style="font-size: small"><b>Id: </b>R</span> <br>
+            <span style="font-size: small"><b>Owner: </b>D</span>
+          </div>
         </div>
       </div>
     </div>
