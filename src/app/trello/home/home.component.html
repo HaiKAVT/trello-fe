@@ -11,12 +11,12 @@
           <a (click)="displayAddBoardModal()"><i class="fas fa-plus-circle"></i></a>
         </div>
       </div>
-      <div class="card">
-        <div class="card-header"><p class="card-header-title">A</p></div>
+      <div class="card" *ngFor="let board of boards" routerLink="/trello/boards/{{board.id}}">
+        <div class="card-header"><p class="card-header-title">{{board.title}}</p></div>
         <div class="card-content">
           <div class="content">
-            <span style="font-size: small"><b>Id: </b>B</span> <br>
-            <span style="font-size: small"><b>Owner: </b>CC</span>
+            <span style="font-size: small"><b>Type: </b>{{board.type}}</span> <br>
+            <span style="font-size: small"><b>Owner: </b>{{board.owner.username}}</span>
           </div>
         </div>
       </div>

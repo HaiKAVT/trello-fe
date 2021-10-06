@@ -3,6 +3,8 @@ import {ModalService} from "../../service/modal/modal.service";
 import {Board} from "../../model/board";
 import {ToastService} from "../../service/toast/toast.service";
 import {BoardService} from "../../service/board/board.service";
+import {UserService} from "../../service/user/user.service";
+import {AuthenticateService} from "../../service/authenticate.service";
 
 @Component({
   selector: 'app-modal',
@@ -16,18 +18,24 @@ export class ModalComponent implements OnInit {
       id: -1,
     },
     columns: [],
-    status:'',
+    type:'',
   };
   constructor(public modalService:ModalService,
               private toastService:ToastService,
-              private boardService:BoardService) { }
+              private boardService:BoardService,
+              private userService:UserService,
+              private authenticateService:AuthenticateService) { }
 
   ngOnInit(): void {
   }
   createNewBoard() {
-    this.resetInput();
     this.modalService.close();
-    this.toastService.showMessage("Board Created","is-success")
+    this.newBoard.owner = this.modalService.currentUser;
+    this.boardService.addBoard(this.newBoard).subscribe(()=>{
+      this.toastService.showMessage("Board Created","is-success");
+      this.resetInput();
+    })
+
     //create new board
     // this.board.owner.id = this.modalService.currentUser.id;
     // this.boardService.addNewBoard(this.board).subscribe(board => {
@@ -45,7 +53,7 @@ export class ModalComponent implements OnInit {
         id: -1,
       },
       columns: [],
-      status:''
+      type:''
     };
   }
 }
