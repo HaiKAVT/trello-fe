@@ -4,59 +4,60 @@
       <div class="board-columns">
         <div cdkDropList
              cdkDropListGroup
-             cdkDropListOrientation="horizontal" class="board-columns"
-             (cdkDropListDropped)="dropColumn($event)">
-          <div cdkDragLockAxis="x" class="board-column"
+             cdkDropListOrientation="horizontal"
+             (cdkDropListDropped)="dropColumn($event)"class="board-columns">
+          <div
+            cdkDragHandle
+            cdkDragLockAxis="x" class="board-column"
                *ngFor="let column of currentBoard.columns; index as i" cdkDrag>
             <div class="window-close" (click)="showDeleteColumnModal(column.id!)">
               <i class="far fa-trash-alt"></i>
             </div>
-            <div class="column-title" cdkDragHandle>
+            <div class="column-title" >
               <input class="input title-column" type="text"
                      (keydown)="onKeydown($event, column)"
                      [(ngModel)]="this.currentBoard.columns[i].title"
                      value="{{column.title}}">
             </div>
-            <!--            content-->
-            <!--          <div class="tasks-container"-->
-            <!--               id="{{column.id}}"-->
-            <!--               cdkDropList-->
-            <!--               [cdkDropListData]="column.cards"-->
-            <!--               (cdkDropListDropped)="dropCard($event, column)">-->
-            <!--            <div class="task" *ngFor="let item of column.cards" cdkDrag [cdkDragData]="item"-->
-            <!--                 (click)="showUpdateCardModal(item)">-->
-            <!--              <ul>-->
-            <!--                <li><span *ngFor="let tag of item.tags" class="tag is-light" [ngClass]="tag.color">{{tag.name}}</span>-->
-            <!--                </li>-->
-            <!--                <li><span class="item-title">{{item.title}}</span></li>-->
-            <!--                <li><span *ngFor="let user of item.users" class="tag is-light">@{{user.username}}</span>-->
-            <!--                </li>-->
-            <!--              </ul>-->
-            <!--            </div>-->
-            <!--&lt;!&ndash;            <div class="form-create-new-card is-hidden" id="new-card-form-col-{{column.id}}">&ndash;&gt;-->
-            <!--&lt;!&ndash;              <form #showAddNewCardForm="ngForm"&ndash;&gt;-->
-            <!--&lt;!&ndash;                    (ngSubmit)="addNewCard(column.id,column.cards?.length,showAddNewCardForm)">&ndash;&gt;-->
-            <!--&lt;!&ndash;                <input type="text" name="title" #addCard="ngModel" class="input" [(ngModel)]="newCard.title"&ndash;&gt;-->
-            <!--&lt;!&ndash;                       placeholder="Title..." required>&ndash;&gt;-->
-            <!--&lt;!&ndash;                <td *ngIf="showAddNewCardForm.invalid && addCard.touched && isAdded">&ndash;&gt;-->
-            <!--&lt;!&ndash;                  <p class="notification is-danger is-light" *ngIf="addCard.errors?.required">Can not blank</p>&ndash;&gt;-->
-            <!--&lt;!&ndash;                </td>&ndash;&gt;-->
-            <!--&lt;!&ndash;                <div class="button-option">&ndash;&gt;-->
-            <!--&lt;!&ndash;                  <button class="button add-new-card is-primary is-light" type="submit">&ndash;&gt;-->
-            <!--&lt;!&ndash;                    Add card&ndash;&gt;-->
-            <!--&lt;!&ndash;                  </button>&ndash;&gt;-->
-            <!--&lt;!&ndash;                  <button class="button is-danger is-light " (click)="hiddenInputAddNewCard(column.id)" type="button">&ndash;&gt;-->
-            <!--&lt;!&ndash;                    Cancel&ndash;&gt;-->
-            <!--&lt;!&ndash;                  </button>&ndash;&gt;-->
-            <!--&lt;!&ndash;                </div>&ndash;&gt;-->
-            <!--&lt;!&ndash;              </form>&ndash;&gt;-->
-            <!--&lt;!&ndash;            </div>&ndash;&gt;-->
-            <!--&lt;!&ndash;            <div id="show-form-create-new-card-{{column.id}}" class="show-form-create-new-card">&ndash;&gt;-->
-            <!--&lt;!&ndash;              <button class="button button-add-new-card is-light" (click)="showInputAddNewCard(column.id)"> + Add new&ndash;&gt;-->
-            <!--&lt;!&ndash;                card&ndash;&gt;-->
-            <!--&lt;!&ndash;              </button>&ndash;&gt;-->
-            <!--&lt;!&ndash;            </div>&ndash;&gt;-->
-            <!--          </div>-->
+            <!--                      <div class="tasks-container"-->
+            <!--                           id="{{column.id}}"-->
+            <!--                           cdkDropList-->
+            <!--                           [cdkDropListData]="column.cards"-->
+            <!--                           (cdkDropListDropped)="dropCard($event, column)">-->
+            <!--                        <div class="task" *ngFor="let item of column.cards" cdkDrag [cdkDragData]="item"-->
+            <!--                             (click)="showUpdateCardModal(item)">-->
+            <!--                          <ul>-->
+            <!--                            <li><span *ngFor="let tag of item.tags" class="tag is-light" [ngClass]="tag.color">{{tag.name}}</span>-->
+            <!--                            </li>-->
+            <!--                            <li><span class="item-title">{{item.title}}</span></li>-->
+            <!--                            <li><span *ngFor="let user of item.users" class="tag is-light">@{{user.username}}</span>-->
+            <!--                            </li>-->
+            <!--                          </ul>-->
+            <!--                        </div>-->
+            <!--                        <div class="form-create-new-card is-hidden" id="new-card-form-col-{{column.id}}">-->
+            <!--                          <form #showAddNewCardForm="ngForm"-->
+            <!--                                (ngSubmit)="addNewCard(column.id,column.cards?.length,showAddNewCardForm)">-->
+            <!--                            <input type="text" name="title" #addCard="ngModel" class="input" [(ngModel)]="newCard.title"-->
+            <!--                                   placeholder="Title..." required>-->
+            <!--                            <td *ngIf="showAddNewCardForm.invalid && addCard.touched && isAdded">-->
+            <!--                              <p class="notification is-danger is-light" *ngIf="addCard.errors?.required">Can not blank</p>-->
+            <!--                            </td>-->
+            <!--                            <div class="button-option">-->
+            <!--                              <button class="button add-new-card is-primary is-light" type="submit">-->
+            <!--                                Add card-->
+            <!--                              </button>-->
+            <!--                              <button class="button is-danger is-light " (click)="hiddenInputAddNewCard(column.id)" type="button">-->
+            <!--                                Cancel-->
+            <!--                              </button>-->
+            <!--                            </div>-->
+            <!--                          </form>-->
+            <!--                        </div>-->
+            <!--                        <div id="show-form-create-new-card-{{column.id}}" class="show-form-create-new-card">-->
+            <!--                          <button class="button button-add-new-card is-light" (click)="showInputAddNewCard(column.id)"> + Add new-->
+            <!--                            card-->
+            <!--                          </button>-->
+            <!--                        </div>-->
+            <!--                      </div>-->
           </div>
         </div>
         <div class="board-column-add" *ngIf="canEdit">

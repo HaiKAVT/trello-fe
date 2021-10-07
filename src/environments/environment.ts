@@ -7,12 +7,21 @@ export const environment = {
   apiURL: 'http://localhost:8081/',
   api_url: 'http://localhost:8080/',
   firebaseConfig: {
-    apiKey: "AIzaSyBMD5YmNFCKjtrhk0UkUFVWXYO-XTMXNS8",
-    authDomain: "md6trello.firebaseapp.com",
-    projectId: "md6trello",
-    storageBucket: "md6trello.appspot.com",
-    messagingSenderId: "713854533980",
-    appId: "1:713854533980:web:0a8931e07340f08613c199"
+    apiKey: "AIzaSyD9P8dOuqTRKL-Esc-25coo9P0XqDO7cLo",
+    authDomain: "trello-h3k.firebaseapp.com",
+    projectId: "trello-h3k",
+    storageBucket: "trello-h3k.appspot.com",
+    messagingSenderId: "288253371925",
+    appId: "1:288253371925:web:a5c0621a1099eb0540d01c",
+    measurementId: "G-QK8W4RFSJT"
   }
 };
 
+/*
+ * For easier debugging in development mode, you can import the following file
+ * to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.
+ *
+ * This import should be commented out in production mode because it will have a negative impact
+ * on performance if an error is thrown.
+ */
+// import 'zone.js/plugins/zone-error';  // Included with Angular CLI.

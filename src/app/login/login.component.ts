@@ -30,8 +30,8 @@ export class LoginComponent implements OnInit {
 
   constructor(private authenticationService: AuthenticateService,
               private router: Router,
-              private navbarService:NavbarService,
-              private toastService:ToastService) {
+              private navbarService: NavbarService,
+              private toastService: ToastService) {
   }
 
   ngOnInit(): void {
@@ -43,7 +43,8 @@ export class LoginComponent implements OnInit {
       .subscribe(() => {
         this.navbarService.getCurrentUser();
         this.router.navigate(['/trello']);
-        // this.toastService.showMessage('Đăng nhập thành công',"is-success")
+      }, () => {
+        this.toastService.showMessage('Sai tài khoản hoặc mật khẩu',"is-warning")
       })
   }
 

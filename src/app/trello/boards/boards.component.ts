@@ -68,6 +68,7 @@ export class BoardsComponent implements OnInit {
       this.getBoards()
       this.getPublicBoard()
       this.getPrivateBoard()
+      this.hideCreateBoard()
     })
   }
   resetInput(){

@@ -51,6 +51,7 @@ export class HomeComponent implements OnInit {
       this.toastService.showMessage("Board Created","is-success");
       this.resetInput();
       this.getBoards()
+      this.hideCreateBoard()
     })
   }
   resetInput(){
