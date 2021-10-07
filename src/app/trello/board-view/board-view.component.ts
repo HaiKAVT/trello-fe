@@ -14,6 +14,8 @@ import {ColumnService} from "../../service/column/column.service";
 import {Card} from "../../model/card";
 import {CardService} from "../../service/card/card.service";
 import {doc} from "@angular/fire/firestore";
+import {TagService} from "../../service/tag/tag.service";
+import {Tag} from "../../model/tag";
 
 @Component({
   selector: 'app-board-view',
@@ -79,7 +81,8 @@ export class BoardViewComponent implements OnInit {
               private toastService: ToastService,
               private userService: UserService,
               private columnService: ColumnService,
-              private cardService: CardService) {
+              private cardService: CardService,
+              private tagService:TagService) {
   }
 
   ngOnInit(): void {
@@ -321,5 +324,21 @@ export class BoardViewComponent implements OnInit {
 
   closeCreateColumnModal(){
     document.getElementById('createColumnModal')!.classList.remove("is-active")
+  }
+
+  removeTagFromCard(tag:Tag){
+    let tagName = tag.name;
+    for (let tags of this.selectedCard.tags!){
+      if(tags.id == tag.id){
+        let index = this.selectedCard.tags?.indexOf(tags);
+        this.selectedCard.tags?.splice(index!,1);
+      }
+    }
+    this.saveChange();
+  }
+
+  switchTagForm(){
+    let tagForm =document.getElementById('tags');
+
   }
 }
