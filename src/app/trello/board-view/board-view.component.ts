@@ -32,20 +32,23 @@ export class BoardViewComponent implements OnInit {
   columnForm: FormGroup = new FormGroup({
     title: new FormControl('', Validators.required),
   })
-  isAdded:boolean=false;
-  columnOld :Column ={
+  isAdded: boolean = false;
+  columnOld: Column = {
     cards: [],
     id: -1,
     position: -1,
     title: ""
   }
+  selectedColumnID: number = -1;
+  selectedIndex: number = -1;
+
   constructor(private activatedRoute: ActivatedRoute,
               private boardService: BoardService,
               public authenticationService: AuthenticateService,
               private router: Router,
               private toastService: ToastService,
               private userService: UserService,
-              private columnService:ColumnService) {
+              private columnService: ColumnService) {
   }
 
   ngOnInit(): void {
@@ -75,57 +78,81 @@ export class BoardViewComponent implements OnInit {
     }
   }
 
-  addColumn(){
-    if(this.columnForm.valid){
-      let newColumn: Column = {cards:[], position:this.currentBoard.columns.length, title:this.columnForm.get('title')?.value}
+  addColumn() {
+    if (this.columnForm.valid) {
+      let newColumn: Column = {
+        cards: [],
+        position: this.currentBoard.columns.length,
+        title: this.columnForm.get('title')?.value
+      }
       this.resetColumnForm();
-      this.columnService.createAColumn(newColumn).subscribe(data=>{
+      this.columnService.createAColumn(newColumn).subscribe(data => {
         this.currentBoard.columns.push(data)
-        this.boardDataUpdate()
+        this.updatePosition();
       })
     }
   }
 
-  resetColumnForm(){
+  resetColumnForm() {
     this.columnForm = new FormGroup({
       title: new FormControl('', Validators.required),
     })
   }
 
-  boardDataUpdate(){
-    this.boardService.updateBoard(this.currentBoardId, this.currentBoard).subscribe(()=>{
+  boardDataUpdate() {
+    this.boardService.updateBoard(this.currentBoardId, this.currentBoard).subscribe(() => {
       this.getCurrentBoard()
     })
   }
 
-  onKeydown($event: KeyboardEvent, column: Column){
-
+  onFocusOut(column:Column){
+    this.updateColumns()
   }
 
-  dropColumn(event: CdkDragDrop<string[]>){
-    moveItemInArray(this.currentBoard.columns,event.previousIndex, event.currentIndex);
+  dropColumn(event: CdkDragDrop<string[]>) {
+    moveItemInArray(this.currentBoard.columns, event.previousIndex, event.currentIndex);
     this.updatePosition();
 
   }
 
-  private updatePosition(){
-    for(let i = 0; i<this.currentBoard.columns.length;i++){
+  private updatePosition() {
+    for (let i = 0; i < this.currentBoard.columns.length; i++) {
       this.currentBoard.columns[i].position = i;
       console.log(this.currentBoard.columns[i]);
-      if(i == this.currentBoard.columns.length - 1){
+      if (i == this.currentBoard.columns.length - 1) {
         this.updateColumns()
       }
     }
   }
 
-  updateColumns(){
-    this.columnService.updateAllColumn(this.currentBoard.columns).subscribe(()=>{
+  updateColumns() {
+    this.columnService.updateAllColumn(this.currentBoard.columns).subscribe(() => {
       this.boardDataUpdate()
     })
   }
 
-  showDeleteColumnModal(id:number){
-
+  deleteColumn() {
+    for (let i = 0; i < this.currentBoard.columns.length; i++) {
+      if (this.currentBoard.columns[i].id == this.selectedColumnID) {
+        this.selectedIndex = this.currentBoard.columns.indexOf(this.currentBoard.columns[i])
+        this.currentBoard.columns.splice(this.selectedIndex, 1);
+        console.log(this.currentBoard.columns);
+        this.columnService.deleteAColumn(this.selectedColumnID).subscribe(() => {
+          this.boardDataUpdate()
+          this.closeDeleteColumnModal();
+        })
+      }
+    }
   }
 
+  showDeleteColumnModal(id: number) {
+    this.selectedColumnID = id;
+    document.getElementById('deleteColumnModal')!.classList.add('is-active')
+  }
+
+  closeDeleteColumnModal() {
+    this.selectedColumnID = -1;
+    this.selectedIndex = -1;
+    document.getElementById('deleteColumnModal')!.classList.remove('is-active')
+  }
 }
