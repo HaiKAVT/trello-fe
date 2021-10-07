@@ -14,8 +14,6 @@
               <i class="far fa-trash-alt"></i>
             </div>
             <div class="column-title">
-              {{i}}
-              {{column.position}}
               <input class="input title-column" type="text"
                      (focusout)="onFocusOut(column)"
                      [(ngModel)]="this.currentBoard.columns[i].title"
