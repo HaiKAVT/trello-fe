@@ -5,5 +5,6 @@ export interface User {
   email?: string;
   image?: string;
   nickname?: string;
+  phone?: number;
   roles?: any;
 }

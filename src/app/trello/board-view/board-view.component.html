@@ -1,0 +1,148 @@
+<div class="root">
+  <div class="board">
+    <div class="board-wrapper">
+      <div class="board-columns">
+        <div cdkDropList
+             cdkDropListGroup
+             cdkDropListOrientation="horizontal"
+             (cdkDropListDropped)="dropColumn($event)" class="board-columns">
+          <div
+            cdkDragHandle
+            cdkDragLockAxis="x" class="board-column"
+            *ngFor="let column of currentBoard.columns; index as i" cdkDrag>
+            <div class="window-close" (click)="showDeleteColumnModal(column.id!)">
+              <i class="far fa-trash-alt"></i>
+            </div>
+            <div class="column-title">
+              {{i}}
+              {{column.position}}
+              <input class="input title-column" type="text"
+                     (focusout)="onFocusOut(column)"
+                     [(ngModel)]="this.currentBoard.columns[i].title"
+                     value="{{column.title}}">
+            </div>
+            <div class="tasks-container"
+                 id="{{column.id}}"
+                 cdkDropList
+                 [cdkDropListData]="column.cards"
+                 (cdkDropListDropped)="dropCard($event, column)">
+              <div class="task" *ngFor="let item of column.cards" cdkDrag [cdkDragData]="item"
+                   (click)="showUpdateCardModal(item)">
+                <ul>
+                  <li><span *ngFor="let tag of item.tags" class="tag is-light" [ngClass]="tag.color">{{tag.name}}</span>
+                  </li>
+                  <li><span class="item-title">{{item.title}}</span></li>
+                  <li><span *ngFor="let user of item.users" class="tag is-light">@{{user.username}}</span>
+                  </li>
+                </ul>
+              </div>
+              <div>
+                <button class="button button-add-new-card is-light" (click)="showCreateCardModal(column)">
+                  + Add new card
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="board-column-add" *ngIf="canEdit">
+          <div class="board-column" style="margin-left: 0px">
+            <div class="column-title">
+              <form [formGroup]="columnForm" (ngSubmit)="addColumn()">
+                <input class="input add-column-input" type="text" formControlName="title" style="position: revert"
+                       placeholder="Enter title column..." maxlength="512">
+                <div class="button-create-column">
+                  <button style="position: revert" [disabled]="columnForm.invalid" class="button is-primary is-light"
+                          type="submit">Add column
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal" id="deleteColumnModal">
+  <div class="modal-background" (click)="closeDeleteColumnModal()"></div>
+  <div class="modal-card" style="width: 500px; height: 215px;">
+    <header class="modal-card-head">
+      <p class="modal-card-title">Delete</p>
+      <button class="delete" aria-label="close" (click)="closeDeleteColumnModal()"></button>
+    </header>
+    <section class="modal-card-body">
+      Do you want to delete this Column?
+    </section>
+    <footer class="modal-card-foot">
+      <button class="button is-danger is-light" (click)="deleteColumn()">Delete</button>
+      <button class="button is-light" (click)="closeDeleteColumnModal()">Cancel</button>
+    </footer>
+  </div>
+</div>
+<div class="modal" id="createCardModal">
+  <div class="modal-background">
+    <div class="modal-card">
+      <form [formGroup]="createCardForm" (ngSubmit)="createCard()">
+        <header class="modal-card-head">
+          <p class="modal-card-title">Create a new card</p>
+          Title:<input type="text" formControlName="title">
+          <p class="alert" *ngIf="createCardForm.get('title')!.dirty && createCardForm.get('title')!.invalid">
+            Trường bắt buộc</p>
+          <h5>Tại danh sách {{selectecdColumn.title}}</h5>
+        </header>
+        <section class="modal-card-body">
+          Content: <input type="text" formControlName="content">
+        </section>
+        <footer class="modal-card-foot">
+          <button class="button add-new-card" type="submit">Create</button>
+          <button class="button is-light" (click)="closeCreateCardModal()">Cancel</button>
+        </footer>
+      </form>
+    </div>
+  </div>
+</div>
+<div class="modal" id="editCardModal">
+  <div class="modal-background">
+    <div class="modal-card">
+      <form [formGroup]="createCardForm">
+        <header class="modal-card-head">
+          <p class="modal-card-title">Edit a card</p>
+          <div>Title:<input type="text" formControlName="title"><br>
+            <div class="alert" *ngIf="createCardForm.get('title')!.dirty && createCardForm.get('title')!.invalid">
+              Trường bắt buộc
+            </div>
+          </div>
+          <h5>Tại danh sách {{selectecdColumn.title}}</h5>
+        </header>
+        <section class="modal-card-body">
+          <div>
+            Content: <input type="text" formControlName="content"><br>
+          </div>
+        </section>
+        <footer class="modal-card-foot">
+          <button class="button add-new-card" (click)="editCard()">Edit</button>
+          <button class="button is-light" (click)="closeEditCardModal()">Cancel</button>
+          <button class="button is-danger is-light" (click)="showDeleteCardModal()">Delete</button>
+        </footer>
+      </form>
+    </div>
+  </div>
+</div>
+<div class="modal" id="delete-card-modal">
+  <div class="modal-background" (click)="closeDeleteCardModal()"></div>
+  <div class="modal-card" style="width: 500px; height: 215px;">
+    <header class="modal-card-head">
+      <p class="modal-card-title">Delete Card</p>
+      <button class="delete" aria-label="close" (click)="closeDeleteCardModal()"></button>
+    </header>
+    <section class="modal-card-body">
+      Are you sure ???
+    </section>
+    <footer class="modal-card-foot">
+      <button class="button is-danger is-light" (click)="deleteCard(selectedCard.id)">Delete</button>
+      <button class="button is-light" (click)="closeDeleteCardModal()">Cancel</button>
+    </footer>
+  </div>
+</div>
+
+

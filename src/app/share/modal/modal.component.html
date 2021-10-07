@@ -19,7 +19,7 @@
       <div class="field columns">
         <label class="label">Type</label>
         <div class="control">
-          <select class="select" [(ngModel)]="newBoard.status">
+          <select class="select" [(ngModel)]="newBoard.type">
             <option value="Private">Private</option>
 <!--            <option value="Group">Group</option>-->
             <option value="Public">Public</option>
@@ -30,7 +30,7 @@
         <div class="column is-one-fifth">
           <label class="label">Owner</label>
           <div class="control">
-            <div class="button is-info user-button is-light">A</div>
+            <div class="button is-info user-button is-light">{{modalService.currentUser.username}}</div>
           </div>
         </div>
 <!--        <div class="column" *ngIf="newBoard.status != 'Private'">-->
