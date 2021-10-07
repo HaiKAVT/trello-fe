@@ -2,18 +2,17 @@
   <div class="form-container sign-in-container">
     <form (ngSubmit)="register()" [formGroup]="registerForm" style="width: 400px;">
       <h1>Đăng Ký</h1>
-
       <div class="form-group" style="width: 300px;">
         <input type="text" formControlName="username" placeholder="Tài Khoản" (click)="existence()"/>
         <div *ngIf="this.userExistence" class="col alert alert-danger">
           <p style="color: crimson">Tài khoản đã tồn tại !</p>
         </div>
         <div class="col alert alert-danger" role="alert"
-             *ngIf="this.registerForm.get('userName')?.invalid && (this.registerForm.get('userName')?.dirty || this.registerForm.get('userName')?.touched)">
-          <div *ngIf="this.registerForm.get('userName')?.errors?.minlength" class="col alert alert-danger">
+             *ngIf="this.registerForm.get('username')?.invalid && (this.registerForm.get('username')?.dirty || this.registerForm.get('userName')?.touched)">
+          <div *ngIf="this.registerForm.get('username')?.errors?.minlength" class="col alert alert-danger">
             <p style="color: crimson">Tài khoản ít nhất 6 ký tự !</p>
           </div>
-          <div *ngIf="this.registerForm.get('userName')?.errors?.required" class="col alert alert-danger">
+          <div *ngIf="this.registerForm.get('username')?.errors?.required" class="col alert alert-danger">
             <p style="color: crimson">Tài khoản phải đc nhập !</p>
           </div>
         </div>
@@ -75,7 +74,10 @@
               </div>
             </div>
           </div>
+<<<<<<< HEAD
 
+=======
+>>>>>>> bbe0560d8fc5386bf717c8cfa8674c07d80df4c8
           <div class="form-group">
             <button class="btn btn-primary" type="submit">
               Đăng ký

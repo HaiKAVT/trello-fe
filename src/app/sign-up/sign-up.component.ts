@@ -18,7 +18,13 @@ export class SignUpComponent implements OnInit {
   userExistence = false;
   emailExistence = false;
 
-  registerForm!: FormGroup ;
+  registerForm = new FormGroup({
+    username: new FormControl('', [Validators.required, Validators.minLength(6)]),
+    password: new FormControl('', [Validators.required, Validators.pattern('^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{3,100}$')]),
+    confirmPassword: new FormControl('', [Validators.minLength(6), Validators.required]),
+    email: new FormControl('', [Validators.required, Validators.pattern('^[a-zA-z][a-z0-9_\\.]{3,32}@[a-z0-9A-Z]{2,}(\\.[A-Za-z0-9]{2,4}){1,2}$')]),
+    phone: new FormControl('', [Validators.required, Validators.pattern('^[0]\\d{9}$')])
+  })
 
 
   constructor(private registerService: RegisterService,
@@ -28,17 +34,12 @@ export class SignUpComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.registerForm = new FormGroup({
-      username: new FormControl('', [Validators.required, Validators.minLength(6)]),
-      password: new FormControl('', [Validators.required, Validators.pattern('^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{3,100}$')]),
-      confirmPassword: new FormControl('', [Validators.minLength(6), Validators.required]),
-      email: new FormControl('', [Validators.required, Validators.pattern('^[a-z][a-z0-9_\\.]{3,32}@[a-z0-9]{2,}(\\.[a-z0-9]{2,4}){1,2}$')]),
-      phone: new FormControl('', [Validators.required, Validators.pattern('^[0]\\d{9}$')])
-    })
+
   }
 
   register() {
     console.log(this.registerForm.value)
+    console.log(this.registerForm.valid)
     if (this.registerForm.valid) {
       this.userService.getAllUser().subscribe(users => {
         // @ts-ignore
@@ -48,12 +49,14 @@ export class SignUpComponent implements OnInit {
           if (user.username == this.registerForm.value.username) {
             this.userExistence = true;
             break;
-          }else if (user.email == this.registerForm.value.email) {
+          } else if (user.email == this.registerForm.value.email) {
             this.emailExistence = true;
             emailExistence = true;
             break;
           }
         }
+        console.log(this.userExistence)
+        console.log(emailExistence)
         if (!emailExistence && !this.userExistence) {
           console.log(emailExistence)
           this.registerService.createUser(this.registerForm.value).subscribe(() => {

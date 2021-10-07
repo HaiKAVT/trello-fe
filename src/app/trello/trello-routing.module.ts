@@ -3,6 +3,7 @@ import {RouterModule, Routes} from '@angular/router';
 // import {AuthGuard} from "../helper/auth.guard";
 import {HomeComponent} from "./home/home.component";
 import {BoardsComponent} from "./boards/boards.component";
+import {BoardViewComponent} from "./board-view/board-view.component";
 
 const routes: Routes = [
   {
@@ -10,9 +11,13 @@ const routes: Routes = [
     component: HomeComponent
   },
   {
-    path:'board',
+    path:'boards',
     component:BoardsComponent
   },
+  {
+    path:'board/:id',
+    component:BoardViewComponent
+  }
 ];
 
 @NgModule({
