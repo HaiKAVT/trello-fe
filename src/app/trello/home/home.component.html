@@ -11,8 +11,8 @@
           <a (click)="displayAddBoardModal()"><i class="fas fa-plus-circle"></i></a>
         </div>
       </div>
-      <div class="card" *ngFor="let board of boards" routerLink="/trello/boards/{{board.id}}">
-        <div class="card-header"><p class="card-header-title">{{board.title}}</p></div>
+      <div class="card" *ngFor="let board of boards" routerLink="/board/{{board.id}}">
+        <div class="card-header"><p class="card-header-title" routerLink="/board/{{board.id}}">{{board.title}}</p></div>
         <div class="card-content">
           <div class="content">
             <span style="font-size: small"><b>Type: </b>{{board.type}}</span> <br>
@@ -123,4 +123,3 @@
     </footer>
   </div>
 </div>
-

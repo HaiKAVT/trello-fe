@@ -36,7 +36,7 @@ export class HomeComponent implements OnInit {
 
   getBoards() {
     this.boardService.getOwnedBoard(this.loggedInUser.id!).subscribe(data => {
-      this.boards = data
+      this.boards = data;
     })
   }
 
@@ -47,9 +47,10 @@ export class HomeComponent implements OnInit {
   createNewBoard() {
     this.modalService.close();
     this.newBoard.owner = this.loggedInUser;
-    this.boardService.addBoard(this.newBoard).subscribe(()=>{
+    this.boardService.addBoard(this.newBoard).subscribe(data=>{
       this.toastService.showMessage("Board Created","is-success");
       this.resetInput();
+      this.getBoards()
     })
   }
   resetInput(){

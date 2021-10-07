@@ -65,6 +65,9 @@ export class BoardsComponent implements OnInit {
     this.boardService.addBoard(this.newBoard).subscribe(()=>{
       this.toastService.showMessage("Board Created","is-success");
       this.resetInput();
+      this.getBoards()
+      this.getPublicBoard()
+      this.getPrivateBoard()
     })
   }
   resetInput(){

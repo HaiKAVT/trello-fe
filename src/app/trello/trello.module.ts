@@ -7,12 +7,14 @@ import {ShareModule} from "../share/share.module";
 import {BoardsComponent} from './boards/boards.component';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {DragDropModule} from "@angular/cdk/drag-drop";
+import { BoardViewComponent } from './board-view/board-view.component';
 
 
 @NgModule({
   declarations: [
     HomeComponent,
     BoardsComponent,
+    BoardViewComponent,
   ],
   imports: [
     CommonModule,
