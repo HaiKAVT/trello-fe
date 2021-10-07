@@ -251,13 +251,13 @@ export class BoardViewComponent implements OnInit {
     }
     this.resetCreateCardForm();
     this.cardService.updateCard(card.id, card).subscribe(data => {
-      this.resetCreateCardForm();
       this.getCurrentBoard()
       this.closeEditCardModal()
     })
   }
 
   closeEditCardModal() {
+    this.resetCreateCardForm();
     document.getElementById('editCardModal')!.classList.remove('is-active')
   }
 
@@ -290,6 +290,7 @@ export class BoardViewComponent implements OnInit {
   }
 
   closeCreateCardModal() {
+    this.resetCreateCardForm();
     this.selectedColumnID = -1;
     document.getElementById('createCardModal')!.classList.remove('is-active')
   }
