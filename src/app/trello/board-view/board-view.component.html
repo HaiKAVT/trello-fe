@@ -45,19 +45,34 @@
         <div class="board-column-add" *ngIf="canEdit">
           <div class="board-column" style="margin-left: 0px">
             <div class="column-title">
-              <form [formGroup]="columnForm" (ngSubmit)="addColumn()">
-                <input class="input add-column-input" type="text" formControlName="title" style="position: revert"
-                       placeholder="Enter title column..." maxlength="512">
-                <div class="button-create-column">
-                  <button style="position: revert" [disabled]="columnForm.invalid" class="button is-primary is-light"
-                          type="submit">Add column
-                  </button>
-                </div>
-              </form>
+              <button class="button button-add-new-card is-light" (click)="showCreateColumnModal()">
+                + Add new card
+              </button>
             </div>
           </div>
         </div>
       </div>
+    </div>
+  </div>
+</div>
+<div class="modal" id="createColumnModal">
+  <div class="modal-background">
+    <div class="modal-card">
+      <form [formGroup]="columnForm" (ngSubmit)="addColumn()">
+        <header class="modal-card-head">
+          <p class="modal-card-title">Create a new list</p>
+        </header>
+        <section class="modal-card-body">
+          <input class="input add-column-input" type="text" formControlName="title" style="position: revert"
+                 placeholder="Enter title column..." maxlength="512">
+        </section>
+        <footer class="modal-card-foot">
+          <button style="position: revert" [disabled]="columnForm.invalid" class="button is-primary is-light"
+                  type="submit">Add column
+          </button>
+          <button class="button is-light" (click)="closeCreateColumnModal()">Cancel</button>
+        </footer>
+      </form>
     </div>
   </div>
 </div>

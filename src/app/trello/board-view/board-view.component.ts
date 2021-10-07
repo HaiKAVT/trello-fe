@@ -13,6 +13,7 @@ import {CdkDragDrop, moveItemInArray, transferArrayItem} from "@angular/cdk/drag
 import {ColumnService} from "../../service/column/column.service";
 import {Card} from "../../model/card";
 import {CardService} from "../../service/card/card.service";
+import {doc} from "@angular/fire/firestore";
 
 @Component({
   selector: 'app-board-view',
@@ -118,7 +119,8 @@ export class BoardViewComponent implements OnInit {
       this.resetColumnForm();
       this.columnService.createAColumn(newColumn).subscribe(data => {
         this.currentBoard.columns.push(data)
-        this.saveChange
+        this.boardDataUpdate()
+        this.closeCreateColumnModal()
       })
     }
   }
@@ -310,5 +312,12 @@ export class BoardViewComponent implements OnInit {
         this.getCurrentBoard()
       }
     )
+  }
+  showCreateColumnModal(){
+    document.getElementById('createColumnModal')!.classList.add("is-active")
+  }
+
+  closeCreateColumnModal(){
+    document.getElementById('createColumnModal')!.classList.remove("is-active")
   }
 }
