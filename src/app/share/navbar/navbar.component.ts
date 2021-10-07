@@ -40,7 +40,7 @@ export class NavbarComponent implements OnInit {
       this.userService.getUserById(this.id).subscribe(user => {
         this.loggedInUser = user;
         if (this.loggedInUser.image == null) {
-          this.loggedInUser.image = "https://i.pinimg.com/originals/57/fb/31/57fb3190d0cc1726d782c4e25e8561e9.png";
+          this.loggedInUser.image = "https://firebasestorage.googleapis.com/v0/b/trello-h3k.appspot.com/o/h3k.png?alt=media&token=2f7182c6-69b5-47a5-a9ab-5e6ad9e7bd91";
         }
         this.imgSrc = this.navbarService.loggedInUser.image;
       })
