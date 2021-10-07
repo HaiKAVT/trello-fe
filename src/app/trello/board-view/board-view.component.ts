@@ -9,8 +9,10 @@ import {UserToken} from "../../model/user-token";
 import {User} from "../../model/user";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {Column} from "../../model/column";
-import {CdkDragDrop, moveItemInArray} from "@angular/cdk/drag-drop";
+import {CdkDragDrop, moveItemInArray, transferArrayItem} from "@angular/cdk/drag-drop";
 import {ColumnService} from "../../service/column/column.service";
+import {Card} from "../../model/card";
+import {CardService} from "../../service/card/card.service";
 
 @Component({
   selector: 'app-board-view',
@@ -32,6 +34,12 @@ export class BoardViewComponent implements OnInit {
   columnForm: FormGroup = new FormGroup({
     title: new FormControl('', Validators.required),
   })
+
+  createCardForm: FormGroup = new FormGroup({
+    title: new FormControl('', Validators.required),
+    content: new FormControl()
+  })
+
   isAdded: boolean = false;
   columnOld: Column = {
     cards: [],
@@ -39,8 +47,29 @@ export class BoardViewComponent implements OnInit {
     position: -1,
     title: ""
   }
+  selectedCard: Card = {
+    id: -1,
+    title: '',
+    content: '',
+    position: -1,
+  }
+  selectecdColumn: Column = {
+    cards: [],
+    id: -1,
+    position: -1,
+    title: ""
+  }
   selectedColumnID: number = -1;
   selectedIndex: number = -1;
+  cardsDto: Card[] = [];
+  columnsDto: Column[] = [];
+
+  previousColumn: Column = {
+    cards: [],
+    id: -1,
+    position: -1,
+    title: ""
+  };
 
   constructor(private activatedRoute: ActivatedRoute,
               private boardService: BoardService,
@@ -48,7 +77,8 @@ export class BoardViewComponent implements OnInit {
               private router: Router,
               private toastService: ToastService,
               private userService: UserService,
-              private columnService: ColumnService) {
+              private columnService: ColumnService,
+              private cardService: CardService) {
   }
 
   ngOnInit(): void {
@@ -88,7 +118,7 @@ export class BoardViewComponent implements OnInit {
       this.resetColumnForm();
       this.columnService.createAColumn(newColumn).subscribe(data => {
         this.currentBoard.columns.push(data)
-        this.updatePosition();
+        this.saveChange
       })
     }
   }
@@ -105,28 +135,76 @@ export class BoardViewComponent implements OnInit {
     })
   }
 
-  onFocusOut(column:Column){
+  onFocusOut(column: Column) {
     this.updateColumns()
   }
 
   dropColumn(event: CdkDragDrop<string[]>) {
     moveItemInArray(this.currentBoard.columns, event.previousIndex, event.currentIndex);
-    this.updatePosition();
-
+    this.saveChange()
   }
 
-  private updatePosition() {
-    for (let i = 0; i < this.currentBoard.columns.length; i++) {
-      this.currentBoard.columns[i].position = i;
-      console.log(this.currentBoard.columns[i]);
-      if (i == this.currentBoard.columns.length - 1) {
-        this.updateColumns()
+  dropCard(event: CdkDragDrop<Card[]>, column: Column) {
+    if (event.previousContainer === event.container) {
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    } else {
+      transferArrayItem(event.previousContainer.data,
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex);
+    }
+    this.setPreviousColumn(event);
+    this.saveChange()
+  }
+
+  private setPreviousColumn(event: CdkDragDrop<Card[]>) {
+    let previousColumnId = parseInt(event.previousContainer.id);
+    for (let column of this.currentBoard.columns) {
+      if (column.id == previousColumnId) {
+        this.previousColumn = column;
+        break;
       }
     }
   }
 
+  saveChange() {
+    this.updatePosition();
+  }
+
+  private updatePosition() {
+    for (let i = 0; i < this.currentBoard.columns.length; i++) {
+      this.currentBoard.columns[i].position = i
+      for (let j = 0; j < this.currentBoard.columns[i].cards.length; j++) {
+        this.currentBoard.columns[i].cards[j].position! = j;
+      }
+    }
+    this.updateDto();
+  }
+
+  private updateDto() {
+    this.columnsDto = [];
+    this.cardsDto = [];
+    for (let column of this.currentBoard.columns) {
+      this.columnsDto.push(column);
+      for (let card of column.cards) {
+        this.cardsDto.push(card);
+      }
+    }
+    this.updateCards()
+  }
+
+  updateCards() {
+    this.cardService.updateCards(this.cardsDto).subscribe(() => this.updatePreviousColumn())
+  }
+  private updatePreviousColumn() {
+    if (this.previousColumn.id != -1) {
+      this.columnService.updateAColumn(this.previousColumn.id, this.previousColumn).subscribe(() => this.updateColumns())
+    } else {
+      this.updateColumns()
+    }
+  }
   updateColumns() {
-    this.columnService.updateAllColumn(this.currentBoard.columns).subscribe(() => {
+    this.columnService.updateAllColumn(this.columnsDto).subscribe(() => {
       this.boardDataUpdate()
     })
   }
@@ -138,7 +216,7 @@ export class BoardViewComponent implements OnInit {
         this.currentBoard.columns.splice(this.selectedIndex, 1);
         console.log(this.currentBoard.columns);
         this.columnService.deleteAColumn(this.selectedColumnID).subscribe(() => {
-          this.boardDataUpdate()
+          this.saveChange()
           this.closeDeleteColumnModal();
         })
       }
@@ -154,5 +232,82 @@ export class BoardViewComponent implements OnInit {
     this.selectedColumnID = -1;
     this.selectedIndex = -1;
     document.getElementById('deleteColumnModal')!.classList.remove('is-active')
+  }
+
+
+  showUpdateCardModal(card: Card) {
+    this.selectedCard = card;
+    this.createCardForm.get('title')?.setValue(card.title);
+    this.createCardForm.get('content')?.setValue(card.content);
+    document.getElementById('editCardModal')!.classList.add('is-active')
+  }
+
+  editCard() {
+    let card: Card = {
+      id: this.selectedCard.id,
+      title: this.createCardForm.get('title')?.value,
+      content: this.createCardForm.get('content')?.value,
+      position: this.selectedCard.position
+    }
+    this.resetCreateCardForm();
+    this.cardService.updateCard(card.id, card).subscribe(data => {
+      this.resetCreateCardForm();
+      this.getCurrentBoard()
+      this.closeEditCardModal()
+    })
+  }
+
+  closeEditCardModal() {
+    document.getElementById('editCardModal')!.classList.remove('is-active')
+  }
+
+  showCreateCardModal(column: Column) {
+    this.selectecdColumn = column;
+    document.getElementById('createCardModal')!.classList.add('is-active')
+  }
+
+  createCard() {
+    if (this.createCardForm.valid) {
+      let newCard: Card = {
+        title: this.createCardForm.get('title')?.value,
+        content: this.createCardForm.get('content')?.value,
+        position: this.selectecdColumn.cards.length
+      }
+      this.resetCreateCardForm();
+      this.cardService.createCard(newCard).subscribe(data => {
+        this.selectecdColumn.cards.push(data)
+        this.columnService.updateAColumn(this.selectecdColumn.id, this.selectecdColumn).subscribe()
+        this.closeCreateCardModal()
+      })
+    }
+  }
+
+  resetCreateCardForm() {
+    this.createCardForm = new FormGroup({
+      title: new FormControl('', Validators.required),
+      content: new FormControl()
+    })
+  }
+
+  closeCreateCardModal() {
+    this.selectedColumnID = -1;
+    document.getElementById('createCardModal')!.classList.remove('is-active')
+  }
+
+  showDeleteCardModal() {
+    document.getElementById("delete-card-modal")!.classList.add("is-active")
+  }
+
+  closeDeleteCardModal() {
+    document.getElementById("delete-card-modal")!.classList.remove("is-active")
+  }
+
+  deleteCard(id: any) {
+    this.cardService.deleteCard(id).subscribe(() => {
+        this.closeDeleteCardModal();
+        this.closeEditCardModal();
+        this.getCurrentBoard()
+      }
+    )
   }
 }

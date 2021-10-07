@@ -18,19 +18,19 @@ export class ColumnService {
     return this.httpClient.put<Column>(`${API_URL}columns/${id}`, column)
   }
 
-  updateAllColumn(column:Column[]):Observable<Column[]> {
-    return this.httpClient.put<Column[]>(`${API_URL}columns`,column)
+  updateAllColumn(column: Column[]): Observable<Column[]> {
+    return this.httpClient.put<Column[]>(`${API_URL}columns`, column)
   }
 
-  deleteAColumn(id:any):Observable<Column[]> {
+  deleteAColumn(id: any): Observable<Column[]> {
     return this.httpClient.delete<Column[]>(`${API_URL}columns/${id}`)
   }
 
-  createAColumn(column:Column):Observable<Column> {
-    return this.httpClient.post<Column>(`${API_URL}columns`,column)
+  createAColumn(column: Column): Observable<Column> {
+    return this.httpClient.post<Column>(`${API_URL}columns`, column)
   }
 
-  getAllColumn():Observable<Column[]> {
+  getAllColumn(): Observable<Column[]> {
     return this.httpClient.get<Column[]>(`${API_URL}columns`)
   }
 }
