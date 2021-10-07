@@ -138,7 +138,9 @@ export class BoardViewComponent implements OnInit {
   }
 
   onFocusOut(column: Column) {
-    this.updateColumns()
+    this.columnService.updateAColumn(column.id,column).subscribe(()=>{
+      this.boardDataUpdate()
+    })
   }
 
   dropColumn(event: CdkDragDrop<string[]>) {
