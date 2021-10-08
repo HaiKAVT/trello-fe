@@ -9,5 +9,5 @@ body {
 
 
 html{
-  background: linear-gradient(to top, #fff1eb 0%, #6d7fcc 100%);
+  background-image: linear-gradient(to top, #fff1eb 0%, #6d7fcc 100%);
 }

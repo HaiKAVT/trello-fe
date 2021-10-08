@@ -18,6 +18,7 @@ import {ShareModule} from "./share/share.module";
 import {AngularFireStorageModule} from "@angular/fire/compat/storage";
 import {AngularFireModule} from "@angular/fire/compat";
 import {environment} from "../environments/environment";
+import {FooterComponent} from "./share/footer/footer.component";
 
 
 @NgModule({
@@ -25,6 +26,7 @@ import {environment} from "../environments/environment";
     AppComponent,
     LoginComponent,
     SignUpComponent,
+    FooterComponent,
     RecoverPasswordComponent,
   ],
   imports: [
