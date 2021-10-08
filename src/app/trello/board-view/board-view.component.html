@@ -29,7 +29,7 @@
                 <ul>
                   <li><span *ngFor="let tag of item.tags" class="tag is-light" [ngClass]="tag.color">{{tag.name}}</span>
                   </li>
-                  <li><span class="item-title">{{item.title}}</span></li>
+                  <li><span class="item-title">{{item.title}}</span>
                   <li><span *ngFor="let user of item.users" class="tag is-light">@{{user.username}}</span>
                   </li>
                 </ul>
@@ -42,13 +42,13 @@
             </div>
           </div>
         </div>
-        <div class="board-column-add" *ngIf="canEdit">
-          <div class="board-column" style="margin-left: 0px">
-            <div class="column-title">
-              <button class="button button-add-new-card is-light" (click)="showCreateColumnModal()">
-                + Add new card
-              </button>
-            </div>
+      </div>
+      <div class="board-column-add" *ngIf="canEdit">
+        <div class="board-column" style="margin-left: 0px">
+          <div class="column-title">
+            <button class="button button-add-new-card is-light" (click)="showCreateColumnModal()">
+              + Add new card
+            </button>
           </div>
         </div>
       </div>
@@ -106,6 +106,10 @@
         <section class="modal-card-body">
           Content: <input type="text" formControlName="content">
         </section>
+        <form #uploadFileCard="ngForm" (ngSubmit)="showPreview($event)">
+          <input class="modal-card-body" type="file" #preview (change)="showPreview($event)" style=" padding-right: 535px;">
+          <span class="modal-card-body" (change)="showPreview($event)"></span>
+        </form>
         <footer class="modal-card-foot">
           <button class="button add-new-card" type="submit">Create</button>
           <button class="button is-light" (click)="closeCreateCardModal()">Cancel</button>
@@ -131,12 +135,22 @@
           <div>
             Content: <input type="text" formControlName="content"><br>
           </div>
+          <!-- upFile -->
+          <div class="content">
+            <!--            <td class="update-image"><img class="img-user" [src]="fileSrc" (click)="preview.click()"></td>-->
+            <form #uploadFileCard="ngForm" (ngSubmit)="showPreview($event)">
+              <div class="update-info">
+               Đính kèm :  <input  type="file" #preview (change)="showPreview($event)">
+                <span  (change)="showPreview($event)"></span>
+              </div>
+            </form>
+          </div>
+          <footer class="modal-card-foot">
+            <button class="button add-new-card" (click)="editCard()">Edit</button>
+            <button class="button is-light" (click)="closeEditCardModal()">Cancel</button>
+            <button class="button is-danger is-light" (click)="showDeleteCardModal()">Delete</button>
+          </footer>
         </section>
-        <footer class="modal-card-foot">
-          <button class="button add-new-card" (click)="editCard()">Edit</button>
-          <button class="button is-light" (click)="closeEditCardModal()">Cancel</button>
-          <button class="button is-danger is-light" (click)="showDeleteCardModal()">Delete</button>
-        </footer>
       </form>
     </div>
   </div>
