@@ -8,12 +8,8 @@ html, body {
 body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
-}
-
-html, body {
   height: auto;
 }
-
 html{
   background-image: linear-gradient(to top, #fff1eb 0%, #6d7fcc 100%);
 }
