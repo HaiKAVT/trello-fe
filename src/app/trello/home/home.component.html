@@ -3,7 +3,7 @@
   <div class="container column is-10" #top style="padding: 10px 13px 13px 106px;">
     <!--    Board-->
     <div class="title-board">
-      <h1><i class="far fa-clipboard"></i>Your Boards</h1>
+      <h1><i class="far fa-clipboard"></i>Bảng của bạn</h1>
     </div>
     <div class="section-board">
       <div class="card">
@@ -23,7 +23,7 @@
     </div>
 
     <div class="title-board">
-      <h1><i class="far fa-clipboard"></i>Shared with you</h1>
+      <h1><i class="far fa-clipboard"></i>Bảng được chia sẻ với bạn</h1>
     </div>
     <div class="section-board">
       <div class="card">
@@ -39,7 +39,7 @@
 
     <!--    Work Space-->
     <div class="title-board" #target>
-      <h1><i class="fas fa-briefcase"></i>Your Workspace</h1>
+      <h1><i class="fas fa-briefcase"></i>Nhóm của bạn</h1>
     </div>
     <div class="section-board">
       <div class="card">
@@ -52,14 +52,14 @@
           <div class="card-header"><p class="card-header-title">A</p></div>
           <div class="card-content">
             <span style="font-size: small"><b>Id: </b>F</span> <br>
-            <span style="font-size: small"><b>Owner: </b>R</span>
+            <span style="font-size: small"><b>Người sở hữu: </b>R</span>
           </div>
         </div>
       </div>
 
     </div>
     <div class="title-board">
-      <h1><i class="fas fa-briefcase"></i>Workspace Shared With You</h1>
+      <h1><i class="fas fa-briefcase"></i>Nhóm được chia sẻ với bạn</h1>
     </div>
     <div class="section-board">
       <div>
@@ -67,7 +67,7 @@
           <div class="card-header"><p class="card-header-title">T</p></div>
           <div class="card-content">
             <span style="font-size: small"><b>Id: </b>R</span> <br>
-            <span style="font-size: small"><b>Owner: </b>D</span>
+            <span style="font-size: small"><b>Người sở hữu: </b>D</span>
           </div>
         </div>
       </div>
@@ -80,32 +80,32 @@
   <div class="modal-background" (click)="hideCreateBoard()"></div>
   <div class="modal-card">
     <header class="modal-card-head">
-      <p class="modal-card-title">Creating new board</p>
+      <p class="modal-card-title">Tạo một bảng</p>
       <button class="delete" aria-label="close" (click)="hideCreateBoard()"></button>
     </header>
     <section class="modal-card-body">
       <div class="field columns" style="position: relative">
-        <label class="label">Title</label>
+        <label class="label">Tiêu đề</label>
         <div class="control">
           <input class="input" type="text" required [(ngModel)]="newBoard.title" #boardTitle="ngModel">
         </div>
         <div *ngIf="boardTitle.invalid && boardTitle.touched" class="alert">
-          <div *ngIf="boardTitle.errors?.required">Title is required.</div>
+          <div *ngIf="boardTitle.errors?.required">Tiêu đề cần được nhập.</div>
         </div>
       </div>
       <br>
       <div class="field columns">
-        <label class="label">Type</label>
+        <label class="label">Loại</label>
         <div class="control">
           <select class="select" [(ngModel)]="newBoard.type">
-            <option value="Private">Private</option>
-            <option value="Public">Public</option>
+            <option value="Private">Riêng tư</option>
+            <option value="Public">Công khai</option>
           </select>
         </div>
       </div>
       <div class="field columns">
         <div class="column is-one-fifth">
-          <label class="label">Owner</label>
+          <label class="label">Người tạo</label>
           <div class="control">
             <div class="button is-info user-button is-light">{{loggedInUser.username}}</div>
           </div>
@@ -114,12 +114,12 @@
     </section>
     <footer class="modal-card-foot">
       <div *ngIf="boardTitle.invalid" class="alert">
-        <button class="button is-dark is-light" disabled>Save changes</button>
+        <button class="button is-dark is-light" disabled>Tạo</button>
       </div>
       <div *ngIf="!boardTitle.invalid" class="alert">
-        <button class="button is-success is-light" (click)="createNewBoard()">Save changes</button>
+        <button class="button is-success is-light" (click)="createNewBoard()">Tạo</button>
       </div>
-      <button class="button is-light" (click)="hideCreateBoard()">Cancel</button>
+      <button class="button is-light" (click)="hideCreateBoard()">Hủy</button>
     </footer>
   </div>
 </div>

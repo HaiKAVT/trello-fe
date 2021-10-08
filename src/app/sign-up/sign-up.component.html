@@ -22,7 +22,7 @@
           <div class="col alert alert-danger" role="alert"
                *ngIf="this.registerForm.get('password')?.invalid && (this.registerForm.get('password')?.dirty || this.registerForm.get('password')?.touched)">
             <div *ngIf="this.registerForm.get('password')?.errors?.required" class="col alert alert-danger">
-              <p style="color: crimson">Mật khẩu phải đc nhập !</p>
+              <p style="color: crimson">Mật khẩu phải được nhập !</p>
             </div>
             <div *ngIf="this.registerForm.get('password')?.errors?.minlength" class="col alert alert-danger">
               <p style="color: crimson">Mật khẩu phải lớn hơn 5 ký tự!</p>
@@ -38,7 +38,7 @@
           <div class="col alert alert-danger" role="alert"
                *ngIf="this.registerForm.get('confirmPassword')?.invalid && (this.registerForm.get('confirmPassword')?.dirty || this.registerForm.get('confirmPassword')?.touched)">
             <div *ngIf="this.registerForm.get('confirmPassword')?.errors?.required" class="col alert alert-danger">
-              <p style="color: crimson">Xác nhận Mật khẩu phải đc nhập !</p>
+              <p style="color: crimson">Xác nhận mật khẩu phải được nhập !</p>
             </div>
             <div *ngIf="registerForm.value.password !== registerForm.value.confirmPassword"
                  class="col alert alert-danger">
@@ -54,7 +54,7 @@
             <div class="col alert alert-danger" role="alert"
                  *ngIf="this.registerForm.get('email')?.invalid && (this.registerForm.get('email')?.dirty || this.registerForm.get('email')?.touched)">
               <div *ngIf="this.registerForm.get('email')?.errors?.required" class="col alert alert-danger">
-                <p style="color: crimson">Email phải đc nhập !!</p>
+                <p style="color: crimson">Email phải được nhập !!</p>
               </div>
               <div *ngIf="this.registerForm.get('email')?.errors?.pattern" class="col alert alert-danger">
                 <p style="color: crimson">Email phải đúng định dạng: "abc@abc.com"</p>
@@ -67,7 +67,7 @@
             <div class="col alert alert-danger" role="alert"
                  *ngIf="this.registerForm.get('phone')?.invalid && (this.registerForm.get('phone')?.dirty || this.registerForm.get('phone')?.touched)">
               <div *ngIf="this.registerForm.get('phone')?.errors?.required" class="col alert alert-danger">
-                <p style="color: crimson">Số điện thoại phải đc nhập !!</p>
+                <p style="color: crimson">Số điện thoại phải được nhập !!</p>
               </div>
               <div *ngIf="this.registerForm.get('phone')?.errors?.pattern" class="col alert alert-danger">
                 <p style="color: crimson">Số điện thoại phải đúng định dạng: "0xxx (xxx : 9 số)"</p>

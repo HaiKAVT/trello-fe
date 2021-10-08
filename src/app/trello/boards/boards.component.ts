@@ -63,7 +63,7 @@ export class BoardsComponent implements OnInit {
     this.modalService.close();
     this.newBoard.owner = this.loggedInUser;
     this.boardService.addBoard(this.newBoard).subscribe(()=>{
-      this.toastService.showMessage("Board Created","is-success");
+      this.toastService.showMessage("Bảng đã được tạo","is-success");
       this.resetInput();
       this.getBoards()
       this.getPublicBoard()

@@ -3,7 +3,7 @@
     <form (ngSubmit)="onSubmit()" [formGroup]="loginForm">
       <h1>Đăng Nhập</h1>
       <div class="form-group">
-        <input formControlName="userName" placeholder="userName" type="text">
+        <input formControlName="userName" placeholder="tên đăng nhập" type="text">
         <div *ngFor="let validation of validation_message.userName" class="text-danger">
           <div
             *ngIf="loginForm.get('userName')?.hasError(validation.type) && (loginForm.get('userName')?.touched || loginForm.get('userName')?.dirty)">
@@ -12,7 +12,7 @@
         </div>
       </div>
       <div class="form-group">
-        <input [type]="show ? 'text':'password'" formControlName="password" placeholder="password">
+        <input [type]="show ? 'text':'password'" formControlName="password" placeholder="mật khẩu">
         <div *ngFor="let validation of validation_message.password" class="text-danger">
           <div
             *ngIf="loginForm.get('password')?.hasError(validation.type) && (loginForm.get('password')?.touched||loginForm.get('password')?.dirty)">
