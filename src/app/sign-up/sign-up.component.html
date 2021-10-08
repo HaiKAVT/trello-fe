@@ -8,7 +8,7 @@
           <p style="color: crimson ; margin-bottom: 0px;margin-top: 0px;">Tài khoản đã tồn tại !</p>
         </div>
         <div class="col alert alert-danger" role="alert"
-             *ngIf="this.registerForm.get('username')?.invalid && (this.registerForm.get('username')?.dirty || this.registerForm.get('userName')?.touched)">
+             *ngIf="this.registerForm.get('username')?.invalid && (this.registerForm.get('username')?.dirty || this.registerForm.get('username')?.touched)">
           <div *ngIf="this.registerForm.get('username')?.errors?.minlength" class="col alert alert-danger">
             <p style="color: crimson ; margin-bottom: 0px;margin-top: 0px;">Tài khoản ít nhất 6 ký tự !</p>
           </div>
@@ -79,11 +79,11 @@
               </div>
             </div>
           </div>
-          <div class="form-group">
-            <button class="btn btn-primary" type="submit">
-              Đăng ký
-            </button>
-          </div>
+        </div>
+        <div class="form-group">
+          <button class="btn btn-primary" type="submit">
+            Đăng ký
+          </button>
         </div>
       </div>
     </form>

@@ -21,7 +21,6 @@ export class NavbarComponent implements OnInit {
   imgSrc: any;
   isSubmitted = false;
   selectedImage: any | undefined = null;
-  user: User = {};
 
   constructor(public navbarService: NavbarService,
               private toast: ToastService,
@@ -80,8 +79,8 @@ export class NavbarComponent implements OnInit {
         finalize(() => {
           fileRef.getDownloadURL().subscribe(url => {
             this.imgSrc = url;
-            this.user.image = url;
-            this.userService.updateById(this.id, this.user).subscribe(() => {
+            this.loggedInUser.image = url;
+            this.userService.updateById(this.id, this.loggedInUser).subscribe(() => {
                 this.toastService.showMessage("Sửa thành công", 'is-success');
                 this.navbarService.getCurrentUser();
                 this.closeModalUpdate();

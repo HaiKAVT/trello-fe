@@ -13,7 +13,6 @@
       </div>
       <div class="form-group" style="width: 300px;">
         <input [type]="show ? 'text':'password'" formControlName="password" placeholder="Mật khẩu">
-
         <div *ngFor="let validation of validation_message.password" class="text-danger">
           <div style="color: crimson"
             *ngIf="loginForm.get('password')?.hasError(validation.type) && (loginForm.get('password')?.touched||loginForm.get('password')?.dirty)">

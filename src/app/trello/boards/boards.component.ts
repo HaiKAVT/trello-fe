@@ -5,6 +5,8 @@ import {BoardService} from "../../service/board/board.service";
 import {UserToken} from "../../model/user-token";
 import {AuthenticateService} from "../../service/authenticate.service";
 import {ToastService} from "../../service/toast/toast.service";
+import {Column} from "../../model/column";
+import {ColumnService} from "../../service/column/column.service";
 
 @Component({
   selector: 'app-boards',
@@ -22,12 +24,15 @@ export class BoardsComponent implements OnInit {
       id: -1,
     },
     columns: [],
-    type:'',
+    type: '',
   };
+  createdBoard?: Board
+
   constructor(private modalService: ModalService,
               private boardService: BoardService,
               private authenticateService: AuthenticateService,
-              private toastService:ToastService) {
+              private toastService: ToastService,
+              private columnService: ColumnService) {
   }
 
   ngOnInit(): void {
@@ -60,28 +65,50 @@ export class BoardsComponent implements OnInit {
   }
 
   createNewBoard() {
-    this.modalService.close();
     this.newBoard.owner = this.loggedInUser;
-    this.boardService.addBoard(this.newBoard).subscribe(()=>{
-      this.toastService.showMessage("Bảng đã được tạo","is-success");
-      this.resetInput();
-      this.getBoards()
-      this.getPublicBoard()
-      this.getPrivateBoard()
-      this.hideCreateBoard()
+    this.boardService.addBoard(this.newBoard).subscribe(async data => {
+      this.createdBoard = data
+      await this.premadeColumnInBoard("Công việc", 0, this.createdBoard!);
+      await this.premadeColumnInBoard("Sẽ làm", 1, this.createdBoard!);
+      await this.premadeColumnInBoard("Đang làm", 2, this.createdBoard!);
+      await this.premadeColumnInBoard("Đã xong", 3, this.createdBoard!);
+      await this.toastService.showMessage("Bảng đã được tạo", "is-success");
+      await this.getBoards()
+      await this.resetInput();
+      await this.hideCreateBoard()
     })
   }
-  resetInput(){
+
+  updateCreatedBoard() {
+    this.boardService.updateBoard(this.createdBoard?.id!, this.createdBoard!).subscribe(() => {
+      this.getBoards()
+    })
+  }
+
+  resetInput() {
     this.newBoard = {
       title: '',
       owner: {
         id: -1,
       },
       columns: [],
-      type:''
+      type: ''
     };
   }
-  hideCreateBoard(){
+
+  hideCreateBoard() {
     document.getElementById('create-board')!.classList.remove('is-active');
+  }
+
+  premadeColumnInBoard(title: string, position: number, board: Board) {
+    let column: Column = {
+      cards: [],
+      position: position,
+      title: title
+    }
+    this.columnService.createAColumn(column).subscribe(data => {
+      board.columns.push(data);
+      this.updateCreatedBoard();
+    })
   }
 }

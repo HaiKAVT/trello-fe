@@ -412,3 +412,12 @@ h1.app-name {
 .modal-card {
   margin-left: auto;
 }
+
+.modal-card-foot {
+  align-items: center;
+  background-color: whitesmoke;
+  display: flex;
+  justify-content: right;
+  padding: 20px;
+  position: relative;
+}

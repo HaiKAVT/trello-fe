@@ -68,7 +68,8 @@ export class BoardViewComponent implements OnInit {
     content: '',
     position: -1,
   }
-  selectecdColumn: Column = {
+  selectedCardAttachment: Attachment[] =[]
+  selectedColumn: Column = {
     cards: [],
     id: -1,
     position: -1,
@@ -135,17 +136,17 @@ export class BoardViewComponent implements OnInit {
 
   uploadFile() {
     this.isSubmitted = true;
-    let isMember = false;
-    for (let member of this.members) {
-      if (member.userId == this.currentUser.id) {
-        // @ts-ignore
-        this.newAttachment.member = member;
-        isMember = true;
-        this.newAttachment.card = this.redirectService.card;
-        break;
-      }
-    }
-    if (isMember && this.selectedFile != null) {
+    // let isMember = false;
+    // for (let member of this.members) {
+    //   if (member.userId == this.currentUser.id) {
+    //     // @ts-ignore
+    //     this.newAttachment.member = member;
+    //     isMember = true;
+    //     this.newAttachment.card = this.selectedCard
+    //     break;
+    //   }
+    // }
+    if (this.canEdit && this.selectedFile != null) {
       const filePath = `${this.selectedFile.name.split('.').slice(0, -1).join('.')}_${new Date().getTime()}`;
       const fileRef = this.storage.ref(filePath);
       this.storage.upload(filePath, this.selectedFile).snapshotChanges().pipe(
@@ -154,9 +155,10 @@ export class BoardViewComponent implements OnInit {
             this.fileSrc = url;
             this.newAttachment.source = url;
             this.newAttachment.name = `${this.selectedFile.name}`;
+            this.newAttachment.card = this.selectedCard;
             this.attachmentService.addNewFile(this.newAttachment).subscribe(() => {
                 this.toastService.showMessage("Upload success", 'is-success');
-                this.getAllAttachmentByCard();
+                this.getSelectedCardAttachment()
               },
               () => {
                 this.toastService.showMessage("Fail !", 'is-danger');
@@ -231,11 +233,17 @@ export class BoardViewComponent implements OnInit {
   }
 
   dropColumn(event: CdkDragDrop<string[]>) {
+    if(!this.canEdit){
+      return
+    }
     moveItemInArray(this.currentBoard.columns, event.previousIndex, event.currentIndex);
     this.saveChange()
   }
 
   dropCard(event: CdkDragDrop<Card[]>, column: Column) {
+    if(!this.canEdit){
+      return
+    }
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
@@ -328,10 +336,11 @@ export class BoardViewComponent implements OnInit {
   }
 
 
-  showUpdateCardModal(card: Card) {
+  showEditCardModal(card: Card) {
     this.selectedCard = card;
     this.createCardForm.get('title')?.setValue(card.title);
     this.createCardForm.get('content')?.setValue(card.content);
+    this.getSelectedCardAttachment();
     document.getElementById('editCardModal')!.classList.add('is-active')
   }
 
@@ -355,7 +364,7 @@ export class BoardViewComponent implements OnInit {
   }
 
   showCreateCardModal(column: Column) {
-    this.selectecdColumn = column;
+    this.selectedColumn = column;
     document.getElementById('createCardModal')!.classList.add('is-active')
   }
 
@@ -364,12 +373,12 @@ export class BoardViewComponent implements OnInit {
       let newCard: Card = {
         title: this.createCardForm.get('title')?.value,
         content: this.createCardForm.get('content')?.value,
-        position: this.selectecdColumn.cards.length
+        position: this.selectedColumn.cards.length
       }
       this.resetCreateCardForm();
       this.cardService.createCard(newCard).subscribe(data => {
-        this.selectecdColumn.cards.push(data)
-        this.columnService.updateAColumn(this.selectecdColumn.id, this.selectecdColumn).subscribe()
+        this.selectedColumn.cards.push(data)
+        this.columnService.updateAColumn(this.selectedColumn.id, this.selectedColumn).subscribe()
         this.closeCreateCardModal()
       })
     }
@@ -427,5 +436,11 @@ export class BoardViewComponent implements OnInit {
   switchTagForm() {
     let tagForm = document.getElementById('tags');
 
+  }
+
+  getSelectedCardAttachment(){
+    this.attachmentService.getAttachmentByCard(this.selectedCard.id).subscribe(data=>{
+      this.selectedCardAttachment = data;
+    })
   }
 }
