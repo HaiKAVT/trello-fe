@@ -68,7 +68,7 @@ export class BoardViewComponent implements OnInit {
     content: '',
     position: -1,
   }
-  selectedCardAttachment: Attachment[] =[]
+  selectedCardAttachment: Attachment[] = []
   selectedColumn: Column = {
     cards: [],
     id: -1,
@@ -87,10 +87,17 @@ export class BoardViewComponent implements OnInit {
     title: ""
   };
 
+  newTagForm: FormGroup = new FormGroup({
+    color: new FormControl('', Validators.required),
+    name: new FormControl(),
+  })
   newAttachment: Attachment = {
     id: -1,
     source: ""
   }
+  pendingAttachment: Attachment[] = [];
+  pendingTag: Tag[] = [];
+  selectedAttachmentId: number = -1;
 
   constructor(private activatedRoute: ActivatedRoute,
               public navbarService: NavbarService,
@@ -112,6 +119,7 @@ export class BoardViewComponent implements OnInit {
   }
 
   showPreview(event: any) {
+    this.toastService.showMessage("Đang tải file xin vui lòng chờ","is-warning")
     if (event.target.files && event.target.files[0]) {
       const reader = new FileReader();
       reader.onload = (e: any) => this.fileSrc = event.target.result;
@@ -130,9 +138,33 @@ export class BoardViewComponent implements OnInit {
     } else {
       this.selectedFile = null;
     }
-    this.uploadFile();
   }
 
+  pendingPreview(event: any) {
+    this.toastService.showMessage("Đang tải file xin vui lòng chờ","is-warning")
+    if (event.target.files && event.target.files[0]) {
+      const reader = new FileReader();
+      reader.onload = (e: any) => this.fileSrc = event.target.result;
+      reader.readAsDataURL(event.target.files[0]);
+      this.selectedFile = event.target.files[0];
+      if (this.selectedFile != null) {
+        const filePath = `${this.selectedFile.name.split('.').splice(0, -1).join('.')}_${new Date().getTime()}`;
+        const fileRef = this.storage.ref(filePath);
+        this.storage.upload(filePath, this.selectedFile).snapshotChanges().pipe(
+          finalize(() => {
+            fileRef.getDownloadURL().subscribe(url => {
+              this.fileSrc = url;
+              this.pendingAttachment.push({
+                source: this.fileSrc,
+                name: this.selectedFile.name,
+              })
+            });
+          })).subscribe();
+      }
+    } else {
+      this.selectedFile = null;
+    }
+  }
 
   uploadFile() {
     this.isSubmitted = true;
@@ -233,7 +265,7 @@ export class BoardViewComponent implements OnInit {
   }
 
   dropColumn(event: CdkDragDrop<string[]>) {
-    if(!this.canEdit){
+    if (!this.canEdit) {
       return
     }
     moveItemInArray(this.currentBoard.columns, event.previousIndex, event.currentIndex);
@@ -241,7 +273,7 @@ export class BoardViewComponent implements OnInit {
   }
 
   dropCard(event: CdkDragDrop<Card[]>, column: Column) {
-    if(!this.canEdit){
+    if (!this.canEdit) {
       return
     }
     if (event.previousContainer === event.container) {
@@ -345,14 +377,10 @@ export class BoardViewComponent implements OnInit {
   }
 
   editCard() {
-    let card: Card = {
-      id: this.selectedCard.id,
-      title: this.createCardForm.get('title')?.value,
-      content: this.createCardForm.get('content')?.value,
-      position: this.selectedCard.position
-    }
-    this.resetCreateCardForm();
-    this.cardService.updateCard(card.id, card).subscribe(data => {
+    this.selectedCard.title = this.createCardForm.get('title')?.value;
+    this.selectedCard.content = this.createCardForm.get('content')?.value,
+      this.resetCreateCardForm();
+    this.cardService.updateCard(this.selectedCard.id, this.selectedCard).subscribe(data => {
       this.getCurrentBoard()
       this.closeEditCardModal()
     })
@@ -360,6 +388,7 @@ export class BoardViewComponent implements OnInit {
 
   closeEditCardModal() {
     this.resetCreateCardForm();
+    this.switchTagForm()
     document.getElementById('editCardModal')!.classList.remove('is-active')
   }
 
@@ -377,6 +406,20 @@ export class BoardViewComponent implements OnInit {
       }
       this.resetCreateCardForm();
       this.cardService.createCard(newCard).subscribe(data => {
+        if (this.pendingAttachment.length > 0) {
+          for (let attachment of this.pendingAttachment) {
+            attachment.card = data;
+            this.attachmentService.addNewFile(attachment).subscribe(data => {
+              },
+              () => {
+              });
+          }
+        }
+        if (this.pendingTag.length > 0) {
+          for (let tags of this.pendingTag) {
+            data.tags?.push(tags);
+          }
+        }
         this.selectedColumn.cards.push(data)
         this.columnService.updateAColumn(this.selectedColumn.id, this.selectedColumn).subscribe()
         this.closeCreateCardModal()
@@ -392,8 +435,11 @@ export class BoardViewComponent implements OnInit {
   }
 
   closeCreateCardModal() {
+    this.switchTagsForm()
     this.resetCreateCardForm();
     this.selectedColumnID = -1;
+    this.pendingAttachment = [];
+    this.pendingTag = [];
     document.getElementById('createCardModal')!.classList.remove('is-active')
   }
 
@@ -430,17 +476,130 @@ export class BoardViewComponent implements OnInit {
         this.selectedCard.tags?.splice(index!, 1);
       }
     }
-    this.saveChange();
+    this.cardService.updateCard(this.selectedCard.id, this.selectedCard).subscribe(() => {
+      this.saveChange()
+    })
+  }
+
+  addTagToCard(tag: Tag) {
+    for (let tags of this.selectedCard.tags!) {
+      if (tags.id == tag.id) {
+        this.toastService.showMessage("Nhãn đã có trong thẻ", "is-danger")
+        return
+      }
+    }
+    this.selectedCard.tags?.push(tag);
+    this.cardService.updateCard(this.selectedCard.id, this.selectedCard).subscribe(() => {
+      this.saveChange()
+    })
+  }
+
+  addTagToPending(tag: Tag) {
+    for (let tags of this.pendingTag) {
+      if (tags.id == tag.id) {
+        this.toastService.showMessage("Nhãn đã có trong thẻ", "is-danger")
+        return
+      }
+    }
+    this.pendingTag.push(tag)
   }
 
   switchTagForm() {
-    let tagForm = document.getElementById('tags');
-
+    let tagForm = document.getElementById('tag');
+    if (tagForm!.classList.contains('is-hidden')) {
+      tagForm!.classList.remove('is-hidden');
+    } else {
+      tagForm!.classList.add('is-hidden');
+    }
   }
 
-  getSelectedCardAttachment(){
-    this.attachmentService.getAttachmentByCard(this.selectedCard.id).subscribe(data=>{
+  switchTagsForm() {
+    let tagForm = document.getElementById('tags');
+    if (tagForm!.classList.contains('is-hidden')) {
+      tagForm!.classList.remove('is-hidden');
+    } else {
+      tagForm!.classList.add('is-hidden');
+    }
+  }
+
+  showDeleteTag(id: number) {
+    document.getElementById('tagDeleteButton-' + id)!.classList.remove('is-hidden');
+  }
+
+  hideDeleteTag(id: number) {
+    document.getElementById('tagDeleteButton-' + id)!.classList.add('is-hidden');
+  }
+
+  showDeleteTags(id: number) {
+    document.getElementById('tagsDeleteButton-' + id)!.classList.remove('is-hidden');
+  }
+
+  hideDeleteTags(id: number) {
+    document.getElementById('tagsDeleteButton-' + id)!.classList.add('is-hidden');
+  }
+
+  deleteTag(id: number) {
+    for (let column of this.currentBoard.columns) {
+      for (let card of column.cards) {
+        for (let tag of card.tags!) {
+          if (tag.id == id) {
+            let deleteIndex = card.tags!.indexOf(tag);
+            card.tags!.splice(deleteIndex, 1);
+          }
+        }
+      }
+    }
+    for (let tag of this.currentBoard.tags!) {
+      if (tag.id == id) {
+        let deleteIndex = this.currentBoard.tags!.indexOf(tag);
+        this.currentBoard.tags!.splice(deleteIndex, 1);
+      }
+    }
+    this.saveChange();
+  }
+
+  addNewTag() {
+    let tag: Tag = this.newTagForm.value;
+    console.log(tag)
+    this.tagService.add(tag).subscribe(tag => {
+      console.log(tag.name)
+      this.currentBoard.tags?.push(tag);
+      this.boardDataUpdate();
+      this.newTagForm = new FormGroup({
+        color: new FormControl("is-primary"),
+        name: new FormControl("")
+      })
+    })
+  }
+
+  getSelectedCardAttachment() {
+    this.attachmentService.getAttachmentByCard(this.selectedCard.id).subscribe(data => {
       this.selectedCardAttachment = data;
     })
+  }
+
+  deletePending(index:any){
+    for (let i = 0; i < this.pendingAttachment.length; i++){
+      if(this.pendingAttachment[index] == this.pendingAttachment[i]){
+        this.pendingAttachment.splice(index,1);
+        return
+      }
+    }
+  }
+
+  deleteAttachment(){
+    this.attachmentService.deleteAttachmentById(this.selectedAttachmentId).subscribe(()=>{
+      this.getSelectedCardAttachment()
+      this.hideDeleteAttachment()
+    })
+  }
+  showDeleteAttachment(id:any){
+    this.selectedAttachmentId = id;
+    document.getElementById('deleteAttachment')!.classList.add('is-active');
+  }
+
+  hideDeleteAttachment(){
+    this.selectedAttachmentId = -1;
+    document.getElementById('deleteAttachment')!.classList.remove('is-active');
   }
 }

@@ -292,8 +292,13 @@ h1.app-name {
 }
 
 .modal-card {
-  width: 800px;
+  width: 1000px;
   height: auto;
+}
+
+.media {
+  display: flex;
+  text-align: inherit
 }
 
 .modal-card-title {
