@@ -6,6 +6,8 @@ import {Router} from "@angular/router";
 import {User} from "../../model/user";
 import {UserToken} from "../../model/user-token";
 import {UserService} from "../../service/user/user.service";
+import {AngularFireStorage} from "@angular/fire/compat/storage";
+import {finalize} from "rxjs/operators";
 
 @Component({
   selector: 'app-navbar',
@@ -17,12 +19,16 @@ export class NavbarComponent implements OnInit {
   loggedInUser!: User;
   id!: any;
   imgSrc: any;
+  isSubmitted = false;
+  selectedImage: any | undefined = null;
 
   constructor(public navbarService: NavbarService,
               private toast: ToastService,
               private authenticateService: AuthenticateService,
               private router: Router,
-              private userService: UserService
+              private storage: AngularFireStorage,
+              private userService: UserService,
+              private toastService: ToastService
   ) {
     this.authenticateService.currentUserSubject.subscribe(data => {
       this.currentUser = data;
@@ -50,6 +56,61 @@ export class NavbarComponent implements OnInit {
   logout() {
     this.authenticateService.logout();
     this.router.navigateByUrl("/login");
+  }
+
+  closeModalUpdate() {
+    // @ts-ignore
+    document.getElementById('modal-update-user').classList.remove('is-active')
+  }
+
+  openModalUpdate() {
+    // @ts-ignore
+    document.getElementById("modal-update-user").classList.add('is-active')
+    this.getUserById()
+  }
+
+  updateUserInfo() {
+    this.isSubmitted = true;
+    if (this.selectedImage != null) {
+      // @ts-ignore
+      const filePath = `${this.selectedImage.name.split('.').slice(0, -1).join('.')}_${new Date().getTime()}`;
+      const fileRef = this.storage.ref(filePath);
+      this.storage.upload(filePath, this.selectedImage).snapshotChanges().pipe(
+        finalize(() => {
+          fileRef.getDownloadURL().subscribe(url => {
+            this.imgSrc = url;
+            this.loggedInUser.image = url;
+            this.userService.updateById(this.id, this.loggedInUser).subscribe(() => {
+                this.toastService.showMessage("Sửa thành công", 'is-success');
+                this.navbarService.getCurrentUser();
+                this.closeModalUpdate();
+              },
+              () => {
+                this.toastService.showMessage("Thất bại !", 'is-danger');
+              });
+          });
+        })).subscribe();
+    }
+  }
+  showPreview(event: any) {
+    if (event.target.files && event.target.files[0]) {
+      const reader = new FileReader();
+      reader.onload = (e: any) => this.imgSrc = event.target.result;
+      reader.readAsDataURL(event.target.files[0]);
+      this.selectedImage = event.target.files[0];
+      if (this.selectedImage != null) {
+        const filePath = `${this.selectedImage.name.split('.').splice(0, -1).join('.')}_${new Date().getTime()}`;
+        const fileRef = this.storage.ref(filePath);
+        this.storage.upload(filePath, this.selectedImage).snapshotChanges().pipe(
+          finalize(() => {
+            fileRef.getDownloadURL().subscribe(url => {
+              this.imgSrc = url;
+            });
+          })).subscribe();
+      }
+    } else {
+      this.selectedImage = null;
+    }
   }
 
 

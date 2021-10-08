@@ -16,6 +16,13 @@ import {CardService} from "../../service/card/card.service";
 import {doc} from "@angular/fire/firestore";
 import {TagService} from "../../service/tag/tag.service";
 import {Tag} from "../../model/tag";
+import {AngularFireStorage} from "@angular/fire/compat/storage";
+import {finalize} from "rxjs/operators";
+import {Attachment} from "../../model/attachment";
+import {DetailedMember} from "../../model/detailed-member";
+import {RedirectService} from "../../service/redirect/redirect.service";
+import {AttachmentService} from "../../service/attachment/attachment.service";
+import {NavbarService} from "../../service/navbar/navbar.service";
 
 @Component({
   selector: 'app-board-view',
@@ -23,6 +30,11 @@ import {Tag} from "../../model/tag";
   styleUrls: ['./board-view.component.scss']
 })
 export class BoardViewComponent implements OnInit {
+  currentUser: UserToken = {};
+  fileSrc: any | undefined = null;
+  selectedFile: any | undefined = null;
+  isSubmitted = false;
+  members: DetailedMember[] = [];
   currentBoardId: number = -1;
   currentBoard: Board = {
     id: -1,
@@ -56,7 +68,8 @@ export class BoardViewComponent implements OnInit {
     content: '',
     position: -1,
   }
-  selectecdColumn: Column = {
+  selectedCardAttachment: Attachment[] =[]
+  selectedColumn: Column = {
     cards: [],
     id: -1,
     position: -1,
@@ -74,7 +87,13 @@ export class BoardViewComponent implements OnInit {
     title: ""
   };
 
+  newAttachment: Attachment = {
+    id: -1,
+    source: ""
+  }
+
   constructor(private activatedRoute: ActivatedRoute,
+              public navbarService: NavbarService,
               private boardService: BoardService,
               public authenticationService: AuthenticateService,
               private router: Router,
@@ -82,11 +101,77 @@ export class BoardViewComponent implements OnInit {
               private userService: UserService,
               private columnService: ColumnService,
               private cardService: CardService,
-              private tagService:TagService) {
+              private tagService: TagService,
+              private storage: AngularFireStorage,
+              public redirectService: RedirectService,
+              private attachmentService: AttachmentService) {
   }
 
   ngOnInit(): void {
     this.getCurrentBoardByURL()
+  }
+
+  showPreview(event: any) {
+    if (event.target.files && event.target.files[0]) {
+      const reader = new FileReader();
+      reader.onload = (e: any) => this.fileSrc = event.target.result;
+      reader.readAsDataURL(event.target.files[0]);
+      this.selectedFile = event.target.files[0];
+      if (this.selectedFile != null) {
+        const filePath = `${this.selectedFile.name.split('.').splice(0, -1).join('.')}_${new Date().getTime()}`;
+        const fileRef = this.storage.ref(filePath);
+        this.storage.upload(filePath, this.selectedFile).snapshotChanges().pipe(
+          finalize(() => {
+            fileRef.getDownloadURL().subscribe(url => {
+              this.fileSrc = url;
+            });
+          })).subscribe();
+      }
+    } else {
+      this.selectedFile = null;
+    }
+    this.uploadFile();
+  }
+
+
+  uploadFile() {
+    this.isSubmitted = true;
+    let isMember = false;
+    for (let member of this.members) {
+      if (member.userId == this.currentUser.id) {
+        // @ts-ignore
+        this.newAttachment.member = member;
+        isMember = true;
+        this.newAttachment.card = this.redirectService.card;
+        break;
+      }
+    }
+    if (isMember && this.selectedFile != null) {
+      const filePath = `${this.selectedFile.name.split('.').slice(0, -1).join('.')}_${new Date().getTime()}`;
+      const fileRef = this.storage.ref(filePath);
+      this.storage.upload(filePath, this.selectedFile).snapshotChanges().pipe(
+        finalize(() => {
+          fileRef.getDownloadURL().subscribe(url => {
+            this.fileSrc = url;
+            this.newAttachment.source = url;
+            this.newAttachment.name = `${this.selectedFile.name}`;
+            this.attachmentService.addNewFile(this.newAttachment).subscribe(() => {
+                this.toastService.showMessage("Upload success", 'is-success');
+                this.getAllAttachmentByCard();
+              },
+              () => {
+                this.toastService.showMessage("Fail !", 'is-danger');
+              });
+          });
+        })).subscribe();
+    }
+  }
+
+  getAllAttachmentByCard() {
+    this.attachmentService.getAttachmentByCard(this.redirectService.card.id).subscribe(attachmentList => {
+        this.redirectService.attachments = attachmentList;
+      }
+    )
   }
 
   getCurrentBoardByURL() {
@@ -141,7 +226,7 @@ export class BoardViewComponent implements OnInit {
   }
 
   onFocusOut(column: Column) {
-    this.columnService.updateAColumn(column.id,column).subscribe(()=>{
+    this.columnService.updateAColumn(column.id, column).subscribe(() => {
       this.boardDataUpdate()
     })
   }
@@ -203,6 +288,7 @@ export class BoardViewComponent implements OnInit {
   updateCards() {
     this.cardService.updateCards(this.cardsDto).subscribe(() => this.updatePreviousColumn())
   }
+
   private updatePreviousColumn() {
     if (this.previousColumn.id != -1) {
       this.columnService.updateAColumn(this.previousColumn.id, this.previousColumn).subscribe(() => this.updateColumns())
@@ -210,6 +296,7 @@ export class BoardViewComponent implements OnInit {
       this.updateColumns()
     }
   }
+
   updateColumns() {
     this.columnService.updateAllColumn(this.columnsDto).subscribe(() => {
       this.boardDataUpdate()
@@ -242,10 +329,11 @@ export class BoardViewComponent implements OnInit {
   }
 
 
-  showUpdateCardModal(card: Card) {
+  showEditCardModal(card: Card) {
     this.selectedCard = card;
     this.createCardForm.get('title')?.setValue(card.title);
     this.createCardForm.get('content')?.setValue(card.content);
+    this.getSelectedCardAttachment();
     document.getElementById('editCardModal')!.classList.add('is-active')
   }
 
@@ -269,7 +357,7 @@ export class BoardViewComponent implements OnInit {
   }
 
   showCreateCardModal(column: Column) {
-    this.selectecdColumn = column;
+    this.selectedColumn = column;
     document.getElementById('createCardModal')!.classList.add('is-active')
   }
 
@@ -278,12 +366,12 @@ export class BoardViewComponent implements OnInit {
       let newCard: Card = {
         title: this.createCardForm.get('title')?.value,
         content: this.createCardForm.get('content')?.value,
-        position: this.selectecdColumn.cards.length
+        position: this.selectedColumn.cards.length
       }
       this.resetCreateCardForm();
       this.cardService.createCard(newCard).subscribe(data => {
-        this.selectecdColumn.cards.push(data)
-        this.columnService.updateAColumn(this.selectecdColumn.id, this.selectecdColumn).subscribe()
+        this.selectedColumn.cards.push(data)
+        this.columnService.updateAColumn(this.selectedColumn.id, this.selectedColumn).subscribe()
         this.closeCreateCardModal()
       })
     }
@@ -318,27 +406,34 @@ export class BoardViewComponent implements OnInit {
       }
     )
   }
-  showCreateColumnModal(){
+
+  showCreateColumnModal() {
     document.getElementById('createColumnModal')!.classList.add("is-active")
   }
 
-  closeCreateColumnModal(){
+  closeCreateColumnModal() {
     document.getElementById('createColumnModal')!.classList.remove("is-active")
   }
 
-  removeTagFromCard(tag:Tag){
+  removeTagFromCard(tag: Tag) {
     let tagName = tag.name;
-    for (let tags of this.selectedCard.tags!){
-      if(tags.id == tag.id){
+    for (let tags of this.selectedCard.tags!) {
+      if (tags.id == tag.id) {
         let index = this.selectedCard.tags?.indexOf(tags);
-        this.selectedCard.tags?.splice(index!,1);
+        this.selectedCard.tags?.splice(index!, 1);
       }
     }
     this.saveChange();
   }
 
-  switchTagForm(){
-    let tagForm =document.getElementById('tags');
+  switchTagForm() {
+    let tagForm = document.getElementById('tags');
 
+  }
+
+  getSelectedCardAttachment(){
+    this.attachmentService.getAttachmentByCard(this.selectedCard.id).subscribe(data=>{
+      this.selectedCardAttachment = data;
+    })
   }
 }

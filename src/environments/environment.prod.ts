@@ -4,6 +4,7 @@ export const environment = {
   firebaseConfig: {
     apiKey: "AIzaSyD9P8dOuqTRKL-Esc-25coo9P0XqDO7cLo",
     authDomain: "trello-h3k.firebaseapp.com",
+    databaseURL: "https://trello-h3k-default-rtdb.firebaseio.com",
     projectId: "trello-h3k",
     storageBucket: "trello-h3k.appspot.com",
     messagingSenderId: "288253371925",
