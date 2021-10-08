@@ -46,7 +46,7 @@
           <div class="board-column" style="margin-left: 0px">
             <div class="column-title">
               <button class="button button-add-new-card is-light" (click)="showCreateColumnModal()">
-                + Thêm cột
+                + Thêm danh sách
               </button>
             </div>
           </div>
@@ -63,11 +63,13 @@
           <p class="modal-card-title">Tạo một danh sách mới</p>
         </header>
         <section class="modal-card-body">
+          <label class="label">Tiêu đề:</label>
           <input class="input add-column-input" type="text" formControlName="title" style="position: revert"
                  placeholder="Nhập tiêu đề của danh sách" maxlength="512">
+          <span style="font-size: large; color: red" *ngIf="columnForm.invalid">Cần nhập tiêu đề của danh sách</span>
         </section>
         <footer class="modal-card-foot">
-          <button style="position: revert" [disabled]="columnForm.invalid" class="button is-primary is-light"
+          <button style="position: revert" [disabled]="columnForm.invalid" class="button is-info"
                   type="submit">Thêm danh sách
           </button>
           <button class="button is-light" (click)="closeCreateColumnModal()">Hủy</button>
@@ -87,7 +89,7 @@
       Bạn chắc chắn muốn xóa danh sách này?
     </section>
     <footer class="modal-card-foot">
-      <button class="button is-danger is-light" (click)="deleteColumn()">Xóa</button>
+      <button class="button is-danger" (click)="deleteColumn()">Xóa</button>
       <button class="button is-light" (click)="closeDeleteColumnModal()">Không</button>
     </footer>
   </div>
@@ -104,14 +106,15 @@
           <h5>Tại danh sách {{selectedColumn.title}}</h5>
         </header>
         <section class="modal-card-body">
-          Nội dung: <input type="text" formControlName="content">
+          <label class="label">Nội dung:</label>
+          <textarea style="font-size: large; border: 0px" cols="93" rows="10" formControlName="content" placeholder="Nhập nội dung"></textarea>
         </section>
         <form #uploadFileCard="ngForm" (ngSubmit)="showPreview($event)">
           <input class="modal-card-body" type="file" #preview (change)="showPreview($event)" style=" padding-right: 535px;">
           <span class="modal-card-body" (change)="showPreview($event)"></span>
         </form>
         <footer class="modal-card-foot">
-          <button class="button add-new-card" type="submit">Tạo thẻ</button>
+          <button class="button is-info add-new-card" [disabled]="createCardForm.invalid" type="submit">Tạo thẻ</button>
           <button class="button is-light" (click)="closeCreateCardModal()">Hủy</button>
         </footer>
       </form>
@@ -123,25 +126,24 @@
     <div class="modal-card">
       <form [formGroup]="createCardForm">
         <header class="modal-card-head">
-          <p class="modal-card-title">Sửa thẻ</p>
-          <div>Tiêu đề:<input type="text" formControlName="title"><br>
-            <div class="alert" *ngIf="createCardForm.get('title')!.dirty && createCardForm.get('title')!.invalid">
-              Trường bắt buộc
-            </div>
-          </div>
-          <h5>Tại danh sách {{selectedColumn.title}}</h5>
+          <p class="modal-card-title">
+            <input class="input is-light" type="text" style="font-weight: bold; font-size: larger"  formControlName="title" placeholder="Nhập tiêu đề">
+            <span style="font-size: medium; color: red" *ngIf="(createCardForm.get('title')!.dirty || createCardForm.get('title')!.touched) && createCardForm.get('title')!.invalid">
+            Trường bắt buộc</span>   <br>
+            <span style="font-size: medium">Tại danh sách {{selectedColumn.title}}</span>
+          </p>
+          <br>
         </header>
         <section class="modal-card-body">
-          <div>
-            Nội dung: <input type="text" formControlName="content"><br>
-          </div>
+          <label class="label">Nội dung:</label>
+          <textarea style="font-size: large; border: 0px" cols="93" rows="10" placeholder="Nhập nội dung" formControlName="content" >{{selectedCard.content}}</textarea>
           <!-- upFile -->
           <div class="content">
             <!--            <td class="update-image"><img class="img-user" [src]="fileSrc" (click)="preview.click()"></td>-->
             <form #uploadFileCard="ngForm" (ngSubmit)="showPreview($event)">
               <div class="update-info">
                Đính kèm :  <input  type="file" #preview (change)="showPreview($event)">
-                <span  (change)="showPreview($event)"></span>
+<!--                <span  (change)="showPreview($event)"></span>-->
               </div>
             </form>
           </div>
@@ -153,9 +155,9 @@
           </div>
         </section>
         <footer class="modal-card-foot">
-          <button class="button add-new-card" (click)="editCard()">Sửa</button>
+          <button class="button is-info add-new-card" (click)="editCard()">Sửa</button>
           <button class="button is-light" (click)="closeEditCardModal()">Hủy</button>
-          <button class="button is-danger is-light" (click)="showDeleteCardModal()">Xóa</button>
+          <button class="button is-danger" (click)="showDeleteCardModal()">Xóa</button>
         </footer>
       </form>
     </div>
@@ -172,7 +174,7 @@
       Bạn đã chắc chắn muốn xóa thẻ??
     </section>
     <footer class="modal-card-foot">
-      <button class="button is-danger is-light" (click)="deleteCard(selectedCard.id)">Xóa</button>
+      <button class="button is-danger" (click)="deleteCard(selectedCard.id)">Xóa</button>
       <button class="button is-light" (click)="closeDeleteCardModal()">Không</button>
     </footer>
   </div>

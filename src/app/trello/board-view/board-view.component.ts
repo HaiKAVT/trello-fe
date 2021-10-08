@@ -136,17 +136,17 @@ export class BoardViewComponent implements OnInit {
 
   uploadFile() {
     this.isSubmitted = true;
-    let isMember = false;
-    for (let member of this.members) {
-      if (member.userId == this.currentUser.id) {
-        // @ts-ignore
-        this.newAttachment.member = member;
-        isMember = true;
-        this.newAttachment.card = this.redirectService.card;
-        break;
-      }
-    }
-    if (isMember && this.selectedFile != null) {
+    // let isMember = false;
+    // for (let member of this.members) {
+    //   if (member.userId == this.currentUser.id) {
+    //     // @ts-ignore
+    //     this.newAttachment.member = member;
+    //     isMember = true;
+    //     this.newAttachment.card = this.selectedCard
+    //     break;
+    //   }
+    // }
+    if (this.canEdit && this.selectedFile != null) {
       const filePath = `${this.selectedFile.name.split('.').slice(0, -1).join('.')}_${new Date().getTime()}`;
       const fileRef = this.storage.ref(filePath);
       this.storage.upload(filePath, this.selectedFile).snapshotChanges().pipe(
@@ -155,9 +155,10 @@ export class BoardViewComponent implements OnInit {
             this.fileSrc = url;
             this.newAttachment.source = url;
             this.newAttachment.name = `${this.selectedFile.name}`;
+            this.newAttachment.card = this.selectedCard;
             this.attachmentService.addNewFile(this.newAttachment).subscribe(() => {
                 this.toastService.showMessage("Upload success", 'is-success');
-                this.getAllAttachmentByCard();
+                this.getSelectedCardAttachment()
               },
               () => {
                 this.toastService.showMessage("Fail !", 'is-danger');
@@ -232,11 +233,17 @@ export class BoardViewComponent implements OnInit {
   }
 
   dropColumn(event: CdkDragDrop<string[]>) {
+    if(!this.canEdit){
+      return
+    }
     moveItemInArray(this.currentBoard.columns, event.previousIndex, event.currentIndex);
     this.saveChange()
   }
 
   dropCard(event: CdkDragDrop<Card[]>, column: Column) {
+    if(!this.canEdit){
+      return
+    }
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
