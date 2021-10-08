@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-// import { NavbarBoardHeaderComponent } from './navbar-board-header/navbar-board-header.component';
+import { NavbarBoardHeaderComponent } from './navbar-board-header/navbar-board-header.component';
 import { ModalComponent } from './modal/modal.component';
 import {FormsModule} from "@angular/forms";
 import {RouterModule} from "@angular/router";
@@ -13,14 +12,14 @@ import {MatListModule} from "@angular/material/list";
 @NgModule({
   declarations: [
     NavbarComponent,
-    // NavbarBoardHeaderComponent,
+    NavbarBoardHeaderComponent,
     ModalComponent,
     SideBarComponent,
     // FooterComponent
   ],
     exports: [
         NavbarComponent,
-        // NavbarBoardHeaderComponent,
+        NavbarBoardHeaderComponent,
         ModalComponent,
         SideBarComponent,
         // FooterComponent

@@ -11,7 +11,6 @@ import {ToastService} from "../service/toast/toast.service";
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-  hide = true;
   loginForm: FormGroup = new FormGroup({
       userName: new FormControl('', [Validators.required, Validators.pattern('^[a-zA-z0-9]+$')]),
       password: new FormControl('', [Validators.required, Validators.pattern('^[a-zA-z0-9]+$')])
