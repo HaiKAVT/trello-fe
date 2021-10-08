@@ -147,11 +147,17 @@ export class BoardViewComponent implements OnInit {
   }
 
   dropColumn(event: CdkDragDrop<string[]>) {
+    if(!this.canEdit){
+      return
+    }
     moveItemInArray(this.currentBoard.columns, event.previousIndex, event.currentIndex);
     this.saveChange()
   }
 
   dropCard(event: CdkDragDrop<Card[]>, column: Column) {
+    if(!this.canEdit){
+      return
+    }
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
