@@ -32,6 +32,8 @@ export class NavbarComponent implements OnInit {
   ) {
     this.authenticateService.currentUserSubject.subscribe(data => {
       this.currentUser = data;
+      this.navbarService.getCurrentUser();
+      this.getUserById()
     })
   }
 
