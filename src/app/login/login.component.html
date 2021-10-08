@@ -1,5 +1,5 @@
 <div class="container">
-  <div class="form-container sign-in-container">
+  <div class="form-container">
     <form (ngSubmit)="onSubmit()" [formGroup]="loginForm">
       <h1 style="padding-bottom: 30px ; font-size: 25px">Đăng Nhập</h1>
       <div class="form-group" style="width: 300px;">
@@ -19,18 +19,18 @@
             {{validation.message}}
           </div>
         </div>
-        <div class="text-danger">
-          <label><input type="checkbox" (click)="showPassword()">Hiện mật khẩu</label>
-        </div>
-        <br>
-        <div class="form-group">
-          <button class="btn btn-primary" type="submit">
-            Đăng nhập
-          </button>
-        </div>
-        <br>
-        <a href="https://anotepad.com/note/read/rc2sccd5" target="_blank">Quên mật khẩu ?</a>
       </div>
+      <div class="text-danger">
+        <label><input style="width: auto; margin-right: 10px" type="checkbox" (click)="showPassword()">Hiện mật khẩu</label>
+      </div>
+      <br>
+      <div class="form-group">
+        <button class="btn btn-primary" type="submit">
+          Đăng nhập
+        </button>
+      </div>
+      <br>
+      <a href="https://anotepad.com/note/read/rc2sccd5" target="_blank">Quên mật khẩu ?</a>
     </form>
   </div>
   <div class="overlay-container">

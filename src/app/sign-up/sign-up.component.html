@@ -2,6 +2,7 @@
   <div class="form-container sign-in-container">
     <form (ngSubmit)="register()" [formGroup]="registerForm" style="width: 400px;">
       <h1 style="font-size: 25px">Đăng Ký</h1>
+      <hr>
       <div class="form-group" style="width: 300px;">
         <input type="text" formControlName="username" placeholder="Tài Khoản" (click)="existence()"/>
         <div *ngIf="this.userExistence" class="col alert alert-danger">
@@ -16,75 +17,74 @@
             <p style="color: crimson ; margin-bottom: 0px;margin-top: 0px;">Tài khoản phải đc nhập !</p>
           </div>
         </div>
+      </div>
+      <div class="form-group" style="width: 300px;">
+        <input [type]="show ? 'text':'password'" formControlName="password" placeholder="Mật khẩu">
+        <div class="col alert alert-danger" role="alert"
+             *ngIf="this.registerForm.get('password')?.invalid && (this.registerForm.get('password')?.dirty || this.registerForm.get('password')?.touched)">
+          <div *ngIf="this.registerForm.get('password')?.errors?.required" class="col alert alert-danger">
+            <p style="color: crimson ; margin-bottom: 0px;margin-top: 0px;">Mật khẩu phải được nhập !</p>
+          </div>
+          <div *ngIf="this.registerForm.get('password')?.errors?.minlength" class="col alert alert-danger">
+            <p style="color: crimson ; margin-bottom: 0px;margin-top: 0px;">Mật khẩu phải lớn hơn 5 ký tự!</p>
+          </div>
+          <div *ngIf="this.registerForm.get('password')?.errors?.pattern" class="col alert alert-danger">
+            <p style="color: crimson ; margin-bottom: 0px;margin-top: 0px;">Mật khẩu phải lớn hơn 5 ký tự, ít nhất một
+              chữ hoa, một chữ thường và một số!</p>
+          </div>
+        </div>
+      </div>
+      <div class="form-group" style="width: 300px;">
+        <input [type]="show ? 'text':'password'" formControlName="confirmPassword" placeholder="Xác nhận Mật khẩu">
+        <div class="col alert alert-danger" role="alert"
+             *ngIf="this.registerForm.get('confirmPassword')?.invalid && (this.registerForm.get('confirmPassword')?.dirty || this.registerForm.get('confirmPassword')?.touched)">
+          <div *ngIf="this.registerForm.get('confirmPassword')?.errors?.required" class="col alert alert-danger">
+            <p style="color: crimson ; margin-bottom: 0px;margin-top: 0px;">Xác nhận mật khẩu phải được nhập !</p>
+          </div>
+          <div *ngIf="registerForm.value.password !== registerForm.value.confirmPassword"
+               class="col alert alert-danger">
+            <p style="color: crimson ; margin-bottom: 0px;margin-top: 0px;">Mật khẩu không trùng khớp!</p>
+          </div>
+        </div>
+      </div>
+      <div class="form-group" style="width: 300px;">
+        <input formControlName="email" placeholder="Email" type="text" (click)="existence()">
+        <div *ngIf="this.emailExistence" class="text-danger">
+          <p style="color: crimson ; margin-bottom: 0px;margin-top: 0px;">Email đã tồn tại !</p>
+        </div>
+        <div class="col alert alert-danger" role="alert"
+             *ngIf="this.registerForm.get('email')?.invalid && (this.registerForm.get('email')?.dirty || this.registerForm.get('email')?.touched)">
+          <div *ngIf="this.registerForm.get('email')?.errors?.required" class="col alert alert-danger">
+            <p style="color: crimson ; margin-bottom: 0px;margin-top: 0px;">Email phải được nhập !!</p>
+          </div>
+          <div *ngIf="this.registerForm.get('email')?.errors?.pattern" class="col alert alert-danger">
+            <p style="color: crimson ; margin-bottom: 0px;margin-top: 0px;">Email phải đúng định dạng:
+              "abc@abc.com"</p>
+          </div>
+        </div>
 
         <div class="form-group" style="width: 300px;">
-          <input type="password" formControlName="password" placeholder="Mật khẩu">
+          <input formControlName="phone" placeholder="Phone Number" type="text"/>
           <div class="col alert alert-danger" role="alert"
-               *ngIf="this.registerForm.get('password')?.invalid && (this.registerForm.get('password')?.dirty || this.registerForm.get('password')?.touched)">
-            <div *ngIf="this.registerForm.get('password')?.errors?.required" class="col alert alert-danger">
-              <p style="color: crimson ; margin-bottom: 0px;margin-top: 0px;">Mật khẩu phải được nhập !</p>
+               *ngIf="this.registerForm.get('phone')?.invalid && (this.registerForm.get('phone')?.dirty || this.registerForm.get('phone')?.touched)">
+            <div *ngIf="this.registerForm.get('phone')?.errors?.required" class="col alert alert-danger">
+              <p style="color: crimson ; margin-bottom: 0px;margin-top: 0px;">Số điện thoại phải được nhập !!</p>
             </div>
-            <div *ngIf="this.registerForm.get('password')?.errors?.minlength" class="col alert alert-danger">
-              <p style="color: crimson ; margin-bottom: 0px;margin-top: 0px;">Mật khẩu phải lớn hơn 5 ký tự!</p>
-            </div>
-            <div *ngIf="this.registerForm.get('password')?.errors?.pattern" class="col alert alert-danger">
-              <p style="color: crimson ; margin-bottom: 0px;margin-top: 0px;">Mật khẩu phải lớn hơn 5 ký tự, ít nhất một
-                chữ hoa, một chữ thường và một số!</p>
+            <div *ngIf="this.registerForm.get('phone')?.errors?.pattern" class="col alert alert-danger">
+              <p style="color: crimson ; margin-bottom: 0px;margin-top: 0px;">Số điện thoại phải đúng định dạng: "0xxx
+                (xxx : 9 số)"</p>
             </div>
           </div>
         </div>
-
-        <div class="form-group" style="width: 300px;">
-          <input type="password" formControlName="confirmPassword" placeholder="Xác nhận Mật khẩu">
-          <div class="col alert alert-danger" role="alert"
-               *ngIf="this.registerForm.get('confirmPassword')?.invalid && (this.registerForm.get('confirmPassword')?.dirty || this.registerForm.get('confirmPassword')?.touched)">
-            <div *ngIf="this.registerForm.get('confirmPassword')?.errors?.required" class="col alert alert-danger">
-              <p style="color: crimson ; margin-bottom: 0px;margin-top: 0px;">Xác nhận mật khẩu phải được nhập !</p>
-            </div>
-            <div *ngIf="registerForm.value.password !== registerForm.value.confirmPassword"
-                 class="col alert alert-danger">
-              <p style="color: crimson ; margin-bottom: 0px;margin-top: 0px;">Mật khẩu không trùng khớp!</p>
-            </div>
-          </div>
-        </div>
-
-
-        <div class="form-group" style="width: 300px;">
-          <input formControlName="email" placeholder="Email" type="text" (click)="existence()">
-          <div *ngIf="this.emailExistence" class="text-danger">
-            <p style="color: crimson ; margin-bottom: 0px;margin-top: 0px;">Email đã tồn tại !</p>
-            <div class="col alert alert-danger" role="alert"
-                 *ngIf="this.registerForm.get('email')?.invalid && (this.registerForm.get('email')?.dirty || this.registerForm.get('email')?.touched)">
-              <div *ngIf="this.registerForm.get('email')?.errors?.required" class="col alert alert-danger">
-                <p style="color: crimson ; margin-bottom: 0px;margin-top: 0px;">Email phải được nhập !!</p>
-              </div>
-              <div *ngIf="this.registerForm.get('email')?.errors?.pattern" class="col alert alert-danger">
-                <p style="color: crimson ; margin-bottom: 0px;margin-top: 0px;">Email phải đúng định dạng:
-                  "abc@abc.com"</p>
-              </div>
-            </div>
-          </div>
-
-
-          <div class="form-group" style="width: 300px;">
-            <input formControlName="phone" placeholder="Phone Number" type="text"/>
-            <div class="col alert alert-danger" role="alert"
-                 *ngIf="this.registerForm.get('phone')?.invalid && (this.registerForm.get('phone')?.dirty || this.registerForm.get('phone')?.touched)">
-              <div *ngIf="this.registerForm.get('phone')?.errors?.required" class="col alert alert-danger">
-                <p style="color: crimson ; margin-bottom: 0px;margin-top: 0px;">Số điện thoại phải được nhập !!</p>
-              </div>
-              <div *ngIf="this.registerForm.get('phone')?.errors?.pattern" class="col alert alert-danger">
-                <p style="color: crimson ; margin-bottom: 0px;margin-top: 0px;">Số điện thoại phải đúng định dạng: "0xxx
-                  (xxx : 9 số)"</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="form-group">
-          <button class="btn btn-primary" type="submit">
-            Đăng ký
-          </button>
-        </div>
+      </div>
+      <div>
+        <label><input style="width: auto" type="checkbox" (click)="showPassword()">Hiện mật khẩu</label>
+      </div>
+      <hr>
+      <div class="form-group">
+        <button class="btn btn-primary" type="submit">
+          Đăng ký
+        </button>
       </div>
     </form>
   </div>
