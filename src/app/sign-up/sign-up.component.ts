@@ -12,7 +12,7 @@ import {ToastService} from "../service/toast/toast.service";
   styleUrls: ['./sign-up.component.css']
 })
 export class SignUpComponent implements OnInit {
-
+  show: Boolean = false;
 
   users: User[] = [];
   userExistence = false;
@@ -82,5 +82,9 @@ export class SignUpComponent implements OnInit {
       return false;
     }
     return true;
+  }
+
+  showPassword() {
+    this.show = !this.show
   }
 }

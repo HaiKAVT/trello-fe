@@ -1,41 +1,42 @@
 <div class="container">
-  <div class="form-container sign-in-container">
+  <div class="form-container">
     <form (ngSubmit)="onSubmit()" [formGroup]="loginForm">
-      <h1>Đăng Nhập</h1>
-      <br>
-      <div class="form-group">
-        <input formControlName="userName" placeholder="Tên đăng nhập" type="text" style="width: 300px;">
+      <h1 style="padding-bottom: 30px ; font-size: 25px">Đăng Nhập</h1>
+      <div class="form-group" style="width: 300px;">
+        <input formControlName="userName" placeholder="Tên đăng nhập" type="text">
         <div *ngFor="let validation of validation_message.userName" class="text-danger">
-          <div
+          <div style="color: crimson"
             *ngIf="loginForm.get('userName')?.hasError(validation.type) && (loginForm.get('userName')?.touched || loginForm.get('userName')?.dirty)">
             {{validation.message}}
           </div>
         </div>
       </div>
-      <div class="form-group">
-        <input [type]="show ? 'text':'password'" formControlName="password" placeholder="Mật khẩu" style="width: 300px;">
+      <div class="form-group" style="width: 300px;">
+        <input [type]="show ? 'text':'password'" formControlName="password" placeholder="Mật khẩu">
         <div *ngFor="let validation of validation_message.password" class="text-danger">
-          <div
+          <div style="color: crimson"
             *ngIf="loginForm.get('password')?.hasError(validation.type) && (loginForm.get('password')?.touched||loginForm.get('password')?.dirty)">
             {{validation.message}}
           </div>
         </div>
-        <div class="text-danger">
-          <label><input type="checkbox" (click)="showPassword()">Hiện mật khẩu</label>
-        </div>
-        <a href="#">Quên mật khẩu</a>
-        <div class="form-group">
-          <button class="btn btn-primary" type="submit">
-            Đăng nhập
-          </button>
-        </div>
       </div>
+      <div class="text-danger">
+        <label><input style="width: auto" type="checkbox" (click)="showPassword()">Hiện mật khẩu</label>
+      </div>
+      <br>
+      <div class="form-group">
+        <button class="btn btn-primary" type="submit">
+          Đăng nhập
+        </button>
+      </div>
+      <br>
+      <a href="https://anotepad.com/note/read/rc2sccd5" target="_blank">Quên mật khẩu ?</a>
     </form>
   </div>
   <div class="overlay-container">
     <div class="overlay">
       <div class="overlay-panel overlay-right">
-        <h1>Chưa có tài khoản?</h1>
+        <p style="font-size: 20px">Chưa có tài khoản?</p>
         <p>Bấm đăng ký ngay thôi</p>
         <button type="submit" class="ghost" routerLink="/register">Đăng ký</button>
       </div>
