@@ -32,8 +32,6 @@ export class NavbarComponent implements OnInit {
   ) {
     this.authenticateService.currentUserSubject.subscribe(data => {
       this.currentUser = data;
-      this.navbarService.getCurrentUser();
-      this.getUserById()
     })
   }
 
@@ -92,6 +90,15 @@ export class NavbarComponent implements OnInit {
               });
           });
         })).subscribe();
+    } else {
+      this.userService.updateById(this.id, this.loggedInUser).subscribe(() => {
+          this.toastService.showMessage("Sửa thành công", 'is-success');
+          this.navbarService.getCurrentUser();
+          this.closeModalUpdate();
+        },
+        () => {
+          this.toastService.showMessage("Thất bại !", 'is-danger');
+        })
     }
   }
   showPreview(event: any) {

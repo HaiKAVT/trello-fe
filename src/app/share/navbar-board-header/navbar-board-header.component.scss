@@ -176,21 +176,21 @@ h1.app-name {
   width: 45px;
 }
 //Notification
-.header__notify {
-  position: absolute;
-  top: 118%;
-  right: 0;
-  width: 404px;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 2px;
-  background-color: white;
-  cursor: default;
-  transform-origin: calc(100% - 30px) top;
-  animation: headerNotifyGrowth ease-in 0.2s;
-  will-change: opacity, transform;
+  .header__notify {
+    position: absolute;
+    top: 118%;
+    right: 0;
+    width: 404px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 2px;
+    background-color: white;
+    cursor: default;
+    transform-origin: calc(100% - 30px) top;
+    animation: headerNotifyGrowth ease-in 0.2s;
+    will-change: opacity, transform;
   //display: none;
-  z-index: 1;
-}
+    z-index: 1;
+  }
 
 .header__notify::before {
   content: "";

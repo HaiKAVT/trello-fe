@@ -19,11 +19,11 @@ export class LoginComponent implements OnInit {
   show: Boolean = false;
   validation_message = {
     userName: [
-      {type: 'required', message: 'Bắt buộc phải nhập'},
+      {type: 'required', message: 'Trường bắt buộc'},
       {type: 'pattern', message: 'Chỉ nhập chữ hoặc số'}
     ],
     password: [
-      {type: 'required', message: 'Bắt buộc phải nhập'},
+      {type: 'required', message: 'Trường bắt buộc'},
       {type: 'pattern', message: 'Chỉ nhập chữ hoặc số'}
     ]
   }
@@ -38,6 +38,7 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit() {
+
     this.authenticationService.login(this.loginForm.get('userName')?.value, this.loginForm.get('password')?.value)
       .subscribe(() => {
         this.navbarService.getCurrentUser();

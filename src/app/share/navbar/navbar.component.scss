@@ -7,12 +7,14 @@
   margin-top: 4px;
   height: 33px;
   width: 33px;
+  object-fit: fill;
   clip-path: circle(50%);
 }
 
 .img-user {
   width: 360px;
   height: 220px;
+  object-fit: scale-down;
 }
 
 .icon-link {

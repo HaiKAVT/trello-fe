@@ -6,7 +6,7 @@
         <input formControlName="userName" placeholder="Tên đăng nhập" type="text">
         <div *ngFor="let validation of validation_message.userName" class="text-danger">
           <div style="color: crimson"
-            *ngIf="loginForm.get('userName')?.hasError(validation.type) && (loginForm.get('userName')?.touched || loginForm.get('userName')?.dirty)">
+               *ngIf="loginForm.get('userName')?.hasError(validation.type) && (loginForm.get('userName')?.touched || loginForm.get('userName')?.dirty)">
             {{validation.message}}
           </div>
         </div>
@@ -15,7 +15,7 @@
         <input [type]="show ? 'text':'password'" formControlName="password" placeholder="Mật khẩu">
         <div *ngFor="let validation of validation_message.password" class="text-danger">
           <div style="color: crimson"
-            *ngIf="loginForm.get('password')?.hasError(validation.type) && (loginForm.get('password')?.touched||loginForm.get('password')?.dirty)">
+               *ngIf="loginForm.get('password')?.hasError(validation.type) && (loginForm.get('password')?.touched||loginForm.get('password')?.dirty)">
             {{validation.message}}
           </div>
         </div>

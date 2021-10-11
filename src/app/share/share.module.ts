@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+
 import { NavbarBoardHeaderComponent } from './navbar-board-header/navbar-board-header.component';
 import { ModalComponent } from './modal/modal.component';
 import {FormsModule} from "@angular/forms";

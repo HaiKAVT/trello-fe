@@ -91,6 +91,8 @@ export class BoardViewComponent implements OnInit {
   pendingTag: Tag[] = [];
   selectedAttachmentId: number = -1;
 
+  isTagsIsShown : boolean = false;
+
   constructor(private activatedRoute: ActivatedRoute,
               private boardService: BoardService,
               public authenticationService: AuthenticateService,
@@ -172,11 +174,12 @@ export class BoardViewComponent implements OnInit {
   }
 
   closeCreateCardModal() {
-    this.switchTagsForm()
+    this.switchCreateTagsForm()
     this.resetCreateCardForm();
     this.selectedColumnID = -1;
     this.pendingAttachment = [];
     this.pendingTag = [];
+    if(this.isTagsIsShown){this.switchCreateTagsForm()}
     document.getElementById('createCardModal')!.classList.remove('is-active')
   }
 
@@ -200,7 +203,9 @@ export class BoardViewComponent implements OnInit {
 
   closeEditCardModal() {
     this.resetCreateCardForm();
-    this.switchTagForm()
+    if(this.isTagsIsShown){
+      this.switchEditTagsForm()
+    }
     document.getElementById('editCardModal')!.classList.remove('is-active')
   }
 
@@ -254,21 +259,25 @@ export class BoardViewComponent implements OnInit {
     })
   }
 
-  switchTagForm() {
-    let tagForm = document.getElementById('tag');
+  switchEditTagsForm() {
+    let tagForm = document.getElementById('editTags');
     if (tagForm!.classList.contains('is-hidden')) {
       tagForm!.classList.remove('is-hidden');
+      this.isTagsIsShown = true
     } else {
       tagForm!.classList.add('is-hidden');
+      this.isTagsIsShown = false
     }
   }
 
-  switchTagsForm() {
-    let tagForm = document.getElementById('tags');
+  switchCreateTagsForm() {
+    let tagForm = document.getElementById('createTags');
     if (tagForm!.classList.contains('is-hidden')) {
       tagForm!.classList.remove('is-hidden');
+      this.isTagsIsShown = true
     } else {
       tagForm!.classList.add('is-hidden');
+      this.isTagsIsShown = false
     }
   }
 
