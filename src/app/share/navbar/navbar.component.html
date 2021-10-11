@@ -35,12 +35,12 @@
       <h1><i class="fab fa-trello logo-icon"></i>Trellot</h1>
     </div>
   </div>
-<!--  <div class="icon-item" *ngIf="currentUser">-->
-<!--    <div class="dropdown is-hoverable is-right">-->
-<!--      <div class="dropdown-trigger">-->
-<!--        <a class="icon-link"><i class="fas fa-bell"></i></a>-->
+  <div class="icon-item" *ngIf="currentUser">
+    <div class="dropdown is-hoverable is-right">
+      <div class="dropdown-trigger">
+        <a class="icon-link"><i class="fas fa-bell"></i></a>
 <!--        <span class="header__cart-notice">{{notificationService.unreadNotice}}</span>-->
-<!--      </div>-->
+      </div>
 <!--      <div class="dropdown-menu" id="dropdown-menu5" role="menu">-->
 <!--        <div class="dropdown-content" style="padding: 0">-->
 <!--          <div class="header__navbar-item header__navbar-item&#45;&#45;has-notify">-->
@@ -68,25 +68,33 @@
 <!--          </div>-->
 <!--        </div>-->
 <!--      </div>-->
-<!--    </div>-->
-<!--  </div>-->
+    </div>
+  </div>
   <div class="icon-item" *ngIf="currentUser">
     <div class="dropdown is-hoverable is-right">
+      <div class="nav-item-start">
+        <h2>{{navbarService.loggedInUser.username}}</h2>
+      </div>
       <div class="dropdown-trigger">
         <a class="icon-link" aria-haspopup="true" aria-controls="dropdown-menu4">
           <img [src]="navbarService.loggedInUser.image" class="img-circle"/>
         </a>
       </div>
-      <div class="dropdown-menu" id="dropdown-menu4" role="menu">
+      <div class="dropdown-menu" id="dropdown-menu" role="menu">
         <div class="dropdown-content">
           <div href="#" class="dropdown-item">
+            <div class="user">
+              <div class="username">
+                Người dùng: {{navbarService.loggedInUser.username}}
+              </div>
+            </div>
           </div>
-          <a class="dropdown-item">
-            Modifiers
+          <a class="dropdown-item" (click)="openModalUpdate()">
+            Thay đổi thông tin
           </a>
           <hr class="dropdown-divider">
           <a class="dropdown-item" (click)="logout()">
-            Logout
+            Đăng xuất
           </a>
         </div>
       </div>
@@ -95,45 +103,45 @@
 </div>
 
 <!--Modal update user-->
-<!--<div class="modal modal-update-user" id="modal-update-user">-->
-<!--  <div class="modal-background" (click)="closeModalUpdate()"></div>-->
-<!--  <div class="modal-card modal-card-user" id="updateForm">-->
-<!--    <div class="login-card">-->
-<!--      <header class="modal-card-head">-->
-<!--        <p class="modal-card-title">Information</p>-->
-<!--        <button class="delete" aria-label="close" (click)="closeModalUpdate()"></button>-->
-<!--      </header>-->
-<!--      <td class="update-image"><img class="img-user" [src]="imgSrc" (click)="preview.click()"></td>-->
-<!--      <div class="content">-->
-<!--        <form #updateForm="ngForm" (ngSubmit)="updateUserInfo()">-->
-<!--          <div class="update-info">-->
-<!--            &lt;!&ndash;upload file&ndash;&gt;-->
-<!--            <div class="file">-->
-<!--              <label class="file-label">-->
-<!--                <input class="file-input" type="file" #preview (change)="showPreview($event)">-->
-<!--                <span class="file-cta">-->
-<!--                  <span class="file-icon">-->
-<!--                    <i class="fas fa-upload"></i>-->
-<!--                  </span>-->
-<!--                  <span class="file-label">-->
-<!--                    Choose a file…-->
-<!--                  </span>-->
-<!--                </span>-->
-<!--              </label>-->
-<!--            </div>-->
-<!--            &lt;!&ndash;            user name&ndash;&gt;-->
-<!--            <input type="text" class="input input-user-name" name="nickname" #nickname="ngModel" required-->
-<!--                   [(ngModel)]="user.nickname" placeholder="Nick name">-->
-<!--            <td *ngIf="updateForm.invalid && updateForm.touched && isSubmitted">-->
-<!--              <p class="notification" *ngIf="nickname.errors?.required">Can not blank</p>-->
-<!--            </td>-->
-<!--          </div>-->
-<!--          <div class="div-update">-->
-<!--            <button class="button is-success is-light button-update">Update</button>-->
-<!--            <button class="button is-danger is-light button-cancel" (click)="closeModalUpdate()" type="button">Cancel</button>-->
-<!--          </div>-->
-<!--        </form>-->
-<!--      </div>-->
-<!--    </div>-->
-<!--  </div>-->
-<!--</div>-->
+<div class="modal modal-update-user" id="modal-update-user">
+  <div class="modal-background" (click)="closeModalUpdate()"></div>
+  <div class="modal-card modal-card-user" id="updateForm">
+    <div class="login-card">
+      <header class="modal-card-head">
+        <p class="modal-card-title">Thông tin</p>
+        <button class="delete" aria-label="close" (click)="closeModalUpdate()"></button>
+      </header>
+      <td class="update-image"><img class="img-user" [src]="imgSrc" (click)="preview.click()"></td>
+      <div class="content">
+        <form #updateForm="ngForm" (ngSubmit)="updateUserInfo()">
+          <div class="update-info">
+            <!--upload file-->
+            <div class="file">
+              <label class="file-label">
+                <input class="file-input" type="file" #preview (change)="showPreview($event)">
+                <span class="file-cta">
+                  <span class="file-icon">
+                    <i class="fas fa-upload"></i>
+                  </span>
+                  <span class="file-label">
+                    Chọn file
+                  </span>
+                </span>
+              </label>
+            </div>
+            <!--            user name-->
+            <input type="text" class="input input-user-name" name="nickname" #nickname="ngModel" required
+                   [(ngModel)]="loggedInUser.nickname" placeholder="Biệt danh">
+            <td *ngIf="updateForm.invalid && updateForm.touched && isSubmitted">
+              <p class="notification" *ngIf="nickname.errors?.required">Trường yêu cầu</p>
+            </td>
+          </div>
+          <div class="div-update">
+            <button class="button is-success is-light button-update">Cập nhập</button>
+            <button class="button is-danger is-light button-cancel" (click)="closeModalUpdate()" type="button">Hủy</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

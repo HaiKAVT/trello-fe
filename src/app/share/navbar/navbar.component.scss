@@ -1,18 +1,20 @@
 .icon-item {
   list-style: none;
-  color: rgba(0, 0, 0, 0.65);
+  color: white;
 }
 
 .img-circle {
   margin-top: 4px;
   height: 33px;
   width: 33px;
+  object-fit: fill;
   clip-path: circle(50%);
 }
 
 .img-user {
   width: 360px;
   height: 220px;
+  object-fit: scale-down;
 }
 
 .icon-link {
@@ -29,9 +31,16 @@
 }
 
 .icon-link:hover {
-  color: #fff;
+  color: black;
 }
-
+h2:hover{
+  color: black;
+}
+.small-button{
+  height: 35px;
+  width: 100px;
+  margin-top: 5px
+}
 .icon-link i {
   margin: auto;
 }
@@ -68,12 +77,18 @@
 }
 
 .nav-item-start {
-  font-family: "Courgette", cursive;
+  font-family: 'Lato', sans-serif, cursive;
   font-size: 1.7rem;
   font-weight: 700;
-  color: rgba(0, 0, 0, 0.65);
+  color: white
 }
-
+.dropdown-content {
+  opacity: 80%;
+  border-radius: 4px;
+  box-shadow: 0 0.5em 1em -0.125em rgba(10, 10, 10, 0.1), 0 0px 0 1px rgba(10, 10, 10, 0.02);
+  padding-bottom: 0.5rem;
+  padding-top: 0.5rem;
+}
 
 .nav {
   background: rgba(#6d7fcc, 0.5);
@@ -118,7 +133,9 @@
   margin: 0;
   height: 40px;
 }
-
+h2{
+  color: white;
+}
 h1.app-name {
   padding: 4px;
 }

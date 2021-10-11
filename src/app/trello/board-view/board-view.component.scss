@@ -229,7 +229,7 @@ h1.app-name {
   cursor: pointer;
   position: absolute;
   margin-left: 265px;
-  top: 100px;
+  top: 150px;
 }
 
 .board-column:hover .window-close {
@@ -292,8 +292,13 @@ h1.app-name {
 }
 
 .modal-card {
-  width: 800px;
-  height: 600px;
+  width: 1000px;
+  height: auto;
+}
+
+.media {
+  display: flex;
+  text-align: inherit
 }
 
 .modal-card-title {
@@ -410,9 +415,15 @@ h1.app-name {
 .span-upload-file-card:hover {
   border: 1.5px solid #AAAAAA;
 }
-//.modal-card {
-//  margin-left: auto;
-//  margin-top: 250px;
-//}
+
+.modal-card-foot {
+  align-items: center;
+  background-color: whitesmoke;
+  display: flex;
+  justify-content: right;
+  padding: 20px;
+  position: relative;
+}
+
 
 
