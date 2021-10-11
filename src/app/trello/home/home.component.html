@@ -6,11 +6,11 @@
       <h1><i class="far fa-clipboard"></i>Bảng của bạn</h1>
     </div>
     <div class="section-board">
-      <div class="card">
-        <div class="img-circle-add-board">
-          <a (click)="displayAddBoardModal()"><i class="fas fa-plus-circle"></i></a>
-        </div>
-      </div>
+<!--      <div class="card">-->
+<!--        <div class="img-circle-add-board">-->
+<!--          <a (click)="displayAddBoardModal()"><i class="fas fa-plus-circle"></i></a>-->
+<!--        </div>-->
+<!--      </div>-->
       <div class="card" *ngFor="let board of boards" routerLink="/board/{{board.id}}">
         <div class="card-header"><p class="card-header-title" routerLink="/board/{{board.id}}">{{board.title}}</p></div>
         <div class="card-content">
@@ -36,40 +36,40 @@
     </div>
 
     <!--    Work Space-->
-    <div class="title-board" #target>
-      <h1><i class="fas fa-briefcase"></i>Nhóm của bạn</h1>
-    </div>
-    <div class="section-board">
-      <div class="card">
-        <div class="img-circle-add-board">
-          <a (click)="showCreateWorkspaceModal()"><i class="fas fa-plus-circle"></i></a>
-        </div>
-      </div>
-      <div *ngFor="let localWorkspace of workspaces">
-        <div class="card" *ngIf="localWorkspace.owner.id == loggedInUser.id">
-          <div class="card-header"><p class="card-header-title">{{localWorkspace.title}}</p></div>
-          <div class="card-content">
-            <span style="font-size: small"><b>Chủ sở hữu: </b>{{localWorkspace.owner.username}}</span><br>
-            <span style="font-size: small"><b>Loại nhóm: </b>{{localWorkspace.type}}</span>
-          </div>
-        </div>
-      </div>
+<!--    <div class="title-board" #target>-->
+<!--      <h1><i class="fas fa-briefcase"></i>Nhóm của bạn</h1>-->
+<!--    </div>-->
+<!--    <div class="section-board">-->
+<!--      <div class="card">-->
+<!--        <div class="img-circle-add-board">-->
+<!--          <a (click)="showCreateWorkspaceModal()"><i class="fas fa-plus-circle"></i></a>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--      <div *ngFor="let localWorkspace of workspaces">-->
+<!--        <div class="card" *ngIf="localWorkspace.owner.id == loggedInUser.id">-->
+<!--          <div class="card-header"><p class="card-header-title">{{localWorkspace.title}}</p></div>-->
+<!--          <div class="card-content">-->
+<!--            <span style="font-size: small"><b>Chủ sở hữu: </b>{{localWorkspace.owner.username}}</span><br>-->
+<!--            <span style="font-size: small"><b>Loại nhóm: </b>{{localWorkspace.type}}</span>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
 
-    </div>
-    <div class="title-board">
-      <h1><i class="fas fa-briefcase"></i>Nhóm được chia sẻ với bạn</h1>
-    </div>
-    <div class="section-board">
-      <div *ngFor="let workspace of workspaces">
-        <div class="card" routerLink="/trello/workspaces/{{workspace.id}}" *ngIf="workspace.owner.id != loggedInUser.id">
-          <div class="card-header"><p class="card-header-title">{{workspace.title}}</p></div>
-          <div class="card-content">
-            <span style="font-size: small"><b>Id: </b>{{workspace.id}}</span> <br>
-            <span style="font-size: small"><b>Owner: </b>{{workspace.owner.username}}</span>
-          </div>
-        </div>
-      </div>
-    </div>
+<!--    </div>-->
+<!--    <div class="title-board">-->
+<!--      <h1><i class="fas fa-briefcase"></i>Nhóm được chia sẻ với bạn</h1>-->
+<!--    </div>-->
+<!--    <div class="section-board">-->
+<!--      <div *ngFor="let workspace of workspaces">-->
+<!--        <div class="card" routerLink="/trello/workspaces/{{workspace.id}}" *ngIf="workspace.owner.id != loggedInUser.id">-->
+<!--          <div class="card-header"><p class="card-header-title">{{workspace.title}}</p></div>-->
+<!--          <div class="card-content">-->
+<!--            <span style="font-size: small"><b>Id: </b>{{workspace.id}}</span> <br>-->
+<!--            <span style="font-size: small"><b>Owner: </b>{{workspace.owner.username}}</span>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
   </div>
 </section>
 
