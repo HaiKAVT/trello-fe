@@ -138,6 +138,7 @@ export class BoardViewComponent implements OnInit {
     document.getElementById('createCardModal')!.classList.add('is-active')
   }
 
+
   createCard() {
     if (this.createCardForm.valid) {
       let newCard: Card = {
@@ -614,4 +615,5 @@ export class BoardViewComponent implements OnInit {
   closeCreateColumnModal() {
     document.getElementById('createColumnModal')!.classList.remove("is-active")
   }
+
 }

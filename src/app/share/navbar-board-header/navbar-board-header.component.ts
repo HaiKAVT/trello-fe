@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {Board} from "../../model/board";
 import {UserToken} from "../../model/user-token";
 import {AuthenticateService} from "../../service/authenticate.service";
@@ -24,6 +24,15 @@ export class NavbarBoardHeaderComponent implements OnInit {
               private boardService:BoardService) { }
 
   ngOnInit(): void {
+  }
+  addMember(){
+    document.getElementById('addMember')!.classList.add('is-active');
+  }
+  closeAddMember(){
+    document.getElementById('addMember')!.classList.remove("is-active")
+  }
+  createAddMember() {
+
   }
 
   updateBoardTitle(){
@@ -62,4 +71,5 @@ export class NavbarBoardHeaderComponent implements OnInit {
       member.classList.remove('is-hidden');
     }
   }
+
 }

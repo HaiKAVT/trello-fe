@@ -25,17 +25,7 @@
         <button class="button is-primary">
           <i class="far fa-star"></i>
         </button>
-        <!--        Mời-->
-<!--        <button type="button" class="button is-primary" data-toggle="modal" data-target="#exampleModal">-->
-<!--          Mời-->
-<!--        </button>-->
-        <button class="button is-primary" mat-button [matMenuTriggerFor]="menu">Menu</button>
-        <mat-menu #menu="matMenu">
-          <form class="example-form">
-              <input matInput placeholder="Gmail">
-          </form>
-        </mat-menu>
-        <!-- Modal -->
+        <button type="button" (click)="addMember()" class="button is-primary" data-toggle="modal" data-target="#addMember" data-whatever="@mdo">Mời</button>
         <div>
           <span *ngFor="let member of members; index as i">
             <a (click)="showDetail(member)" (mouseover)="showUserPreview(member)"
@@ -253,3 +243,20 @@
 <!--    </footer>-->
 <!--  </div>-->
 <!--</div>-->
+
+<div class="modal" id="addMember">
+  <div class="modal-background">
+    <div class="modal-card">
+      <form>
+        <header class="modal-card-head" style="width: 300px">
+          <p >Mời một thành viên tham gia</p>
+        </header>
+          <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="  name@example.com" style="width: 300px;border-top-width: 0px;padding-top: 10px;border-bottom-width: 0px;padding-bottom: 10px;border-left-width: 0px;border-right-width: 0px;">
+        <footer class="modal-card-foot" style="width: 300px">
+          <button id="1" class="button is-info add-new-card"  (click)="createAddMember()">Thêm thành viên</button>
+          <button id="2" class="button is-light" (click)="closeAddMember()">Hủy</button>
+        </footer>
+      </form>
+    </div>
+  </div>
+</div>
