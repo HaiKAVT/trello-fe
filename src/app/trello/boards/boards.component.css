@@ -37,7 +37,7 @@ a:focus {
   display: flex;
   width: 100%;
   align-items: stretch;
-  background-image: linear-gradient(to top, #fff1eb 0%, #6d7fcc 100%);
+  background-image: linear-gradient(to left, #fff1eb 0%, #6d7fcc 100%);
 }
 
 #sidebar {

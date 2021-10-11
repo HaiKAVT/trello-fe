@@ -26,7 +26,7 @@
                  [cdkDropListData]="column.cards"
                  (cdkDropListDropped)="dropCard($event, column)">
               <div class="task" *ngFor="let item of column.cards" cdkDrag [cdkDragData]="item"
-                   (click)="showEditCardModal(item)">
+                   (click)="showEditCardModal(item,column)">
                 <ul>
                   <li><span *ngFor="let tag of item.tags" class="tag is-light" [ngClass]="tag.color">{{tag.name}}</span>
                   </li>
@@ -101,7 +101,7 @@
 <div class="modal" id="createCardModal">
   <div class="modal-background">
     <div class="modal-card">
-      <form [formGroup]="createCardForm" (ngSubmit)="createCard()">
+      <form [formGroup]="createCardForm">
         <header class="modal-card-head">
           <p class="modal-card-title">
             <input class="input is-light" type="text" style="font-weight: bold; font-size: larger"
@@ -209,7 +209,7 @@
           </div>
         </section>
         <footer class="modal-card-foot">
-          <button class="button is-info add-new-card" [disabled]="createCardForm.invalid" type="submit">Tạo thẻ</button>
+          <button class="button is-info add-new-card" [disabled]="createCardForm.invalid" (click)="createCard()">Tạo thẻ</button>
           <button class="button is-light" (click)="closeCreateCardModal()">Hủy</button>
         </footer>
       </form>
@@ -308,14 +308,14 @@
                 <form #uploadFileCard="ngForm" (ngSubmit)="showPreview($event)">
                   <div class="update-info">
                     Đính kèm : <input type="file" #preview (change)="showPreview($event)">
-                    <button (click)="uploadFile()">Thêm file</button>
+<!--                    <button (click)="uploadFile()">Thêm file</button>-->
                   </div>
                 </form>
               </div>
             </div>
           </div>
           <div id="attachments" class="media-attachment-body" style="margin-left: 40px"
-               *ngFor="let attachment of pendingAttachment, index as i">
+               *ngFor="let attachment of selectedCardAttachment, index as i">
             <span class="media link-file">
               <a target="_blank" href="{{attachment.source}}">{{attachment.name}}</a>
                <a (click)="showDeleteAttachment(attachment.id)">

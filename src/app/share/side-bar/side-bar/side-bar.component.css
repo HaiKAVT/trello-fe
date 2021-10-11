@@ -7,6 +7,14 @@ a:focus {
   transition: all 0.3s;
 }
 
+p,
+p:hover,
+p:focus {
+  color: inherit;
+  text-decoration: none;
+  transition: all 0.3s;
+}
+
 .navbar {
   padding: 15px 10px;
   background: #fff;
@@ -46,6 +54,7 @@ a:focus {
   background: #7386D5;
   color: #fff;
   transition: all 0.3s;
+  height: 100%;
 }
 
 #sidebar.active {
@@ -153,7 +162,6 @@ a.article:hover {
     display: none;
   }
 }
-
 .section-board {
   width: fit-content;
   display: flex;
@@ -400,9 +408,16 @@ h1.app-name {
   margin-right: 5px;
 }
 
+span{
+  margin-left: 135px;
+}
+
 .fa-plus-circle{
-  font-size: 50px;
-  margin-top: 30px;
+  font-size: 20px;
+}
+
+.fa-plus-circle:hover{
+  color: black;
 }
 
 .img-circle-add-board{
