@@ -247,13 +247,17 @@
 <div class="modal" id="addMember">
   <div class="modal-background">
     <div class="modal-card">
-      <form>
+      <form [formGroup]="addMemberForm" class="form-group">
         <header class="modal-card-head" style="width: 300px">
-          <p >Mời một thành viên tham gia</p>
+          <p>Mời một thành viên tham gia</p>
         </header>
-          <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="  name@example.com" style="width: 300px;border-top-width: 0px;padding-top: 10px;border-bottom-width: 0px;padding-bottom: 10px;border-left-width: 0px;border-right-width: 0px;">
+          <input type="email" class="form-control" formControlName="email" placeholder=" Địa chỉ email" style="width: 300px;border-top-width: 0px;padding-top: 10px;border-bottom-width: 0px;padding-bottom: 10px;border-left-width: 0px;border-right-width: 0px;">
+        <div  *ngIf="this.addMemberForm.get('email')?.invalid && (this.addMemberForm.get('email')?.dirty || this.addMemberForm.get('email')?.touched)">
+        <div *ngIf="this.addMemberForm.get('email')?.errors?.required">
+        </div>
+        </div>
         <footer class="modal-card-foot" style="width: 300px">
-          <button id="1" class="button is-info add-new-card"  (click)="createAddMember()">Thêm thành viên</button>
+          <button id="1" class="button is-info add-new-card"  (click)="createAddMember()" [disabled]="addMemberForm.invalid">Thêm thành viên</button>
           <button id="2" class="button is-light" (click)="closeAddMember()">Hủy</button>
         </footer>
       </form>

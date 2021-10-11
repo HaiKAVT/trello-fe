@@ -6,6 +6,7 @@ import {Router} from "@angular/router";
 import {BoardService} from "../../service/board/board.service";
 import {DetailedMember} from "../../model/detailed-member";
 import {Tag} from "../../model/tag";
+import {FormControl, FormGroup, Validators} from "@angular/forms";
 
 @Component({
   selector: 'app-navbar-board-header',
@@ -13,17 +14,21 @@ import {Tag} from "../../model/tag";
   styleUrls: ['./navbar-board-header.component.scss']
 })
 export class NavbarBoardHeaderComponent implements OnInit {
+
   @Input() currentBoard: Board = {columns: [], owner: {}, title: "", tags: []};
   @Input() canEdit: boolean = false;
   @Input() members: DetailedMember[] = [];
   @Input() tags: Tag[] = [];
   selectedMember: DetailedMember = {boardId: -1, canEdit: false, id: -1, userId: -1, username: ""};
   currentUser: UserToken = this.authenticationService.getCurrentUserValue()
+  addMemberForm: FormGroup = new FormGroup({
+    email: new FormControl('',Validators.required)
+  })
   constructor(private authenticationService:AuthenticateService,
               private router:Router,
               private boardService:BoardService) { }
 
-  ngOnInit(): void {
+  ngOnInit(){
   }
   addMember(){
     document.getElementById('addMember')!.classList.add('is-active');
