@@ -9,6 +9,7 @@ import { SideBarComponent } from './side-bar/side-bar/side-bar.component';
 import {NavbarComponent} from "./navbar/navbar.component";
 import {MatListModule} from "@angular/material/list";
 import { FooterComponent } from './footer/footer.component';
+import {AngularMaterialModule} from "../angular-material.module";
 
 @NgModule({
   declarations: [
@@ -25,11 +26,12 @@ import { FooterComponent } from './footer/footer.component';
         SideBarComponent,
         FooterComponent
     ],
-  imports: [
-    CommonModule,
-    FormsModule,
-    RouterModule,
-    MatListModule
-  ]
+    imports: [
+        CommonModule,
+        FormsModule,
+        RouterModule,
+        MatListModule,
+        AngularMaterialModule
+    ]
 })
 export class ShareModule { }
