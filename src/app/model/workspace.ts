@@ -13,4 +13,6 @@ export interface Workspace {
   members: MemberWorkspace[];
 
   boards: Board[];
+
+  privacy: string;
 }

@@ -4,6 +4,8 @@ import {RouterModule, Routes} from '@angular/router';
 import {HomeComponent} from "./home/home.component";
 import {BoardsComponent} from "./boards/boards.component";
 import {BoardViewComponent} from "./board-view/board-view.component";
+import {WorkspaceHomeComponent} from "./workspace/workspacehome/workspace-home.component";
+import {WorkspaceMembersComponent} from "./workspace/workspacemembers/workspace-members.component";
 
 const routes: Routes = [
   {
@@ -17,6 +19,14 @@ const routes: Routes = [
   {
     path:'board/:id',
     component:BoardViewComponent
+  },
+  {
+    path:'workspaces/:id/home',
+    component:WorkspaceHomeComponent
+  },
+  {
+    path:'workspaces/:id/members',
+    component:WorkspaceMembersComponent
   }
 ];
 

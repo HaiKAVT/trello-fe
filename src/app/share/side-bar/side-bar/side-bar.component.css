@@ -1,3 +1,4 @@
+@import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
 
 a,
 a:hover,
@@ -37,7 +38,6 @@ a:focus {
   display: flex;
   width: 100%;
   align-items: stretch;
-  background-image: linear-gradient(to top, #fff1eb 0%, #6d7fcc 100%);
 }
 
 #sidebar {
@@ -78,7 +78,7 @@ a:focus {
   background: #fff;
 }
 
-#sidebar ul li.active > a,
+#sidebar ul li.active>a,
 a[aria-expanded="true"] {
   color: #fff;
   background: #6d7fcc;
@@ -144,16 +144,13 @@ a.article:hover {
   #sidebar {
     margin-left: -250px;
   }
-
   #sidebar.active {
     margin-left: 0;
   }
-
   #sidebarCollapse span {
     display: none;
   }
 }
-
 .section-board {
   width: fit-content;
   display: flex;
@@ -400,12 +397,20 @@ h1.app-name {
   margin-right: 5px;
 }
 
+span{
+  margin-left: 135px;
+}
+
 .fa-plus-circle{
-  font-size: 50px;
-  margin-top: 30px;
+  font-size: 20px;
+}
+
+.fa-plus-circle:hover{
+  color: black;
 }
 
 .img-circle-add-board{
   margin: inherit;
   text-align: center;
 }
+

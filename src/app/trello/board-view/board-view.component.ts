@@ -183,8 +183,9 @@ export class BoardViewComponent implements OnInit {
     document.getElementById('createCardModal')!.classList.remove('is-active')
   }
 
-  showEditCardModal(card: Card) {
+  showEditCardModal(card: Card,column:Column) {
     this.selectedCard = card;
+    this.selectedColumn = column;
     this.createCardForm.get('title')?.setValue(card.title);
     this.createCardForm.get('content')?.setValue(card.content);
     this.getSelectedCardAttachment();
@@ -360,6 +361,7 @@ export class BoardViewComponent implements OnInit {
     } else {
       this.selectedFile = null;
     }
+    this.uploadFile()
   }
 
   pendingPreview(event: any) {
@@ -400,6 +402,7 @@ export class BoardViewComponent implements OnInit {
     //     break;
     //   }
     // }
+    this.newAttachment.card = this.selectedCard
     if (this.canEdit && this.selectedFile != null) {
       const filePath = `${this.selectedFile.name.split('.').slice(0, -1).join('.')}_${new Date().getTime()}`;
       const fileRef = this.storage.ref(filePath);
@@ -410,6 +413,7 @@ export class BoardViewComponent implements OnInit {
             this.newAttachment.source = url;
             this.newAttachment.name = `${this.selectedFile.name}`;
             this.newAttachment.card = this.selectedCard;
+            console.log(this.newAttachment)
             this.attachmentService.addNewFile(this.newAttachment).subscribe(() => {
                 this.toastService.showMessage("Upload success", 'is-success');
                 this.getSelectedCardAttachment()

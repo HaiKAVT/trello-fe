@@ -8,6 +8,8 @@ import {BoardsComponent} from './boards/boards.component';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {DragDropModule} from "@angular/cdk/drag-drop";
 import { BoardViewComponent } from './board-view/board-view.component';
+import { WorkspaceHomeComponent } from './workspace/workspacehome/workspace-home.component';
+import { WorkspaceMembersComponent } from './workspace/workspacemembers/workspace-members.component';
 
 
 @NgModule({
@@ -15,6 +17,8 @@ import { BoardViewComponent } from './board-view/board-view.component';
     HomeComponent,
     BoardsComponent,
     BoardViewComponent,
+    WorkspaceHomeComponent,
+    WorkspaceMembersComponent,
   ],
   imports: [
     CommonModule,

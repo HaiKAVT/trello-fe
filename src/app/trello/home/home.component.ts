@@ -7,6 +7,8 @@ import {UserToken} from "../../model/user-token";
 import {ToastService} from "../../service/toast/toast.service";
 import {Column} from "../../model/column";
 import {ColumnService} from "../../service/column/column.service";
+import {Workspace} from "../../model/workspace";
+import {WorkspaceService} from "../../service/workspace/workspace.service";
 
 @Component({
   selector: 'app-home',
@@ -26,17 +28,21 @@ export class HomeComponent implements OnInit {
   };
 
   createdBoard?: Board
+  workspaces: Workspace[] = [];
+  workspace: Workspace = {boards: [], id: 0, members: [], owner: undefined, title: "", type: "", privacy: ""};
 
   constructor(private modalService: ModalService,
               private boardService: BoardService,
               private authenticateService: AuthenticateService,
               private toastService: ToastService,
-              private columnService: ColumnService) {
+              private columnService: ColumnService,
+              private workspaceService: WorkspaceService) {
   }
 
   ngOnInit(): void {
     this.loggedInUser = this.authenticateService.getCurrentUserValue()
     this.getBoards()
+    this.getAllWorkspace();
   }
 
   getBoards() {
@@ -94,6 +100,44 @@ export class HomeComponent implements OnInit {
   }
 
   hideCreateBoard() {
+    this.resetInput();
     document.getElementById('create-board')!.classList.remove('is-active');
   }
+
+  showCreateWorkspaceModal() {
+    document.getElementById('create-workspace')!.classList.add('is-active');
+  }
+
+  hideCreateWorkspaceModal() {
+    this.resetWorkspaceInput()
+    document.getElementById('create-workspace')!.classList.remove('is-active');
+  }
+
+  getAllWorkspace() {
+    this.workspaceService.findAllByOwnerId(this.loggedInUser.id).subscribe(data => {
+      this.workspaces = data;
+    })
+  }
+
+  createWorkspace() {
+    this.workspace.owner = this.loggedInUser;
+    this.workspaceService.createWorkspace(this.workspace).subscribe(()=>{
+      this.getAllWorkspace();
+      this.toastService.showMessage("Nhóm đã được tạo", 'is-success');
+      this.hideCreateWorkspaceModal();
+    })
+  }
+
+  resetWorkspaceInput() {
+    this.workspace = {boards: [], id: 0, members: [], owner: undefined, title: "", type: "", privacy: ""};
+  }
+
+  // createWorkspaces(){
+  //   this.workspace.owner = this.currentUser
+  //   this.hideAddWorkspaceModal()
+  //   this.workspaceService.create(this.workspace).subscribe((workspaces) => {
+  //     this.getAllWorkspace()
+  //     this.router.navigateByUrl(`/trello/workspaces/${workspaces.id}`)
+  //   })
+  // }
 }
