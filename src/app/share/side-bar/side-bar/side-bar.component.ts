@@ -11,7 +11,7 @@ import {WorkspaceService} from "../../../service/workspace/workspace.service";
   styleUrls: ['./side-bar.component.css']
 })
 export class SideBarComponent implements OnInit {
-  workspaces: Workspace[] = [];
+  @Input() workspaces: Workspace[] = [];
   loggedInUser!: UserToken;
 
   constructor(private authenticateService: AuthenticateService,
@@ -33,12 +33,18 @@ export class SideBarComponent implements OnInit {
   showCreateWorkspaceModal() {
     document.getElementById('create-workspace')!.classList.add('is-active');
   }
-  showWorkspaceButton(id:any){
-    let toChange = document.getElementById(`workspace-${id}`);
+  showWorkspaceButton(index:any){
+    let toChange = document.getElementById(`workspace-${index}`);
+    let arrowDown = document.getElementById(`arrow-down-${index}`);
+    let arrowUp = document.getElementById(`arrow-up-${index}`);
     if(toChange!.classList.contains('is-hidden')){
       toChange!.classList.remove('is-hidden')
+      arrowDown!.classList.add('is-hidden')
+      arrowUp!.classList.remove('is-hidden')
     } else {
       toChange!.classList.add('is-hidden')
+      arrowDown!.classList.remove('is-hidden')
+      arrowUp!.classList.add('is-hidden')
     }
   }
 }

@@ -1,1 +1,59 @@
-<p>workspacehome works!</p>
+<section class="main-content columns is-fullheight" xmlns="http://www.w3.org/1999/html">
+  <app-side-bar [workspaces]="workspaces"></app-side-bar>
+  <div class="container column is-10" style="padding: 0px 13px 13px 0px;">
+    <div class="title-board">
+      <h1><i class="far fa-clipboard"></i>Boards</h1>
+    </div>
+    <div class="section-board">
+      <div class="card" (click)="displayAddBoardModal()" *ngIf="roleUserInWorkspace">
+        <div class="img-circle-add-board">
+          <a><i class="fas fa-plus-circle"></i></a>
+        </div>
+      </div>
+      <div class="card" *ngFor="let board of workspace.boards" routerLink="/board/{{board.id}}">
+        <div class="card-header"><p class="card-header-title">{{board.title}}</p></div>
+        <div class="card-content">
+          <div class="content">
+            <span style="font-size: small"><b>Id: </b>{{board.id}}</span> <br>
+            <span style="font-size: small"><b>Owner: </b>{{board.owner.username}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="modal" id="create-board">
+  <div class="modal-background" (click)="hideCreateBoard()"></div>
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <p class="modal-card-title">Tạo một bảng</p>
+      <button class="delete" aria-label="close" (click)="hideCreateBoard()"></button>
+    </header>
+    <section class="modal-card-body">
+      <label class="label">Tiêu đề</label>
+      <input class="input" type="text" required [(ngModel)]="newBoard.title" #boardTitle="ngModel">
+      <div *ngIf="boardTitle.invalid && boardTitle.touched" class="alert">
+        <div *ngIf="boardTitle.errors?.required" style="color: red;">Tiêu đề cần được nhập.</div>
+      </div>
+      <label class="label">Loại</label>
+      <div class="control">
+        <select class="input" [(ngModel)]="newBoard.type">
+          <option value="Private">Riêng tư</option>
+          <option value="Workspace">Nhóm</option>
+          <option value="Public">Công khai</option>
+        </select>
+      </div>
+      <br>
+      <div class="control">
+        <label class="label">Người tạo: <span
+          class="is-info user-button is-light">{{loggedInUser.username}}</span></label>
+      </div>
+    </section>
+    <footer class="modal-card-foot">
+      <div class=" is-right">
+        <button [disabled]="boardTitle.invalid" class="button is-dark is-right" (click)="createNewBoard()">Tạo</button>
+      </div>
+      <button class="button is-light is-right" (click)="hideCreateBoard()">Hủy</button>
+    </footer>
+  </div>
+</div>

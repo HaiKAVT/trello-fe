@@ -51,9 +51,6 @@ export class HomeComponent implements OnInit {
     })
   }
 
-  displayAddBoardModal() {
-    document.getElementById('create-board')!.classList.add('is-active');
-  }
 
   createNewBoard() {
     this.newBoard.owner = this.loggedInUser;
@@ -131,13 +128,4 @@ export class HomeComponent implements OnInit {
   resetWorkspaceInput() {
     this.workspace = {boards: [], id: 0, members: [], owner: undefined, title: "", type: "", privacy: ""};
   }
-
-  // createWorkspaces(){
-  //   this.workspace.owner = this.currentUser
-  //   this.hideAddWorkspaceModal()
-  //   this.workspaceService.create(this.workspace).subscribe((workspaces) => {
-  //     this.getAllWorkspace()
-  //     this.router.navigateByUrl(`/trello/workspaces/${workspaces.id}`)
-  //   })
-  // }
 }
