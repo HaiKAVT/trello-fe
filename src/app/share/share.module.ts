@@ -8,7 +8,7 @@ import {RouterModule} from "@angular/router";
 import { SideBarComponent } from './side-bar/side-bar/side-bar.component';
 import {NavbarComponent} from "./navbar/navbar.component";
 import {MatListModule} from "@angular/material/list";
-// import { FooterComponent } from './footer/footer.component';
+import { FooterComponent } from './footer/footer.component';
 
 @NgModule({
   declarations: [
@@ -16,14 +16,14 @@ import {MatListModule} from "@angular/material/list";
     NavbarBoardHeaderComponent,
     ModalComponent,
     SideBarComponent,
-    // FooterComponent
+    FooterComponent
   ],
     exports: [
         NavbarComponent,
         NavbarBoardHeaderComponent,
         ModalComponent,
         SideBarComponent,
-        // FooterComponent
+        FooterComponent
     ],
   imports: [
     CommonModule,
