@@ -315,7 +315,7 @@
             </div>
           </div>
           <div id="attachments" class="media-attachment-body" style="margin-left: 40px"
-               *ngFor="let attachment of selectedCardAttachment, index as i">
+               *ngFor="let attachment of pendingAttachment, index as i">
             <span class="media link-file">
               <a target="_blank" href="{{attachment.source}}">{{attachment.name}}</a>
                <a (click)="showDeleteAttachment(attachment.id)">
