@@ -408,7 +408,12 @@ span{
 .fa-plus-circle:hover{
   color: black;
 }
-
+.fa-angle-down{
+  color: black;
+}
+.fa-angle-up{
+  color: black;
+}
 .img-circle-add-board{
   margin: inherit;
   text-align: center;

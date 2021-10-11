@@ -7,6 +7,8 @@ import {AuthenticateService} from "../../service/authenticate.service";
 import {ToastService} from "../../service/toast/toast.service";
 import {Column} from "../../model/column";
 import {ColumnService} from "../../service/column/column.service";
+import {Workspace} from "../../model/workspace";
+import {WorkspaceService} from "../../service/workspace/workspace.service";
 
 @Component({
   selector: 'app-boards',
@@ -27,12 +29,15 @@ export class BoardsComponent implements OnInit {
     type: '',
   };
   createdBoard?: Board
+  workspaces: Workspace[] = [];
+  workspace: Workspace = {boards: [], id: 0, members: [], owner: undefined, title: "", type: "", privacy: ""};
 
   constructor(private modalService: ModalService,
               private boardService: BoardService,
               private authenticateService: AuthenticateService,
               private toastService: ToastService,
-              private columnService: ColumnService) {
+              private columnService: ColumnService,
+              private workspaceService: WorkspaceService) {
   }
 
   ngOnInit(): void {
@@ -40,6 +45,7 @@ export class BoardsComponent implements OnInit {
     this.getBoards()
     this.getPublicBoard()
     this.getPrivateBoard()
+    this.getAllWorkspace();
   }
 
   getBoards() {
@@ -110,5 +116,32 @@ export class BoardsComponent implements OnInit {
       board.columns.push(data);
       this.updateCreatedBoard();
     })
+  }
+  showCreateWorkspaceModal() {
+    document.getElementById('create-workspace')!.classList.add('is-active');
+  }
+
+  hideCreateWorkspaceModal() {
+    this.resetWorkspaceInput()
+    document.getElementById('create-workspace')!.classList.remove('is-active');
+  }
+
+  getAllWorkspace() {
+    this.workspaceService.findAllByOwnerId(this.loggedInUser.id).subscribe(data => {
+      this.workspaces = data;
+    })
+  }
+
+  createWorkspace() {
+    this.workspace.owner = this.loggedInUser;
+    this.workspaceService.createWorkspace(this.workspace).subscribe(()=>{
+      this.getAllWorkspace();
+      this.toastService.showMessage("Nhóm đã được tạo", 'is-success');
+      this.hideCreateWorkspaceModal();
+    })
+  }
+
+  resetWorkspaceInput() {
+    this.workspace = {boards: [], id: 0, members: [], owner: undefined, title: "", type: "", privacy: ""};
   }
 }
