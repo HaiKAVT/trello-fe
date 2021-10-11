@@ -19,8 +19,8 @@ export class WorkspaceService {
     return this.httpClient.get<Workspace[]>(`${API_URL}workspaces/owner/${id}`)
   }
 
-  findById(id:any):Observable<Workspace[]>{
-    return this.httpClient.get<Workspace[]>(`${API_URL}workspaces/${id}`)
+  findById(id:any):Observable<Workspace>{
+    return this.httpClient.get<Workspace>(`${API_URL}workspaces/${id}`)
   }
 
   updateWorkspace(id: any, workspace: Workspace): Observable<Workspace>{

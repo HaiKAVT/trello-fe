@@ -51,9 +51,6 @@ export class HomeComponent implements OnInit {
     })
   }
 
-  displayAddBoardModal() {
-    document.getElementById('create-board')!.classList.add('is-active');
-  }
 
   createNewBoard() {
     this.newBoard.owner = this.loggedInUser;
