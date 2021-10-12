@@ -44,7 +44,7 @@ export class RecoverPasswordComponent implements OnInit {
           nickname: new FormControl(this.user.nickname),
         });
       } else {
-        this.toastService.showMessage('Không đúng!', 'is-warning');
+        this.toastService.showMessage('Tên tài khoản hoặc email không đúng!', 'is-warning');
       }
     })
   }
