@@ -25,13 +25,12 @@
         <button class="button is-primary">
           <i class="far fa-star"></i>
         </button>
-
         <button *ngIf="canEdit && !isInWorkspace" class="button is-primary"
                 (click)="toggleUserSearchBar()">
           <i class="fas fa-user-plus"></i>Mời
         </button>
-
         <div>
+          <div>
           <span *ngFor="let member of members; index as i">
             <a (click)="showDetail(member)" (mouseover)="showUserPreview(member)"
                (mouseout)="closeUserPreviews()"
@@ -49,14 +48,14 @@
               </span>
             </a>
           </span>
-          <span *ngIf="members.length > 5">
+            <span *ngIf="members.length > 5">
             <a>
               <img src="./assets/img/three-dots.png" (click)="showAllMembers()" class="img-circle"
                    style="width: 15px; height: 15px;margin-bottom: 20px;"/>
             </a>
           </span>
+          </div>
         </div>
-
       </div>
     </div>
     <div class="navbar-end">
@@ -64,8 +63,7 @@
         <div class="buttons">
           <div style="position: relative">
             <div id="menu-btn-dropdown" class="is-hidden" style="position: absolute; top: 25px">
-              <button *ngIf="canEdit" class="button is-danger is-light" (click)="toggleDeleteBoardModal()">Remove
-                Board
+              <button *ngIf="canEdit" class="button is-danger is-light" (click)="toggleDeleteBoardModal()">Xóa bảng
               </button>
             </div>
           </div>
@@ -102,7 +100,7 @@
                             </div>
                           </a>
                           <a class="header__notify-link" routerLink="{{activity.url}}" *ngIf="!activity.card">
-                            <img src="https://dizibrand.com/wp-content/uploads/2019/07/trello-la-gi-dizibrand-1.png"
+                            <img src="https://firebasestorage.googleapis.com/v0/b/trello-h3k.appspot.com/o/h3k.png?alt=media&token=575e3071-bd05-44f2-89fb-04851d21af49"
                                  alt=""
                                  class="header__notify-img">
                             <div class="header__notify-info">
@@ -118,7 +116,7 @@
               </div>
             </div>
           </div>
-          <div class="search-bar" style="right: 1220px;">
+          <div class="search-bar">
             <div *ngIf="searchBarIsShown" class="search-bar-input">
               <input class="input" type="text" placeholder="Tìm kiếm thành viên" [(ngModel)]="userSearch"
                      (keyup)="searchUsers()">
@@ -143,7 +141,7 @@
   <div class="modal-background"></div>
   <div class="modal-card">
     <header class="modal-card-head">
-      <p class="modal-card-title">Member Details</p>
+      <p class="modal-card-title">Thông tin thành viên</p>
       <button class="delete" aria-label="close" (click)="closeModal()"></button>
     </header>
     <section class="modal-card-body">
@@ -164,11 +162,9 @@
             </div>
           </div>
           <div class="content">
-            <div *ngIf="selectedMember.canEdit" class="notification is-success is-light">This user has the right to edit
-              this board
+            <div *ngIf="selectedMember.canEdit" class="notification is-success is-light">Người dùng này có quyền chỉnh sửa bản này
             </div>
-            <div *ngIf="!selectedMember.canEdit" class="notification is-info is-light">This user can not edit. Ask board
-              owner for permission!
+            <div *ngIf="!selectedMember.canEdit" class="notification is-info is-light">Người dùng này không có quyền chỉnh sửa bản này
             </div>
           </div>
         </div>
@@ -177,21 +173,21 @@
     <footer class="modal-card-foot">
       <button class="button is-danger is-light"
               *ngIf="canEdit && (selectedMember.userId )" (click)="removeSelectedMember()">
-        Remove member
+        Xóa thành viên !
       </button>
       <span *ngIf="canEdit && (selectedMember.userId)">
         <button class="button is-secondary is-light"
                 *ngIf="selectedMember.canEdit"
                 (click)="makeSelectedMemberObserver()">
-        Make observer
+        Cấp quyền thành viên
       </button>
       <button class="button is-success is-light"
               *ngIf="!selectedMember.canEdit"
               (click)="makeSelectedMemberEditor()">
-        Make editor
+        Cấp quyền chỉnh sửa
       </button>
       </span>
-      <button class="button is-light" (click)="closeModal()">Cancel</button>
+      <button class="button is-light" (click)="closeModal()">Hủy</button>
     </footer>
   </div>
 </div>
@@ -200,38 +196,17 @@
   <div class="modal-background"></div>
   <div class="modal-card">
     <header class="modal-card-head">
-      <p class="modal-card-title">Delete Board</p>
+      <p class="modal-card-title">Thông báo</p>
       <button class="delete" aria-label="close" (click)="toggleDeleteBoardModal()"></button>
     </header>
     <section class="modal-card-body">
       <div class="notification is-danger is-light">
-        Are you sure you want to delete this board?
+        Bạn có thực sự muốn xóa ?
       </div>
     </section>
     <footer class="modal-card-foot">
-      <button class="button is-danger is-light" (click)="removeThisBoard()">Remove Board</button>
-      <button class="button is-light" (click)="toggleDeleteBoardModal()">Cancel</button>
+      <button class="button is-danger is-light" (click)="removeThisBoard()">Xóa bảng</button>
+      <button class="button is-light" (click)="toggleDeleteBoardModal()">Hủy</button>
     </footer>
   </div>
 </div>
-
-<!--<div class="modal" id="addMember">-->
-<!--  <div class="modal-background">-->
-<!--    <div class="modal-card">-->
-<!--      <form [formGroup]="addMemberForm" class="form-group">-->
-<!--        <header class="modal-card-head" style="width: 300px">-->
-<!--          <p>Mời một thành viên tham gia</p>-->
-<!--        </header>-->
-<!--          <input type="email" class="form-control" formControlName="email" placeholder=" Địa chỉ email" style="width: 300px;border-top-width: 0px;padding-top: 10px;border-bottom-width: 0px;padding-bottom: 10px;border-left-width: 0px;border-right-width: 0px;">-->
-<!--        <div  *ngIf="this.addMemberForm.get('email')?.invalid && (this.addMemberForm.get('email')?.dirty || this.addMemberForm.get('email')?.touched)">-->
-<!--        <div *ngIf="this.addMemberForm.get('email')?.errors?.required">-->
-<!--        </div>-->
-<!--        </div>-->
-<!--        <footer class="modal-card-foot" style="width: 300px">-->
-<!--          <button id="1" class="button is-info add-new-card"  (click)="createAddMember()" [disabled]="addMemberForm.invalid">Thêm thành viên</button>-->
-<!--          <button id="2" class="button is-light" (click)="closeAddMember()">Hủy</button>-->
-<!--        </footer>-->
-<!--      </form>-->
-<!--    </div>-->
-<!--  </div>-->
-<!--</div>-->
