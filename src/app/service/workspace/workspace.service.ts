@@ -34,4 +34,8 @@ export class WorkspaceService {
   deleteWorkspace(id: any): Observable<Workspace>{
     return this.httpClient.delete<Workspace>(`${API_URL}workspaces/${id}`)
   }
+
+  getCurrentWorkspaceID(id:any): Observable<number>{
+    return this.httpClient.get<number>(`${API_URL}workspaces/${id}/boards`);
+  }
 }

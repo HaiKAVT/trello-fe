@@ -16,6 +16,7 @@ import {MemberService} from "../../service/member/member.service";
 import {ActivityLog} from "../../model/activity-log";
 import {NotificationService} from "../../service/notification/notification.service";
 import {EventEmitter} from '@angular/core';
+import {Workspace} from "../../model/workspace";
 
 @Component({
   selector: 'app-navbar-board-header',
@@ -23,7 +24,7 @@ import {EventEmitter} from '@angular/core';
   styleUrls: ['./navbar-board-header.component.scss']
 })
 export class NavbarBoardHeaderComponent implements OnInit {
-
+  @Input() workspace?: Workspace;
   @Input() currentBoard: Board = {columns: [], owner: {}, title: "", tags: []};
   @Input() canEdit: boolean = false;
   @Input() members: DetailedMember[] = [];
@@ -95,10 +96,19 @@ export class NavbarBoardHeaderComponent implements OnInit {
 
   searchUsers() {
     if (this.userSearch != '') {
-      this.userService.findUsersByKeyword(this.userSearch).subscribe(users => {
-        this.userResult = users;
-        this.cleanSearchResults();
-      });
+      if(this.isInWorkspace){
+        for(let member of this.workspace?.members!){
+          if(member.user?.username?.includes(this.userSearch)){
+            this.userResult.push(member)
+            this.cleanSearchResults();
+          }
+        }
+      } else {
+        this.userService.findUsersByKeyword(this.userSearch).subscribe(users => {
+          this.userResult = users;
+          this.cleanSearchResults();
+        });
+      }
     } else {
       this.userResult = [];
     }

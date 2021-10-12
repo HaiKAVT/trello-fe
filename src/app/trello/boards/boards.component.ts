@@ -74,14 +74,10 @@ export class BoardsComponent implements OnInit {
     this.newBoard.owner = this.loggedInUser;
     this.boardService.addBoard(this.newBoard).subscribe(async data => {
       this.createdBoard = data
-      await this.premadeColumnInBoard("Công việc", 0, this.createdBoard!);
-      await this.premadeColumnInBoard("Sẽ làm", 1, this.createdBoard!);
-      await this.premadeColumnInBoard("Đang làm", 2, this.createdBoard!);
-      await this.premadeColumnInBoard("Đã xong", 3, this.createdBoard!);
-      await this.toastService.showMessage("Bảng đã được tạo", "is-success");
-      await this.getBoards()
-      await this.resetInput();
-      await this.hideCreateBoard()
+      this.toastService.showMessage("Bảng đã được tạo", "is-success");
+      this.getBoards()
+      this.resetInput();
+      this.hideCreateBoard()
     })
   }
 
