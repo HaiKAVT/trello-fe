@@ -47,28 +47,20 @@
         <button class="button is-primary">
           {{member.role}}
         </button>
-        <!--        <button class="button is-primary" style="width: 40px" (click)="removeMembers(i)"-->
-        <!--                *ngIf="workspace.owner.id == currentUser.id">-->
-        <!--          <i class="fas fa-user-minus" style="color: red"></i>-->
-        <!--        </button>-->
-        <!--        <button class="button is-primary" style="width: 40px" (click)="removeMembers(i)"-->
-        <!--                *ngIf="member.user?.id == currentUser.id && member.role != 'Admin'">-->
-        <!--          <i class="fas fa-user-minus" style="color: red"></i>-->
-        <!--        </button>-->
         <button class="button is-primary" style="width: 40px" (click)="removeMembers(i,member)"
-                *ngIf="allowEdit">
+                *ngIf="allowEdit && loggedInUser.id != member.user?.id">
           <i class="fas fa-user-minus" style="color: red"></i>
         </button>
 
         <button class="button is-success" style="top: 10px" (click)="updateMember(member,'Admin')"
-                *ngIf="allowEdit && member.role !== 'Admin'">Set Admin
+                *ngIf="allowEdit && member.role !== 'Admin' && isOwner">Quản trị
         </button>
         <button class="button is-success" style="top: 10px" (click)="updateMember(member,'Member')"
-                *ngIf="allowEdit && member.role == 'Admin' && loggedInUser.id != member.user?.id">Set Member
+                *ngIf="allowEdit && (member.role == 'Admin' || member.role == 'Editor') && loggedInUser.id != member.user?.id">Chỉ xem
         </button>
-        <!--        <button class="button is-success" style="top: 10px" (click)="updateMember(member,'Admin')"-->
-        <!--                *ngIf="workspace.owner.id == currentUser.id && member.role !== 'Admin'">Set Admin-->
-        <!--        </button>-->
+        <button class="button is-success" style="top: 10px" (click)="updateMember(member,'Editor')"
+                *ngIf="allowEdit && (member.role == 'Admin' || member.role == 'Member')">Chỉnh sửa
+        </button>
         <!--        <button class="button is-success" style="top: 10px" (click)="updateMember(member,'Member')"-->
         <!--                *ngIf="workspace.owner.id == currentUser.id && member.role == 'Admin'">Set Member-->
         <!--        </button>-->

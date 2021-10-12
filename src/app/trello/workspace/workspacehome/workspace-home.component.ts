@@ -8,6 +8,10 @@ import {AuthenticateService} from "../../../service/authenticate.service";
 import {ToastService} from "../../../service/toast/toast.service";
 import {UserToken} from "../../../model/user-token";
 import {Board} from "../../../model/board";
+import {NotificationService} from "../../../service/notification/notification.service";
+import {MemberService} from "../../../service/member/member.service";
+import {User} from "../../../model/user";
+import {Notification} from "../../../model/notification";
 
 @Component({
   selector: 'app-workspacehome',
@@ -28,7 +32,7 @@ export class WorkspaceHomeComponent implements OnInit {
     columns: [],
     type: '',
   };
-  newWorkspace:Workspace = {boards: [], id: 0, members: [], owner: undefined, title: "", type: "", privacy: ""};
+  newWorkspace: Workspace = {boards: [], id: 0, members: [], owner: undefined, title: "", type: "", privacy: ""};
 
   constructor(private workspaceService: WorkspaceService,
               private userService: UserService,
@@ -36,7 +40,9 @@ export class WorkspaceHomeComponent implements OnInit {
               private boardService: BoardService,
               private router: Router,
               private authenticateService: AuthenticateService,
-              private toastService: ToastService) {
+              private toastService: ToastService,
+              private notificationService: NotificationService,
+              private memberService: MemberService) {
   }
 
   ngOnInit(): void {
@@ -88,14 +94,15 @@ export class WorkspaceHomeComponent implements OnInit {
     this.boardService.addBoard(this.newBoard).subscribe(data => {
       this.toastService.showMessage("Bảng đã được tạo", "is-success");
       this.workspaceAddBoard(data)
+      this.createNotificationBoard(`đã thêm ${data.title} vào nhóm ${this.workspace.title}`, data.id);
       this.resetInput();
       this.hideCreateBoard();
     })
   }
 
-  workspaceAddBoard(board: Board){
+  workspaceAddBoard(board: Board) {
     this.workspace.boards.push(board);
-    this.workspaceService.updateWorkspace(this.workspace.id, this.workspace).subscribe(()=>{
+    this.workspaceService.updateWorkspace(this.workspace.id, this.workspace).subscribe(() => {
       this.getCurrentWorkspace(this.currentWorkspaceId)
     })
   }
@@ -123,7 +130,7 @@ export class WorkspaceHomeComponent implements OnInit {
 
   createWorkspace() {
     this.newWorkspace.owner = this.loggedInUser;
-    this.workspaceService.createWorkspace(this.newWorkspace).subscribe(()=>{
+    this.workspaceService.createWorkspace(this.newWorkspace).subscribe(() => {
       this.getAllWorkspace();
       this.toastService.showMessage("Nhóm đã được tạo", 'is-success');
       this.hideCreateWorkspaceModal();
@@ -132,5 +139,20 @@ export class WorkspaceHomeComponent implements OnInit {
 
   resetWorkspaceInput() {
     this.newWorkspace = {boards: [], id: 0, members: [], owner: undefined, title: "", type: "", privacy: ""};
+  }
+
+  createNotificationBoard(notification: string, boardId: any) {
+    let receiver: User[] = [];
+    for (let members of this.workspace.members) {
+      receiver.push(members.user!);
+    }
+    let notify: Notification = {
+      title: this.workspace.title,
+      content: `${this.loggedInUser.username} ${notification} vào lúc ${this.notificationService.getTime()}`,
+      url: `trello/board/${boardId}`,
+      status: false,
+      receiver: receiver
+    }
+    this.notificationService.saveNotification(notify)
   }
 }
