@@ -5,7 +5,7 @@
       <h1><i class="far fa-clipboard"></i>Boards</h1>
     </div>
     <div class="section-board">
-      <div class="card" (click)="displayAddBoardModal()" *ngIf="roleUserInWorkspace">
+      <div class="card" (click)="displayAddBoardModal()" *ngIf="allowEdit">
         <div class="img-circle-add-board">
           <a><i class="fas fa-plus-circle"></i></a>
         </div>

@@ -17,7 +17,7 @@ import {Board} from "../../../model/board";
 export class WorkspaceHomeComponent implements OnInit {
   workspace!: Workspace;
   workspaces: Workspace[] = [];
-  roleUserInWorkspace: Boolean = false;
+  allowEdit: Boolean = false;
   loggedInUser!: UserToken;
   currentWorkspaceId!: number;
   newBoard: Board = {
@@ -65,8 +65,12 @@ export class WorkspaceHomeComponent implements OnInit {
 
   checkRole(workspace: Workspace) {
     if (this.loggedInUser.id == workspace.owner.id) {
-      console.log(this.workspace.owner)
-      this.roleUserInWorkspace = true;
+      this.allowEdit = true;
+    }
+    for (let member of this.workspace.members) {
+      if ((this.loggedInUser.id == member.user?.id && (member.role == "Admin" || member.role == "Editor"))) {
+        this.allowEdit = true
+      }
     }
   }
 
