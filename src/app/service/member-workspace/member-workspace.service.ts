@@ -30,6 +30,11 @@ export class MemberWorkspaceService {
   }
 
   findInWorkspace(string:string, workspaceId:any):Observable<MemberWorkspace[]>{
-    return this.httpClient.get<MemberWorkspace[]>(`${environment.api_url}member-workspace/search/${string}/${workspaceId}`);
+    return this.httpClient.get<MemberWorkspace[]>(`${API_URL}member-workspace/search/${string}/${workspaceId}`);
   }
+
+  findByWorkspace(workspaceId:any,params:any):Observable<any>{
+    return this.httpClient.get<any>(`${API_URL}member-workspace/${workspaceId}/workspace`,{params})
+  }
+
 }

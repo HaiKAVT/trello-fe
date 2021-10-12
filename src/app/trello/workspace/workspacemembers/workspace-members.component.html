@@ -4,7 +4,8 @@
     <div class="navbar-end" *ngIf="allowEdit || loggedInUser.id == workspace.owner?.id">
       <div class="navbar-item">
         <div class="buttons">
-          <button class="button is-primary" *ngIf="isAdmin || isOwner" (click)="showSingleInvite()" style="width: 180px">
+          <button class="button is-primary" *ngIf="isAdmin || isOwner" (click)="showSingleInvite()"
+                  style="width: 180px">
             <i class="fas fa-user-plus"></i>
             Mời một thành viên
           </button>
@@ -40,7 +41,11 @@
         </button>
       </div>
     </div>
-    <div class="user-container" *ngFor="let member of memberInWorkspace; index as i"
+    <div class="user-container" *ngFor="let member of memberInWorkspace | paginate:{
+    itemsPerPage:pageSize,
+    currentPage:page,
+    totalItems:count
+    }; index as i"
          [class.background-current-user]="loggedInUser.id == member.user?.id">
       <div class="user-info">
         <div>
@@ -60,20 +65,22 @@
           <i class="fas fa-user-minus" style="color: red"></i>
         </button>
         <div>
-          <button class="button is-success" style="top: 10px" (click)="updateMember(member,'Quản trị')"
+          <button class="button is-success" (click)="updateMember(member,'Quản trị')"
                   *ngIf="member.role !== 'Quản trị' && isOwner">Quản trị
           </button>
-          <button class="button is-success" style="top: 10px; margin-left: 20px" (click)="updateMember(member,'Chỉ xem')"
+          <button class="button is-success"
+                  (click)="updateMember(member,'Chỉ xem')"
                   *ngIf="isOwner && member.role != 'Chỉ xem' && loggedInUser.id != member.user?.id">Chỉ xem
           </button>
-          <button class="button is-success" style="top: 10px; margin-left: 20px" (click)="updateMember(member,'Chỉnh sửa')"
+          <button class="button is-success"
+                  (click)="updateMember(member,'Chỉnh sửa')"
                   *ngIf="isOwner && member.role != 'Chỉnh sửa' && loggedInUser.id != member.user?.id">Chỉnh sửa
           </button>
         </div>
-        <button class="button is-success" style="top: 10px" (click)="updateMember(member,'Chỉ xem')"
+        <button class="button is-success"  (click)="updateMember(member,'Chỉ xem')"
                 *ngIf="isAdmin && member.role == 'Chỉnh sửa' && loggedInUser.id != member.user?.id">Chỉ xem
         </button>
-        <button class="button is-success" style="top: 10px" (click)="updateMember(member,'Chỉnh sửa')"
+        <button class="button is-success"  (click)="updateMember(member,'Chỉnh sửa')"
                 *ngIf="isAdmin && member.role == 'Chỉ xem' && loggedInUser.id != member.user?.id">Chỉnh sửa
         </button>
         <!--        <button class="button is-success" style="top: 10px" (click)="updateMember(member,'Member')"-->
@@ -81,6 +88,15 @@
         <!--        </button>-->
       </div>
     </div>
+    <pagination-controls previousLabel="Trước"
+                         nextLabel="Sau"
+                         [responsive]="true"
+                         (pageChange)="handlePageChange($event)"></pagination-controls>
+    <select (change)="handlePageSizeChange($event)">
+      <option *ngFor="let size of pageSizes" [ngValue]="size">
+        {{ size }}
+      </option>
+    </select>
   </div>
 </section>
 

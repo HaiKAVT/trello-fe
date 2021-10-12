@@ -242,6 +242,10 @@ h1.app-name {
   width: 100px;
   margin: 10px;
 }
+.button.is-success{
+  width: 100px;
+  margin: 10px;
+}
 
 .list-user {
   padding: 10px;
@@ -299,6 +303,5 @@ h1.app-name {
 
 .background-current-user {
   background-color: rgba(109, 127, 204, 0.25);
-
 }
 

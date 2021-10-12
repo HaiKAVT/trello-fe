@@ -10,6 +10,8 @@ import {DragDropModule} from "@angular/cdk/drag-drop";
 import { BoardViewComponent } from './board-view/board-view.component';
 import { WorkspaceHomeComponent } from './workspace/workspacehome/workspace-home.component';
 import { WorkspaceMembersComponent } from './workspace/workspacemembers/workspace-members.component';
+import {AngularMaterialModule} from "../angular-material.module";
+import {NgxPaginationModule} from "ngx-pagination";
 
 
 @NgModule({
@@ -26,7 +28,9 @@ import { WorkspaceMembersComponent } from './workspace/workspacemembers/workspac
     ShareModule,
     FormsModule,
     ReactiveFormsModule,
-    DragDropModule
+    DragDropModule,
+    AngularMaterialModule,
+    NgxPaginationModule
   ]
 })
 export class TrelloModule {
