@@ -97,12 +97,7 @@ export class NavbarBoardHeaderComponent implements OnInit {
   searchUsers() {
     if (this.userSearch != '') {
       if(this.isInWorkspace){
-        for(let member of this.workspace?.members!){
-          if(member.user?.username?.includes(this.userSearch)){
-            this.userResult.push(member)
-            this.cleanSearchResults();
-          }
-        }
+        this.
       } else {
         this.userService.findUsersByKeyword(this.userSearch).subscribe(users => {
           this.userResult = users;
