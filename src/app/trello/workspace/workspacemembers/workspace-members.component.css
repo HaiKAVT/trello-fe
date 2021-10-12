@@ -243,6 +243,11 @@ h1.app-name {
   margin: 10px;
 }
 
+.button.is-success {
+  width: 100px;
+  margin: 10px;
+}
+
 .list-user {
   padding: 10px;
   font-size: 16px;
@@ -299,6 +304,30 @@ h1.app-name {
 
 .background-current-user {
   background-color: rgba(109, 127, 204, 0.25);
-
 }
 
+.my-pagination /deep/ .ngx-pagination {
+  margin-left: 41%;
+  margin-top: 30px;
+  justify-content: space-evenly;
+}
+
+.my-pagination /deep/ .ngx-pagination .pagination-previous {
+  background: #6d7fcc;
+  color: white;
+  width: 100px;
+  margin-right: 5px;
+  margin-top: -5px;
+}
+
+.my-pagination /deep/ .ngx-pagination .pagination-next {
+  background: #6d7fcc;
+  color: white;
+  width: 100px;
+  margin-top: -5px;
+}
+
+.my-pagination /deep/ .ngx-pagination .current {
+  background: #6d7fcc;
+  color: white;
+}

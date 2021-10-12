@@ -36,6 +36,9 @@ export class WorkspaceMembersComponent implements OnInit {
   memberInWorkspace: MemberWorkspace[] = [];
   newWorkspace: Workspace = {boards: [], id: 0, members: [], owner: undefined, title: "", type: "", privacy: ""};
 
+  page = 1;
+  count = 0;
+  pageSize = 20;
   constructor(private workspaceService: WorkspaceService,
               private userService: UserService,
               private activatedRoute: ActivatedRoute,
@@ -56,6 +59,7 @@ export class WorkspaceMembersComponent implements OnInit {
       if (this.currentWorkspaceId != null) {
         this.getCurrentWorkspace(this.currentWorkspaceId);
         this.getAllWorkspace();
+        this.getMemberInWorkspace()
       }
     });
   }
@@ -282,4 +286,35 @@ export class WorkspaceMembersComponent implements OnInit {
     }
     this.notificationService.saveNotification(notification)
   }
+
+  getRequestParam(page: number, pageSize:number){
+    let params:any = {};
+    if(page){
+      params[`page`]=page-1;
+    }
+    if(pageSize){
+      params[`size`]=pageSize;
+    }
+    return params
+  }
+
+  getMemberInWorkspace(){
+    const params = this.getRequestParam(this.page, this.pageSize);
+    this.workspaceMemberService.findByWorkspace(this.currentWorkspaceId,params).subscribe(data=>{
+      this.memberInWorkspace = data.members;
+      this.count = data.totalItems;
+    })
+  }
+
+  handlePageChange(event:any){
+    this.page = event;
+    this.getMemberInWorkspace()
+  }
+
+  handlePageSizeChange(event: any): void {
+    this.pageSize = event.target.value;
+    this.page = 1;
+    this.getMemberInWorkspace();
+  }
+
 }

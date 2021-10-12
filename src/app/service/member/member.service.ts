@@ -5,6 +5,7 @@ import {Observable} from "rxjs";
 import {DetailedMember} from '../../model/detailed-member';
 import {Member} from "../../model/member";
 import {User} from "../../model/user";
+import {MemberWorkspace} from "../../model/member-workspace";
 
 const API_URL = `${environment.api_url}`
 
@@ -38,5 +39,4 @@ export class MemberService {
   deleteMemberBoardWorkspace(boardId: any, userId: any): Observable<Member> {
     return this.httpClient.delete<Member>(`${API_URL}members/${boardId}/${userId}`, );
   }
-
 }

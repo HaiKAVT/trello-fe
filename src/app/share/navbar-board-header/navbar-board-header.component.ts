@@ -16,6 +16,8 @@ import {MemberService} from "../../service/member/member.service";
 import {ActivityLog} from "../../model/activity-log";
 import {NotificationService} from "../../service/notification/notification.service";
 import {EventEmitter} from '@angular/core';
+import {Workspace} from "../../model/workspace";
+import {MemberWorkspaceService} from "../../service/member-workspace/member-workspace.service";
 
 @Component({
   selector: 'app-navbar-board-header',
@@ -23,6 +25,7 @@ import {EventEmitter} from '@angular/core';
   styleUrls: ['./navbar-board-header.component.scss']
 })
 export class NavbarBoardHeaderComponent implements OnInit {
+  @Input() workspace?: Workspace;
   @Input() currentBoard: Board = {columns: [], owner: {}, title: "", tags: []};
   @Input() canEdit: boolean = false;
   @Input() members: DetailedMember[] = [];
@@ -42,7 +45,8 @@ export class NavbarBoardHeaderComponent implements OnInit {
               public activityLogService: ActivityLogService,
               public redirectService: RedirectService,
               private memberService: MemberService,
-              public notificationService: NotificationService) {
+              public notificationService: NotificationService,
+              private memberWorkspaceService:MemberWorkspaceService) {
   }
 
   ngOnInit() {
@@ -94,10 +98,18 @@ export class NavbarBoardHeaderComponent implements OnInit {
 
   searchUsers() {
     if (this.userSearch != '') {
-      this.userService.findUsersByKeyword(this.userSearch).subscribe(users => {
-        this.userResult = users;
-        this.cleanSearchResults();
-      });
+      if(this.isInWorkspace){
+        this.userService.findByKeywordAndWorkspace(this.userSearch,this.workspace?.id).subscribe(users=>{
+          console.log(users)
+          this.userResult = users;
+          this.cleanSearchResults();
+        })
+      } else {
+        this.userService.findUsersByKeyword(this.userSearch).subscribe(users => {
+          this.userResult = users;
+          this.cleanSearchResults();
+        });
+      }
     } else {
       this.userResult = [];
     }

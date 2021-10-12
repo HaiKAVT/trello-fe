@@ -22,6 +22,9 @@ import {DetailedMember} from "../../model/detailed-member";
 import {RedirectService} from "../../service/redirect/redirect.service";
 import {AttachmentService} from "../../service/attachment/attachment.service";
 import {MemberService} from "../../service/member/member.service";
+import {Workspace} from "../../model/workspace";
+import {WorkspaceService} from "../../service/workspace/workspace.service";
+import {MemberWorkspace} from "../../model/member-workspace";
 
 @Component({
   selector: 'app-board-view',
@@ -92,8 +95,10 @@ export class BoardViewComponent implements OnInit {
   pendingAttachment: Attachment[] = [];
   pendingTag: Tag[] = [];
   selectedAttachmentId: number = -1;
-
-  isTagsIsShown : boolean = false;
+  currentWorkspace!: Workspace;
+  memberInWorkspace: MemberWorkspace[] = [];
+  isBoardInWorkspace: boolean = false;
+  isTagsIsShown: boolean = false;
 
   constructor(private activatedRoute: ActivatedRoute,
               private boardService: BoardService,
@@ -107,7 +112,8 @@ export class BoardViewComponent implements OnInit {
               private storage: AngularFireStorage,
               public redirectService: RedirectService,
               private attachmentService: AttachmentService,
-              private memberService:MemberService) {
+              private memberService: MemberService,
+              private workspaceService: WorkspaceService) {
   }
 
   ngOnInit(): void {
@@ -183,11 +189,13 @@ export class BoardViewComponent implements OnInit {
     this.selectedColumnID = -1;
     this.pendingAttachment = [];
     this.pendingTag = [];
-    if(this.isTagsIsShown){this.switchCreateTagsForm()}
+    if (this.isTagsIsShown) {
+      this.switchCreateTagsForm()
+    }
     document.getElementById('createCardModal')!.classList.remove('is-active')
   }
 
-  showEditCardModal(card: Card,column:Column) {
+  showEditCardModal(card: Card, column: Column) {
     this.selectedCard = card;
     this.selectedColumn = column;
     this.createCardForm.get('title')?.setValue(card.title);
@@ -208,7 +216,7 @@ export class BoardViewComponent implements OnInit {
 
   closeEditCardModal() {
     this.resetCreateCardForm();
-    if(this.isTagsIsShown){
+    if (this.isTagsIsShown) {
       this.switchEditTagsForm()
     }
     document.getElementById('editCardModal')!.classList.remove('is-active')
@@ -476,11 +484,14 @@ export class BoardViewComponent implements OnInit {
   getMembers() {
     this.memberService.getMembersByBoardId(this.currentBoard.id).subscribe(members => {
       this.members = members;
+      this.checkEditAllow()
     });
   }
+
   getCurrentBoard() {
     this.boardService.getBoardById(this.currentBoardId).subscribe(board => {
       this.currentBoard = board;
+      this.checkWorkspace(board);
       this.getMembers()
       this.checkEditAllow();
     })
@@ -488,10 +499,62 @@ export class BoardViewComponent implements OnInit {
 
   checkEditAllow() {
     let userId = this.loggedInUser.id
-    let isEditAllow = userId == this.currentBoard.owner.id
-    if (isEditAllow) {
+    if (this.currentBoard.type == "Public") {
       this.canEdit = true;
+      return;
     }
+    if (this.loggedInUser.id == this.currentBoard.owner.id) {
+      this.canEdit = true;
+      console.log(this.canEdit)
+    }
+    if (this.isBoardInWorkspace) {
+      if(this.currentWorkspace.owner.id == this.loggedInUser.id){
+        this.canEdit = true;
+        return;
+      }
+      if(this.currentBoard.type == "Private") {
+        for (let member of this.members) {
+          if (member.userId == this.loggedInUser.id) {
+            if (member.canEdit) {
+              this.canEdit = true;
+              return;
+            }
+          }
+        }
+      } else {
+        for (let member of this.memberInWorkspace) {
+          if (member.user?.id == this.loggedInUser.id) {
+            if (member.role == "Quản trị" || member.role == "Chỉnh sửa") {
+              this.canEdit = true;
+            }
+          }
+        }
+      }
+    }
+    if(this.currentBoard.type == "Private") {
+      for (let member of this.members) {
+        if (member.userId == this.loggedInUser.id) {
+          if (member.canEdit) {
+            this.canEdit = true;
+          }
+        }
+      }
+    }
+  }
+
+  checkWorkspace(board: Board) {
+    this.boardService.isBoardInWorkspace(board.id!).subscribe(data => {
+      this.isBoardInWorkspace = data;
+      if (this.isBoardInWorkspace) {
+        this.workspaceService.getCurrentWorkspaceID(this.currentBoard.id).subscribe(id => {
+          this.workspaceService.findById(id).subscribe(workspace => {
+            this.currentWorkspace = workspace;
+            this.memberInWorkspace = workspace.members;
+            this.checkEditAllow()
+          })
+        })
+      }
+    })
   }
 
   boardDataUpdate() {

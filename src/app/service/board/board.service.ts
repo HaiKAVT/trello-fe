@@ -58,5 +58,7 @@ export class BoardService {
   getOwnedBoard(id:number):Observable<Board[]>{
     return this.http.get<Board[]>(`${API_URL}boards/${id}/owned-boards`)
   }
-
+  isBoardInWorkspace(id: number): Observable<boolean> {
+    return this.http.get<boolean>(`${API_URL}boards/${id}/is-in-workspace`);
+  }
 }
