@@ -35,6 +35,7 @@ export class BoardViewComponent implements OnInit {
   isSubmitted = false;
   members: DetailedMember[] = [];
   currentBoardId: number = -1;
+  tags: Tag[] = [];
   currentBoard: Board = {
     id: -1,
     owner: {},

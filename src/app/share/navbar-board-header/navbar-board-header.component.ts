@@ -23,7 +23,6 @@ import {EventEmitter} from '@angular/core';
   styleUrls: ['./navbar-board-header.component.scss']
 })
 export class NavbarBoardHeaderComponent implements OnInit {
-
   @Input() currentBoard: Board = {columns: [], owner: {}, title: "", tags: []};
   @Input() canEdit: boolean = false;
   @Input() members: DetailedMember[] = [];
