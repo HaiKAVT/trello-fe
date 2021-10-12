@@ -521,11 +521,12 @@ export class BoardViewComponent implements OnInit {
             }
           }
         }
-      }
-      for (let member of this.memberInWorkspace) {
-        if (member.user?.id == this.loggedInUser.id) {
-          if (member.role == "Quản trị" || member.role == "Chỉnh sửa") {
-            this.canEdit = true;
+      } else {
+        for (let member of this.memberInWorkspace) {
+          if (member.user?.id == this.loggedInUser.id) {
+            if (member.role == "Quản trị" || member.role == "Chỉnh sửa") {
+              this.canEdit = true;
+            }
           }
         }
       }

@@ -3,6 +3,7 @@ import {environment} from "../../../environments/environment";
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {User} from "../../model/user";
+import {MemberWorkspace} from "../../model/member-workspace";
 const API_URL = `${environment.api_url}`
 @Injectable({
   providedIn: 'root'
@@ -41,5 +42,8 @@ export class UserService {
 
   getMemberByBoardId(boardId: any): Observable<User[]> {
     return this.http.get<User[]>(`${API_URL}users/board/${boardId}`);
+  }
+  findByKeywordAndWorkspace(string:string, workspaceId:any):Observable<User[]>{
+    return this.http.get<User[]>(`${API_URL}users/search/${string}/${workspaceId}`);
   }
 }
