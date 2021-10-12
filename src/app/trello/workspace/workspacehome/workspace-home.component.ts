@@ -17,7 +17,7 @@ import {Board} from "../../../model/board";
 export class WorkspaceHomeComponent implements OnInit {
   workspace!: Workspace;
   workspaces: Workspace[] = [];
-  roleUserInWorkspace: Boolean = false;
+  allowEdit: Boolean = false;
   loggedInUser!: UserToken;
   currentWorkspaceId!: number;
   newBoard: Board = {
@@ -28,6 +28,7 @@ export class WorkspaceHomeComponent implements OnInit {
     columns: [],
     type: '',
   };
+  newWorkspace:Workspace = {boards: [], id: 0, members: [], owner: undefined, title: "", type: "", privacy: ""};
 
   constructor(private workspaceService: WorkspaceService,
               private userService: UserService,
@@ -40,11 +41,11 @@ export class WorkspaceHomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.loggedInUser = this.authenticateService.getCurrentUserValue()
+    this.getAllWorkspace();
     this.activatedRoute.paramMap.subscribe(paramMap => {
       this.currentWorkspaceId = parseInt(paramMap.get('id')!)
       if (this.currentWorkspaceId != null) {
         this.getCurrentWorkspace(this.currentWorkspaceId);
-        this.getAllWorkspace();
       }
     });
   }
@@ -65,8 +66,12 @@ export class WorkspaceHomeComponent implements OnInit {
 
   checkRole(workspace: Workspace) {
     if (this.loggedInUser.id == workspace.owner.id) {
-      console.log(this.workspace.owner)
-      this.roleUserInWorkspace = true;
+      this.allowEdit = true;
+    }
+    for (let member of this.workspace.members) {
+      if ((this.loggedInUser.id == member.user?.id && (member.role == "Admin" || member.role == "Editor"))) {
+        this.allowEdit = true
+      }
     }
   }
 
@@ -104,5 +109,28 @@ export class WorkspaceHomeComponent implements OnInit {
       columns: [],
       type: ''
     };
+  }
+
+  showCreateWorkspaceModal() {
+    document.getElementById('create-workspace')!.classList.add('is-active');
+  }
+
+  hideCreateWorkspaceModal() {
+    this.resetWorkspaceInput()
+    document.getElementById('create-workspace')!.classList.remove('is-active');
+  }
+
+
+  createWorkspace() {
+    this.newWorkspace.owner = this.loggedInUser;
+    this.workspaceService.createWorkspace(this.newWorkspace).subscribe(()=>{
+      this.getAllWorkspace();
+      this.toastService.showMessage("Nhóm đã được tạo", 'is-success');
+      this.hideCreateWorkspaceModal();
+    })
+  }
+
+  resetWorkspaceInput() {
+    this.newWorkspace = {boards: [], id: 0, members: [], owner: undefined, title: "", type: "", privacy: ""};
   }
 }

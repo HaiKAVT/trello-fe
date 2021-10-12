@@ -1,4 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {WorkspaceService} from "../../../service/workspace/workspace.service";
+import {UserToken} from "../../../model/user-token";
+import {Workspace} from "../../../model/workspace";
+import {User} from "../../../model/user";
+import {UserService} from "../../../service/user/user.service";
+import {ActivatedRoute, Router} from "@angular/router";
+import {BoardService} from "../../../service/board/board.service";
+import {AuthenticateService} from "../../../service/authenticate.service";
+import {ToastService} from "../../../service/toast/toast.service";
+import {MemberWorkspace} from "../../../model/member-workspace";
+import {MemberWorkspaceService} from "../../../service/member-workspace/member-workspace.service";
+import {MemberService} from "../../../service/member/member.service";
 
 @Component({
   selector: 'app-workspacemembers',
@@ -6,10 +18,170 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./workspace-members.component.css']
 })
 export class WorkspaceMembersComponent implements OnInit {
+  loggedInUser!: UserToken;
+  workspace!: Workspace;
+  workspaces: Workspace[] = [];
+  allowEdit: Boolean = false;
+  user: User = {};
+  userSearchResult: User[] = [];
+  currentWorkspaceId!: number;
+  pendingAddMember: User[] = [];
+  pendingAddMemberRole: string[] = [];
+  workspaceOwner!: User;
+  memberInWorkspace: MemberWorkspace[] = [];
+  newWorkspace: Workspace = {boards: [], id: 0, members: [], owner: undefined, title: "", type: "", privacy: ""};
 
-  constructor() { }
-
-  ngOnInit(): void {
+  constructor(private workspaceService: WorkspaceService,
+              private userService: UserService,
+              private activatedRoute: ActivatedRoute,
+              private boardService: BoardService,
+              private router: Router,
+              private authenticateService: AuthenticateService,
+              private toastService: ToastService,
+              private workspaceMemberService: MemberWorkspaceService,
+              private memberService: MemberService) {
   }
 
+  ngOnInit(): void {
+    this.loggedInUser = this.authenticateService.getCurrentUserValue()
+    this.getAllWorkspace();
+    this.activatedRoute.paramMap.subscribe(paramMap => {
+      this.currentWorkspaceId = parseInt(paramMap.get('id')!)
+      if (this.currentWorkspaceId != null) {
+        this.getCurrentWorkspace(this.currentWorkspaceId);
+        this.getAllWorkspace();
+      }
+    });
+  }
+
+  getCurrentWorkspace(id: any) {
+    this.workspaceService.findById(id).subscribe(data => {
+      this.workspace = data;
+      this.workspaceOwner = data.owner
+      this.memberInWorkspace = data.members
+      this.checkRole(data);
+    })
+  }
+
+  checkRole(workspace: Workspace) {
+    if (this.loggedInUser.id == workspace.owner.id) {
+      this.allowEdit = true;
+    }
+    for (let member of this.workspace.members) {
+      if ((this.loggedInUser.id == member.user?.id && member.role == "Admin")) {
+        this.allowEdit = true
+      }
+    }
+  }
+
+  getAllWorkspace() {
+    this.workspaceService.findAllByOwnerId(this.loggedInUser.id).subscribe(data => {
+      this.workspaces = data;
+    })
+  }
+
+  findAllUserByUsername(username: string) {
+    this.user.username = username;
+    if (username != "") {
+      this.userService.findUsersByKeyword(username).subscribe(data => {
+        for (let member of this.workspace.members) {
+          for (let user of data) {
+            if (member.user?.id == user.id) {
+              data.splice(data.indexOf(user), 1)
+            }
+          }
+        }
+        for (let member of this.pendingAddMember) {
+          for (let user of data) {
+            if (member.id == user.id) {
+              data.splice(data.indexOf(user), 1)
+            }
+          }
+        }
+        this.userSearchResult = data;
+      })
+    } else if (username == "") {
+      this.userSearchResult = []
+    }
+  }
+
+  selectUser(username: any, user: User) {
+    username.value = "";
+    this.pendingAddMember.push(user)
+    this.userSearchResult = []
+  }
+
+  addMemberToWorkspace() {
+    if (this.pendingAddMember.length > 0) {
+      let newMember: MemberWorkspace;
+      for (let user of this.pendingAddMember) {
+        newMember = {
+          user: user,
+          role: "Member"
+        }
+        this.workspaceMemberService.addWorkspaceMember(newMember).subscribe(data => {
+          this.workspace.members.push(data)
+          this.workspaceService.updateWorkspace(this.workspace.id, this.workspace).subscribe()
+        })
+      }
+      this.toastService.showMessage("Invite Success!", "is-success");
+      this.pendingAddMember = [];
+      this.hideInvite()
+    }
+  }
+
+  removePendingUser(index: any) {
+    this.pendingAddMember.splice(index, 1)
+  }
+
+  searchMembers(username: string) {
+
+  }
+
+  removeMembers(index: any, member: MemberWorkspace) {
+    let removeMember: MemberWorkspace[] = this.workspace.members.splice(index, 1);
+    this.workspaceService.updateWorkspace(this.workspace.id, this.workspace).subscribe();
+    for (let board of this.workspace.boards) {
+      for (let member of removeMember) {
+        this.memberService.deleteMemberBoardWorkspace(board.id, member.user?.id).subscribe()
+      }
+    }
+    this.workspaceMemberService.deleteWorkspaceMembers(removeMember).subscribe()
+  }
+
+  updateMember(member: MemberWorkspace, role: string) {
+    member.role = role;
+    this.workspaceMemberService.updateWorkspaceMember(member.id, member).subscribe()
+  }
+
+  hideInvite() {
+    document.getElementById('invite')!.classList.remove('is-active')
+  }
+
+  showInvite() {
+    document.getElementById('invite')!.classList.add('is-active')
+  }
+
+  showCreateWorkspaceModal() {
+    document.getElementById('create-workspace')!.classList.add('is-active');
+  }
+
+  hideCreateWorkspaceModal() {
+    this.resetWorkspaceInput()
+    document.getElementById('create-workspace')!.classList.remove('is-active');
+  }
+
+
+  createWorkspace() {
+    this.newWorkspace.owner = this.loggedInUser;
+    this.workspaceService.createWorkspace(this.newWorkspace).subscribe(() => {
+      this.getAllWorkspace();
+      this.toastService.showMessage("Nhóm đã được tạo", 'is-success');
+      this.hideCreateWorkspaceModal();
+    })
+  }
+
+  resetWorkspaceInput() {
+    this.newWorkspace = {boards: [], id: 0, members: [], owner: undefined, title: "", type: "", privacy: ""};
+  }
 }

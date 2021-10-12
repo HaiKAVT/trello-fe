@@ -3,12 +3,13 @@ import { CommonModule } from '@angular/common';
 
 import { NavbarBoardHeaderComponent } from './navbar-board-header/navbar-board-header.component';
 import { ModalComponent } from './modal/modal.component';
-import {FormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {RouterModule} from "@angular/router";
 import { SideBarComponent } from './side-bar/side-bar/side-bar.component';
 import {NavbarComponent} from "./navbar/navbar.component";
 import {MatListModule} from "@angular/material/list";
 import { FooterComponent } from './footer/footer.component';
+import {AngularMaterialModule} from "../angular-material.module";
 
 @NgModule({
   declarations: [
@@ -25,11 +26,13 @@ import { FooterComponent } from './footer/footer.component';
         SideBarComponent,
         FooterComponent
     ],
-  imports: [
-    CommonModule,
-    FormsModule,
-    RouterModule,
-    MatListModule
-  ]
+    imports: [
+        CommonModule,
+        FormsModule,
+        RouterModule,
+        MatListModule,
+        AngularMaterialModule,
+        ReactiveFormsModule
+    ]
 })
 export class ShareModule { }

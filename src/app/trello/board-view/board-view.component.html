@@ -1,5 +1,9 @@
 <div class="root">
-  <app-navbar-board-header [canEdit]="this.canEdit" [currentBoard]="this.currentBoard"></app-navbar-board-header>
+  <app-navbar-board-header
+    [canEdit]="this.canEdit"
+    [currentBoard]="this.currentBoard"
+    [members]="this.members"
+  ></app-navbar-board-header>
   <div class="board">
     <div class="board-wrapper">
       <div class="board-columns">

@@ -21,14 +21,14 @@ export class SideBarComponent implements OnInit {
 
   ngOnInit(): void {
     this.loggedInUser = this.authenticateService.getCurrentUserValue()
-    this.getAllWorkspace();
+    // this.getAllWorkspace();
   }
 
-  getAllWorkspace() {
-    this.workspaceService.findAllByOwnerId(this.loggedInUser.id).subscribe(data => {
-      this.workspaces = data;
-    })
-  }
+  // getAllWorkspace() {
+  //   this.workspaceService.findAllByOwnerId(this.loggedInUser.id).subscribe(data => {
+  //     this.workspaces = data;
+  //   })
+  // }
 
   showCreateWorkspaceModal() {
     document.getElementById('create-workspace')!.classList.add('is-active');
