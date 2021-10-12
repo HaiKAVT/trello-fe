@@ -88,15 +88,11 @@
         <!--        </button>-->
       </div>
     </div>
-    <pagination-controls previousLabel="Trước"
+    <pagination-controls class="my-pagination"
+      previousLabel="Trước"
                          nextLabel="Sau"
                          [responsive]="true"
                          (pageChange)="handlePageChange($event)"></pagination-controls>
-    <select (change)="handlePageSizeChange($event)">
-      <option *ngFor="let size of pageSizes" [ngValue]="size">
-        {{ size }}
-      </option>
-    </select>
   </div>
 </section>
 

@@ -38,8 +38,7 @@ export class WorkspaceMembersComponent implements OnInit {
 
   page = 1;
   count = 0;
-  pageSize = 5;
-  pageSizes = [5, 10, 20];
+  pageSize = 20;
   constructor(private workspaceService: WorkspaceService,
               private userService: UserService,
               private activatedRoute: ActivatedRoute,

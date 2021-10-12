@@ -242,7 +242,8 @@ h1.app-name {
   width: 100px;
   margin: 10px;
 }
-.button.is-success{
+
+.button.is-success {
   width: 100px;
   margin: 10px;
 }
@@ -305,3 +306,26 @@ h1.app-name {
   background-color: rgba(109, 127, 204, 0.25);
 }
 
+.my-pagination /deep/ .ngx-pagination {
+  margin-left: 45%;
+  margin-top: 30px;
+  justify-content: space-evenly;
+}
+
+.my-pagination /deep/ .ngx-pagination .pagination-previous {
+  background: #6d7fcc;
+  color: white;
+  width: 100px;
+  margin-right: 6px;
+}
+
+.my-pagination /deep/ .ngx-pagination .pagination-next {
+  background: #6d7fcc;
+  color: white;
+  width: 100px;
+}
+
+.my-pagination /deep/ .ngx-pagination .current {
+  background: #6d7fcc;
+  color: white;
+}
