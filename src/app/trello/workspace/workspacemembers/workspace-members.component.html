@@ -1,19 +1,27 @@
-<section class="main-content columns is-fullheight" style="margin-top: 40px">
+<section class="main-content columns is-fullheight">
   <app-side-bar [workspaces]="workspaces"></app-side-bar>
   <div class="container column is-10">
     <div class="navbar-end" *ngIf="allowEdit || loggedInUser.id == workspace.owner?.id">
       <div class="navbar-item">
         <div class="buttons">
-          <button class="button is-primary" (click)="showInvite()" style="width: 100px">
+          <button class="button is-primary" *ngIf="isAdmin || isOwner" (click)="showSingleInvite()" style="width: 180px">
             <i class="fas fa-user-plus"></i>
-            Invite
+            Mời một thành viên
+          </button>
+        </div>
+      </div>
+      <div class="navbar-item">
+        <div class="buttons">
+          <button class="button is-primary" *ngIf="isAdmin || isOwner" (click)="showInvite()" style="width: 190px">
+            <i class="fas fa-user-plus"></i>
+            Mời nhiều thành viên
           </button>
         </div>
       </div>
     </div>
 
     <div class="title-board">
-      <input #searchMember class="input is-link" type="text" placeholder="Find Member"
+      <input #searchMember class="input is-link" type="text" placeholder="Tìm kiếm thành viên trong nhóm"
              (keyup)="searchMembers(searchMember.value)">
     </div>
     <div class="user-container">
@@ -28,7 +36,7 @@
       </div>
       <div>
         <button class="button is-primary">
-          Owner
+          Chủ nhóm
         </button>
       </div>
     </div>
@@ -48,18 +56,25 @@
           {{member.role}}
         </button>
         <button class="button is-primary" style="width: 40px" (click)="removeMembers(i,member)"
-                *ngIf="allowEdit && loggedInUser.id != member.user?.id">
+                *ngIf="(isAdmin||isOwner) && loggedInUser.id != member.user?.id">
           <i class="fas fa-user-minus" style="color: red"></i>
         </button>
-
-        <button class="button is-success" style="top: 10px" (click)="updateMember(member,'Admin')"
-                *ngIf="allowEdit && member.role !== 'Admin' && isOwner">Quản trị
+        <div>
+          <button class="button is-success" style="top: 10px" (click)="updateMember(member,'Quản trị')"
+                  *ngIf="member.role !== 'Quản trị' && isOwner">Quản trị
+          </button>
+          <button class="button is-success" style="top: 10px; margin-left: 20px" (click)="updateMember(member,'Chỉ xem')"
+                  *ngIf="isOwner && member.role != 'Chỉ xem' && loggedInUser.id != member.user?.id">Chỉ xem
+          </button>
+          <button class="button is-success" style="top: 10px; margin-left: 20px" (click)="updateMember(member,'Chỉnh sửa')"
+                  *ngIf="isOwner && member.role != 'Chỉnh sửa' && loggedInUser.id != member.user?.id">Chỉnh sửa
+          </button>
+        </div>
+        <button class="button is-success" style="top: 10px" (click)="updateMember(member,'Chỉ xem')"
+                *ngIf="isAdmin && member.role == 'Chỉnh sửa' && loggedInUser.id != member.user?.id">Chỉ xem
         </button>
-        <button class="button is-success" style="top: 10px" (click)="updateMember(member,'Member')"
-                *ngIf="allowEdit && (member.role == 'Admin' || member.role == 'Editor') && loggedInUser.id != member.user?.id">Chỉ xem
-        </button>
-        <button class="button is-success" style="top: 10px" (click)="updateMember(member,'Editor')"
-                *ngIf="allowEdit && (member.role == 'Admin' || member.role == 'Member')">Chỉnh sửa
+        <button class="button is-success" style="top: 10px" (click)="updateMember(member,'Chỉnh sửa')"
+                *ngIf="isAdmin && member.role == 'Chỉ xem' && loggedInUser.id != member.user?.id">Chỉnh sửa
         </button>
         <!--        <button class="button is-success" style="top: 10px" (click)="updateMember(member,'Member')"-->
         <!--                *ngIf="workspace.owner.id == currentUser.id && member.role == 'Admin'">Set Member-->
@@ -78,7 +93,7 @@
       </header>
       <section class="modal-card-body">
         <div class="control">
-          <input #searchUser class="input is-link" type="text" placeholder="Nhập email"
+          <input #searchUser class="input is-link" type="text" placeholder="Nhập tên"
                  (keyup)="findAllUserByUsername(searchUser.value)">
         </div>
         <div class="control">
@@ -157,5 +172,51 @@
       </div>
       <button class="button is-light" (click)="hideCreateWorkspaceModal()">Hủy</button>
     </footer>
+  </div>
+</div>
+<div class="modal" id="single-invite">
+  <div class="modal-background">
+    <div class="modal-card" style="margin-top: 300px">
+      <header class="modal-card-head">
+        <p class="modal-card-title">Thêm thành viên vào nhóm</p>
+        <button class="delete" aria-label="close" (click)="hideSingleInvite()"></button>
+      </header>
+      <section class="modal-card-body">
+        <div class="control">
+          <input #searchUserSingle class="input is-link" type="text" placeholder="Nhập tên"
+                 (keyup)="findAllUserByUsername(searchUserSingle.value)">
+        </div>
+        <div class="control">
+          <div *ngFor="let user of userSearchResult" class="dropdown-item">
+              <span *ngIf="workspace.owner.id != user.id" (click)="selectSingleUser(searchUserSingle, user)">
+              @{{user.username}}({{user.nickname}})
+            </span>
+          </div>
+        </div>
+        <p style="margin-bottom: 10px">Thông tin thành viên mới</p>
+        <div class="control">
+          <div *ngIf="pendingMember != null">
+            <label class="label">Người dùng: {{pendingMember.username}}</label>
+            <label class="label">Email: {{pendingMember.email}}</label>
+          </div>
+        </div>
+        <div class="control" style="margin-top: 10px">
+          <label class="label">Quyền hạn:</label>
+          <select class="input" [(ngModel)]="pendingMemberRole" required #pendingRole="ngModel">
+            <option value="Quản trị">Quản trị</option>
+            <option value="Chỉnh sửa">Chỉnh sửa</option>
+            <option value="Chỉ xem">Chỉ xem</option>
+          </select>
+        </div>
+      </section>
+      <footer class="modal-card-foot">
+        <div class=" is-right">
+          <button [disabled]="pendingRole.invalid" class="button is-dark is-right"
+                  (click)="addSingleMember(pendingRole.value)">Thêm
+          </button>
+        </div>
+        <button class="button is-light is-right" (click)="hideSingleInvite()">Hủy</button>
+      </footer>
+    </div>
   </div>
 </div>
