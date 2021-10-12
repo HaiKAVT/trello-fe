@@ -9,6 +9,7 @@ import {BoardService} from "../../../service/board/board.service";
 import {AuthenticateService} from "../../../service/authenticate.service";
 import {ToastService} from "../../../service/toast/toast.service";
 import {MemberWorkspace} from "../../../model/member-workspace";
+import {MemberWorkspaceService} from "../../../service/member-workspace/member-workspace.service";
 
 @Component({
   selector: 'app-workspacemembers',
@@ -32,7 +33,8 @@ export class WorkspaceMembersComponent implements OnInit {
               private boardService: BoardService,
               private router: Router,
               private authenticateService: AuthenticateService,
-              private toastService: ToastService) {
+              private toastService: ToastService,
+              private workspaceMemberService: MemberWorkspaceService) {
   }
 
   ngOnInit(): void {
@@ -94,4 +96,6 @@ export class WorkspaceMembersComponent implements OnInit {
   updateMember(member:MemberWorkspace, role:string){
 
   }
+
+  hideInvite(){}
 }

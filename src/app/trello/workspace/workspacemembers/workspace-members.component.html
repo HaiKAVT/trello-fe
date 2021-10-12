@@ -72,14 +72,14 @@
         <button class="button is-primary">
           {{member.role}}
         </button>
-<!--        <button class="button is-primary" style="width: 40px" (click)="removeMembers(i)"-->
-<!--                *ngIf="workspace.owner.id == currentUser.id">-->
-<!--          <i class="fas fa-user-minus" style="color: red"></i>-->
-<!--        </button>-->
-<!--        <button class="button is-primary" style="width: 40px" (click)="removeMembers(i)"-->
-<!--                *ngIf="member.user?.id == currentUser.id && member.role != 'Admin'">-->
-<!--          <i class="fas fa-user-minus" style="color: red"></i>-->
-<!--        </button>-->
+        <!--        <button class="button is-primary" style="width: 40px" (click)="removeMembers(i)"-->
+        <!--                *ngIf="workspace.owner.id == currentUser.id">-->
+        <!--          <i class="fas fa-user-minus" style="color: red"></i>-->
+        <!--        </button>-->
+        <!--        <button class="button is-primary" style="width: 40px" (click)="removeMembers(i)"-->
+        <!--                *ngIf="member.user?.id == currentUser.id && member.role != 'Admin'">-->
+        <!--          <i class="fas fa-user-minus" style="color: red"></i>-->
+        <!--        </button>-->
         <button class="button is-primary" style="width: 40px" (click)="removeMembers(i)"
                 *ngIf="allowEdit">
           <i class="fas fa-user-minus" style="color: red"></i>
@@ -91,13 +91,51 @@
         <button class="button is-success" style="top: 10px" (click)="updateMember(member,'Member')"
                 *ngIf="allowEdit && member.role == 'Admin' && loggedInUser.id != member.user?.id">Set Member
         </button>
-<!--        <button class="button is-success" style="top: 10px" (click)="updateMember(member,'Admin')"-->
-<!--                *ngIf="workspace.owner.id == currentUser.id && member.role !== 'Admin'">Set Admin-->
-<!--        </button>-->
-<!--        <button class="button is-success" style="top: 10px" (click)="updateMember(member,'Member')"-->
-<!--                *ngIf="workspace.owner.id == currentUser.id && member.role == 'Admin'">Set Member-->
-<!--        </button>-->
+        <!--        <button class="button is-success" style="top: 10px" (click)="updateMember(member,'Admin')"-->
+        <!--                *ngIf="workspace.owner.id == currentUser.id && member.role !== 'Admin'">Set Admin-->
+        <!--        </button>-->
+        <!--        <button class="button is-success" style="top: 10px" (click)="updateMember(member,'Member')"-->
+        <!--                *ngIf="workspace.owner.id == currentUser.id && member.role == 'Admin'">Set Member-->
+        <!--        </button>-->
       </div>
     </div>
   </div>
 </section>
+
+<div class="modal" id="invite">
+  <div class="modal-background">
+    <div class="modal-card">
+      <header class="modal-card-head">
+        <p class="modal-card-title">Thêm thành viên vào nhóm</p>
+        <button class="delete" aria-label="close" (click)="hideInvite()"></button>
+      </header>
+      <section class="modal-card-body">
+        <div class="control">
+          <input #searchUser class="input is-link" type="text" placeholder="Nhập email"
+                 (change)="findAllUserByUsername(searchUser.value)">
+        </div>
+        <div class="control">
+          <div *ngFor="let user of userSearchResult" class="dropdown-item" (click)="selectUser(searchUser, user)">
+              <span *ngIf="workspace.owner.id != user.id">
+              @{{user.username}}({{user.nickname}})
+            </span>
+          </div>
+        </div>
+        <div class="dropdown-menu" role="menu" *ngIf="pendingAddMember.length !=0" style="top: -24px">
+          <div class="dropdown-content">
+            <span *ngFor="let user of pendingAddMember" class="dropdown-item user-invite"
+                  (click)="removePendingUser(pendingAddMember.indexOf(user))">
+              @{{user.username}}({{user.nickname}})
+            </span>
+          </div>
+        </div>
+      </section>
+      <footer class="modal-card-foot">
+        <div class=" is-right">
+          <button [disabled]="pendingAddMember.length == 0" class="button is-dark is-right" (click)="addMemberToWorkspace()">Thêm</button>
+        </div>
+        <button class="button is-light is-right" (click)="hideInvite()">Hủy</button>
+      </footer>
+    </div>
+  </div>
+</div>
