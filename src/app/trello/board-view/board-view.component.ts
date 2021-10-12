@@ -24,6 +24,7 @@ import {AttachmentService} from "../../service/attachment/attachment.service";
 import {MemberService} from "../../service/member/member.service";
 import {Workspace} from "../../model/workspace";
 import {WorkspaceService} from "../../service/workspace/workspace.service";
+import {MemberWorkspace} from "../../model/member-workspace";
 
 @Component({
   selector: 'app-board-view',
@@ -37,6 +38,7 @@ export class BoardViewComponent implements OnInit {
   isSubmitted = false;
   members: DetailedMember[] = [];
   currentBoardId: number = -1;
+  tags: Tag[] = [];
   currentBoard: Board = {
     id: -1,
     owner: {},
@@ -94,7 +96,8 @@ export class BoardViewComponent implements OnInit {
   pendingTag: Tag[] = [];
   selectedAttachmentId: number = -1;
   currentWorkspace!: Workspace;
-  isBoardInWorkspace:boolean = false;
+  memberInWorkspace: MemberWorkspace[] = [];
+  isBoardInWorkspace: boolean = false;
   isTagsIsShown: boolean = false;
 
   constructor(private activatedRoute: ActivatedRoute,
@@ -110,7 +113,7 @@ export class BoardViewComponent implements OnInit {
               public redirectService: RedirectService,
               private attachmentService: AttachmentService,
               private memberService: MemberService,
-              private workspaceService:WorkspaceService) {
+              private workspaceService: WorkspaceService) {
   }
 
   ngOnInit(): void {
@@ -481,15 +484,16 @@ export class BoardViewComponent implements OnInit {
   getMembers() {
     this.memberService.getMembersByBoardId(this.currentBoard.id).subscribe(members => {
       this.members = members;
+      this.checkEditAllow()
     });
   }
 
   getCurrentBoard() {
     this.boardService.getBoardById(this.currentBoardId).subscribe(board => {
       this.currentBoard = board;
+      this.checkWorkspace(board);
       this.getMembers()
       this.checkEditAllow();
-      this.checkWorkspace();
     })
   }
 
@@ -498,28 +502,43 @@ export class BoardViewComponent implements OnInit {
     if (this.currentBoard.type == "Public") {
       this.canEdit = true;
       return;
-    } else {
-      if (this.loggedInUser.id == this.currentBoard.owner.id) {
+    }
+    if (this.loggedInUser.id == this.currentBoard.owner.id) {
+      this.canEdit = true;
+      console.log(this.canEdit)
+    }
+    if (this.isBoardInWorkspace) {
+      if(this.currentWorkspace.owner.id == this.loggedInUser.id){
         this.canEdit = true;
-        return;
-      } else {
-        for (let member of this.members){
-          if(this.loggedInUser.id == member.userId){
+      }
+      for (let member of this.memberInWorkspace) {
+        if (member.user?.id == this.loggedInUser.id) {
+          if (member.role == "Quản trị" || member.role == "Chỉnh sửa") {
             this.canEdit = true;
+          }
+        }
+      }
+    } else {
+      for (let member of this.members) {
+        if (member.userId == this.loggedInUser.id) {
+          if (member.canEdit) {
+            this.canEdit = true;
+            console.log(this.canEdit)
           }
         }
       }
     }
   }
 
-  checkWorkspace(){
-    this.boardService.isBoardInWorkspace(this.currentBoard.id!).subscribe(data=>{
+  checkWorkspace(board: Board) {
+    this.boardService.isBoardInWorkspace(board.id!).subscribe(data => {
       this.isBoardInWorkspace = data;
-      if(this.isBoardInWorkspace){
-        this.workspaceService.getCurrentWorkspaceID(this.currentBoard.id).subscribe(id=>{
-          this.workspaceService.findById(id).subscribe(workspace=>{
+      if (this.isBoardInWorkspace) {
+        this.workspaceService.getCurrentWorkspaceID(this.currentBoard.id).subscribe(id => {
+          this.workspaceService.findById(id).subscribe(workspace => {
             this.currentWorkspace = workspace;
-            console.log(this.currentWorkspace)
+            this.memberInWorkspace = workspace.members;
+            this.checkEditAllow()
           })
         })
       }

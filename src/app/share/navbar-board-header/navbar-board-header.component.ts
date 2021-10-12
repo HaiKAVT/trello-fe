@@ -96,14 +96,10 @@ export class NavbarBoardHeaderComponent implements OnInit {
 
   searchUsers() {
     if (this.userSearch != '') {
-      if(this.isInWorkspace){
-        this.
-      } else {
-        this.userService.findUsersByKeyword(this.userSearch).subscribe(users => {
-          this.userResult = users;
-          this.cleanSearchResults();
-        });
-      }
+      this.userService.findUsersByKeyword(this.userSearch).subscribe(users => {
+        this.userResult = users;
+        this.cleanSearchResults();
+      });
     } else {
       this.userResult = [];
     }
