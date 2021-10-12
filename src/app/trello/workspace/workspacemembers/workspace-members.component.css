@@ -307,7 +307,7 @@ h1.app-name {
 }
 
 .my-pagination /deep/ .ngx-pagination {
-  margin-left: 45%;
+  margin-left: 41%;
   margin-top: 30px;
   justify-content: space-evenly;
 }
@@ -316,13 +316,15 @@ h1.app-name {
   background: #6d7fcc;
   color: white;
   width: 100px;
-  margin-right: 6px;
+  margin-right: 5px;
+  margin-top: -5px;
 }
 
 .my-pagination /deep/ .ngx-pagination .pagination-next {
   background: #6d7fcc;
   color: white;
   width: 100px;
+  margin-top: -5px;
 }
 
 .my-pagination /deep/ .ngx-pagination .current {
