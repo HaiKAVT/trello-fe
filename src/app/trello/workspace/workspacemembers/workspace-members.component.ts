@@ -12,6 +12,7 @@ import {MemberWorkspace} from "../../../model/member-workspace";
 import {MemberWorkspaceService} from "../../../service/member-workspace/member-workspace.service";
 import {MemberService} from "../../../service/member/member.service";
 import {NotificationService} from "../../../service/notification/notification.service";
+import {Notification} from "../../../model/notification";
 
 @Component({
   selector: 'app-workspacemembers',
@@ -23,12 +24,14 @@ export class WorkspaceMembersComponent implements OnInit {
   workspace!: Workspace;
   workspaces: Workspace[] = [];
   allowEdit: Boolean = false;
+  isAdmin:Boolean = false;
   user: User = {};
   userSearchResult: User[] = [];
   currentWorkspaceId!: number;
   pendingAddMember: User[] = [];
-  pendingAddMemberRole: string[] = [];
-  isOwner:Boolean = false;
+  pendingMember: User = {};
+  pendingMemberRole: string = '';
+  isOwner: Boolean = false;
   workspaceOwner!: User;
   memberInWorkspace: MemberWorkspace[] = [];
   newWorkspace: Workspace = {boards: [], id: 0, members: [], owner: undefined, title: "", type: "", privacy: ""};
@@ -72,7 +75,10 @@ export class WorkspaceMembersComponent implements OnInit {
       this.isOwner = true;
     }
     for (let member of this.workspace.members) {
-      if ((this.loggedInUser.id == member.user?.id && (member.role == "Admin" || member.role == 'Editor'))) {
+      if ((this.loggedInUser.id == member.user?.id && member.role == "Quản trị")) {
+        this.allowEdit = true
+        this.isAdmin = true;
+      } else if ((this.loggedInUser.id == member.user?.id && member.role == "Chỉnh sửa")){
         this.allowEdit = true
       }
     }
@@ -121,14 +127,15 @@ export class WorkspaceMembersComponent implements OnInit {
       for (let user of this.pendingAddMember) {
         newMember = {
           user: user,
-          role: "Member"
+          role: "Chỉ xem"
         }
         this.workspaceMemberService.addWorkspaceMember(newMember).subscribe(data => {
           this.workspace.members.push(data)
           this.workspaceService.updateWorkspace(this.workspace.id, this.workspace).subscribe()
         })
       }
-      this.toastService.showMessage("Invite Success!", "is-success");
+      this.createNotificationAddToWorkspace()
+      this.toastService.showMessage("Mời thành công", "is-success");
       this.pendingAddMember = [];
       this.hideInvite()
     }
@@ -139,7 +146,13 @@ export class WorkspaceMembersComponent implements OnInit {
   }
 
   searchMembers(username: string) {
-
+    if (username != "") {
+      this.workspaceMemberService.findInWorkspace(username, this.workspace.id).subscribe(memberWorkspace => {
+        this.memberInWorkspace = memberWorkspace;
+      })
+    } else {
+      this.memberInWorkspace = this.workspace.members;
+    }
   }
 
   removeMembers(index: any, member: MemberWorkspace) {
@@ -150,9 +163,10 @@ export class WorkspaceMembersComponent implements OnInit {
         this.memberService.deleteMemberBoardWorkspace(board.id, member.user?.id).subscribe()
       }
     }
-    this.workspaceMemberService.deleteWorkspaceMembers(removeMember).subscribe(()=>{
+    this.workspaceMemberService.deleteWorkspaceMembers(removeMember).subscribe(() => {
     })
-    if(this.loggedInUser.id == member.user?.id){
+    this.createNotificationRemovedFromWorkSpace(member);
+    if (this.loggedInUser.id == member.user?.id) {
       this.router.navigateByUrl('')
     }
   }
@@ -191,5 +205,81 @@ export class WorkspaceMembersComponent implements OnInit {
 
   resetWorkspaceInput() {
     this.newWorkspace = {boards: [], id: 0, members: [], owner: undefined, title: "", type: "", privacy: ""};
+  }
+
+  showSingleInvite() {
+    document.getElementById('single-invite')!.classList.add('is-active');
+  }
+
+  hideSingleInvite() {
+    this.pendingMember = {};
+    this.pendingMemberRole = '';
+    document.getElementById('single-invite')!.classList.remove('is-active');
+  }
+
+  selectSingleUser(username: any, user: User) {
+    username.value = ''
+    this.pendingMember = user
+    this.userSearchResult = []
+  }
+
+  addSingleMember(role: string) {
+    if (this.pendingMember != null) {
+      let newMember: MemberWorkspace = {
+        user: this.pendingMember,
+        role: role
+      }
+      this.workspaceMemberService.addWorkspaceMember(newMember).subscribe(data => {
+        this.workspace.members.push(data)
+        this.workspaceService.updateWorkspace(this.workspace.id, this.workspace).subscribe()
+      })
+      this.createNotificationInvitedToWorkspace()
+      this.toastService.showMessage("Mời thành công", "is-success");
+      this.pendingMember = {};
+      this.hideSingleInvite()
+    }
+  }
+
+  createNotificationAddToWorkspace() {
+    let receivers: User[] = [];
+    for (let member of this.pendingAddMember) {
+      receivers.push(member)
+    }
+    let notification: Notification = {
+      title: this.workspace.title,
+      content: this.loggedInUser.username + ` đã thêm bạn vào nhóm ${this.workspace.title} vào lúc ` + this.notificationService.getTime(),
+      status: false,
+      url: "/trello/workspaces/" + this.workspace.id,
+      receiver: receivers
+    }
+    this.notificationService.saveNotification(notification)
+  }
+
+  createNotificationInvitedToWorkspace() {
+    let receivers: User[] = [];
+    if (this.pendingMember != null) {
+      receivers.push(this.pendingMember)
+    }
+    let notification: Notification = {
+      title: this.workspace.title,
+      content: this.loggedInUser.username + ` đã thêm bạn vào nhóm ${this.workspace.title} vào lúc ` + this.notificationService.getTime(),
+      status: false,
+      url: "/trello/workspaces/" + this.workspace.id,
+      receiver: receivers
+    }
+    this.notificationService.saveNotification(notification)
+  }
+
+  createNotificationRemovedFromWorkSpace(member: MemberWorkspace) {
+    let receivers: User[] = [];
+    receivers.push(member.user!)
+    let notification: Notification = {
+      title: this.workspace.title,
+      content: this.loggedInUser.username + ` đã đá bạn ra khỏi nhóm ${this.workspace.title} vào lúc ` + this.notificationService.getTime(),
+      status: false,
+      url: "",
+      receiver: receivers
+    }
+    this.notificationService.saveNotification(notification)
   }
 }

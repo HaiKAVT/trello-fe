@@ -75,7 +75,7 @@ export class WorkspaceHomeComponent implements OnInit {
       this.allowEdit = true;
     }
     for (let member of this.workspace.members) {
-      if ((this.loggedInUser.id == member.user?.id && (member.role == "Admin" || member.role == "Editor"))) {
+      if ((this.loggedInUser.id == member.user?.id && (member.role == "Quản trị" || member.role == "Chỉnh sửa"))) {
         this.allowEdit = true
       }
     }

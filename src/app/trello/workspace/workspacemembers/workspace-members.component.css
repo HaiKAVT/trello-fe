@@ -278,7 +278,8 @@ h1.app-name {
 }
 
 .user-name {
-  margin-left: 15px
+  margin-left: 15px;
+  color: white;
 }
 
 .user-nickname {
