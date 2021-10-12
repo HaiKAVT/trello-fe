@@ -52,6 +52,7 @@ export class WorkspaceMembersComponent implements OnInit {
     this.workspaceService.findById(id).subscribe(data => {
       this.workspace = data;
       this.workspaceOwner = data.owner
+      this.memberInWorkspace = data.members
       this.checkRole(data);
     })
   }
