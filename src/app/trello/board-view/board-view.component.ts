@@ -21,6 +21,7 @@ import {Attachment} from "../../model/attachment";
 import {DetailedMember} from "../../model/detailed-member";
 import {RedirectService} from "../../service/redirect/redirect.service";
 import {AttachmentService} from "../../service/attachment/attachment.service";
+import {MemberService} from "../../service/member/member.service";
 
 @Component({
   selector: 'app-board-view',
@@ -104,7 +105,8 @@ export class BoardViewComponent implements OnInit {
               private tagService: TagService,
               private storage: AngularFireStorage,
               public redirectService: RedirectService,
-              private attachmentService: AttachmentService) {
+              private attachmentService: AttachmentService,
+              private memberService:MemberService) {
   }
 
   ngOnInit(): void {
@@ -470,9 +472,15 @@ export class BoardViewComponent implements OnInit {
     })
   }
 
+  getMembers() {
+    this.memberService.getMembersByBoardId(this.currentBoard.id).subscribe(members => {
+      this.members = members;
+    });
+  }
   getCurrentBoard() {
     this.boardService.getBoardById(this.currentBoardId).subscribe(board => {
       this.currentBoard = board;
+      this.getMembers()
       this.checkEditAllow();
     })
   }
