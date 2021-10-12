@@ -10,8 +10,8 @@ const API_URL = `${environment.api_url}`;
   providedIn: 'root'
 })
 export class AuthenticateService {
-  public currentUserSubject!: BehaviorSubject<UserToken>;
-  public currentUser!: Observable<UserToken>;
+  public currentUserSubject: BehaviorSubject<UserToken>;
+  public currentUser: Observable<UserToken>;
 
   constructor(private http: HttpClient) {
     this.currentUserSubject = new BehaviorSubject<UserToken>(JSON.parse(<string>localStorage.getItem('user')));

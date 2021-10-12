@@ -18,6 +18,8 @@ import {WorkspaceService} from "../../service/workspace/workspace.service";
 export class HomeComponent implements OnInit {
   boards: Board[] = [];
   loggedInUser!: UserToken;
+  yourBoards: Board[] = [];
+  sharedBoards: Board[] = [];
   newBoard: Board = {
     title: '',
     owner: {
@@ -43,12 +45,18 @@ export class HomeComponent implements OnInit {
     this.loggedInUser = this.authenticateService.getCurrentUserValue()
     this.getBoards()
     this.getAllWorkspace();
+    this.getSharedBoards()
   }
 
   getBoards() {
     this.boardService.getOwnedBoard(this.loggedInUser.id!).subscribe(data => {
       this.boards = data;
     })
+  }
+
+   getSharedBoards() {
+    this.boardService.findAllSharedBoardsByUserId(this.loggedInUser.id).subscribe(
+      data => this.sharedBoards = data);
   }
 
 
@@ -128,4 +136,5 @@ export class HomeComponent implements OnInit {
   resetWorkspaceInput() {
     this.workspace = {boards: [], id: 0, members: [], owner: undefined, title: "", type: "", privacy: ""};
   }
+
 }
