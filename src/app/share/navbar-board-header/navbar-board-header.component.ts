@@ -79,7 +79,7 @@ export class NavbarBoardHeaderComponent implements OnInit {
     let activity: ActivityLog = {
       title: "Bảng : " + this.currentBoard.title,
       content: this.currentUser.username + " " + activityText + " trong " + this.currentBoard.title + " " + this.notificationService.getTime(),
-      url: "/trello/boards/" + this.currentBoard.id,
+      url: "/trello/board/" + this.currentBoard.id,
       status: false,
       board: this.currentBoard
     }
