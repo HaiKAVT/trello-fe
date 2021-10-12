@@ -11,6 +11,7 @@ import {ToastService} from "../../../service/toast/toast.service";
 import {MemberWorkspace} from "../../../model/member-workspace";
 import {MemberWorkspaceService} from "../../../service/member-workspace/member-workspace.service";
 import {MemberService} from "../../../service/member/member.service";
+import {NotificationService} from "../../../service/notification/notification.service";
 
 @Component({
   selector: 'app-workspacemembers',
@@ -27,6 +28,7 @@ export class WorkspaceMembersComponent implements OnInit {
   currentWorkspaceId!: number;
   pendingAddMember: User[] = [];
   pendingAddMemberRole: string[] = [];
+  isOwner:Boolean = false;
   workspaceOwner!: User;
   memberInWorkspace: MemberWorkspace[] = [];
   newWorkspace: Workspace = {boards: [], id: 0, members: [], owner: undefined, title: "", type: "", privacy: ""};
@@ -39,7 +41,8 @@ export class WorkspaceMembersComponent implements OnInit {
               private authenticateService: AuthenticateService,
               private toastService: ToastService,
               private workspaceMemberService: MemberWorkspaceService,
-              private memberService: MemberService) {
+              private memberService: MemberService,
+              private notificationService: NotificationService) {
   }
 
   ngOnInit(): void {
@@ -66,9 +69,10 @@ export class WorkspaceMembersComponent implements OnInit {
   checkRole(workspace: Workspace) {
     if (this.loggedInUser.id == workspace.owner.id) {
       this.allowEdit = true;
+      this.isOwner = true;
     }
     for (let member of this.workspace.members) {
-      if ((this.loggedInUser.id == member.user?.id && member.role == "Admin")) {
+      if ((this.loggedInUser.id == member.user?.id && (member.role == "Admin" || member.role == 'Editor'))) {
         this.allowEdit = true
       }
     }
@@ -146,7 +150,11 @@ export class WorkspaceMembersComponent implements OnInit {
         this.memberService.deleteMemberBoardWorkspace(board.id, member.user?.id).subscribe()
       }
     }
-    this.workspaceMemberService.deleteWorkspaceMembers(removeMember).subscribe()
+    this.workspaceMemberService.deleteWorkspaceMembers(removeMember).subscribe(()=>{
+    })
+    if(this.loggedInUser.id == member.user?.id){
+      this.router.navigateByUrl('')
+    }
   }
 
   updateMember(member: MemberWorkspace, role: string) {

@@ -8,6 +8,8 @@ import {UserToken} from "../../model/user-token";
 import {UserService} from "../../service/user/user.service";
 import {AngularFireStorage} from "@angular/fire/compat/storage";
 import {finalize} from "rxjs/operators";
+import {NotificationService} from "../../service/notification/notification.service";
+import {Notification} from "../../model/notification";
 
 @Component({
   selector: 'app-navbar',
@@ -28,7 +30,8 @@ export class NavbarComponent implements OnInit {
               private router: Router,
               private storage: AngularFireStorage,
               private userService: UserService,
-              private toastService: ToastService
+              private toastService: ToastService,
+              public notificationService: NotificationService
   ) {
     this.authenticateService.currentUserSubject.subscribe(data => {
       this.currentUser = data;
@@ -50,6 +53,7 @@ export class NavbarComponent implements OnInit {
         }
         this.imgSrc = this.navbarService.loggedInUser.image;
       })
+      this.findAllNotificationByUserId()
     }
   }
 
@@ -101,6 +105,7 @@ export class NavbarComponent implements OnInit {
         })
     }
   }
+
   showPreview(event: any) {
     if (event.target.files && event.target.files[0]) {
       const reader = new FileReader();
@@ -122,5 +127,33 @@ export class NavbarComponent implements OnInit {
     }
   }
 
+  findAllNotificationByUserId() {
+    if (this.currentUser.id != null) {
+      this.notificationService.findAllByUser(this.currentUser.id).subscribe(data => {
+        this.notificationService.notification = data;
+        for (let notification of data) {
+          if (!notification.status) {
+            this.notificationService.unreadNotice++
+          }
+        }
+      })
+    }
+  }
+
+  markReadNotification(notification: Notification){
+    if (notification.id != null && !notification.status) {
+      notification.status = true;
+      this.notificationService.updateNotification(notification.id, notification).subscribe(() => this.notificationService.unreadNotice--)
+    }
+  }
+
+  markAllAsRead() {
+    if (this.currentUser.id != null) {
+      this.notificationService.markAllAsRead(this.currentUser.id).subscribe(() => {
+        this.notificationService.unreadNotice = 0
+        this.notificationService.findAllByUser(this.currentUser.id!).subscribe(notifications => this.notificationService.notification = notifications)
+      })
+    }
+  }
 
 }
