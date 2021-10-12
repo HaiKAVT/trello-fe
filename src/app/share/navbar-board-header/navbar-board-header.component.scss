@@ -12,7 +12,7 @@
 }
 .search-bar{
   position: fixed;
-  right: 1230px;
+  right: 64.5%;
 }
 .search-bar-input{
   position: absolute; top: 25px; left: -210px
@@ -198,7 +198,7 @@ h1.app-name {
   content: "";
   border-width: 20px 27px;
   border-style: solid;
-  border-color: transparent transparent rgb(100,181,216) transparent;
+  border-color: transparent transparent rgb(179, 217, 255) transparent;
   position: absolute;
   right: 4px;
   top: -29px;
@@ -231,7 +231,7 @@ h1.app-name {
 }
 .header__notify-header {
   height: 40px;
-  background-color: rgb(100,181,216);
+  background-color: rgb(179, 179, 255);
   display: flex;
   align-items: center;
 }
@@ -258,7 +258,7 @@ h1.app-name {
   display: flex;
 }
 .header__notify-item:hover {
-  background-color: rgb(182,226,247);
+  background-color: rgb(179, 198, 255);
 }
 .header__notify-item--viewed {
   background-color: rgba(238, 75, 43, 0.09);
@@ -290,7 +290,7 @@ h1.app-name {
 }
 .header__notify-footer {
   display: flex;
-  background-color: rgb(100,181,216);
+  background-color: rgb(179, 198, 255);
 }
 .header__notify-footer-btn {
   text-decoration: none;
@@ -305,10 +305,10 @@ h1.app-name {
   top: 2px;
   right: 2px;
   padding: 1px 4px;
-  background-color: rgb(100,181,216);
+  background-color: rgb(179, 217, 255);
   color: white;
   font-size: 12px;
   line-height: 12px;
   border-radius: 10px;
-  border: 1px solid rgb(100,181,216);
+  border: 1px solid rgb(179, 217, 255);
 }

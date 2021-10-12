@@ -35,9 +35,6 @@ export class NavbarBoardHeaderComponent implements OnInit {
   searchBarIsShown: boolean = false;
   userSearch: string = ``;
   userResult: User[] = [];
-  addMemberForm: FormGroup = new FormGroup({
-    email: new FormControl('', Validators.required)
-  })
 
   constructor(private authenticationService: AuthenticateService,
               private userService: UserService,
@@ -81,8 +78,8 @@ export class NavbarBoardHeaderComponent implements OnInit {
 
   createNoticeInBoard(activityText: string) {
     let activity: ActivityLog = {
-      title: "Board: " + this.currentBoard.title,
-      content: this.currentUser.username + " " + activityText + " in " + this.currentBoard.title + " " + this.notificationService.getTime(),
+      title: "Bảng : " + this.currentBoard.title,
+      content: this.currentUser.username + " " + activityText + " trong " + this.currentBoard.title + " " + this.notificationService.getTime(),
       url: "/trello/boards/" + this.currentBoard.id,
       status: false,
       board: this.currentBoard
@@ -90,16 +87,6 @@ export class NavbarBoardHeaderComponent implements OnInit {
     if (this.currentBoard.id != null) {
       this.activityLogService.saveNotification(activity, this.currentBoard.id)
     }
-
-  }
-
-
-  closeAddMember() {
-    document.getElementById('addMember')!.classList.remove("is-active")
-  }
-
-  createAddMember() {
-
   }
 
   toggleUserSearchBar() {
