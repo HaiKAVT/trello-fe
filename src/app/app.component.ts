@@ -7,4 +7,8 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'trello-FrontEnd';
+
+  onActivate($event: any) {
+    window.scroll(0, 0);
+  }
 }

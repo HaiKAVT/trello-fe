@@ -173,10 +173,10 @@
     </section>
     <footer class="modal-card-foot">
       <button class="button is-danger is-light"
-              *ngIf="canEdit && (selectedMember.userId )" (click)="removeSelectedMember()">
+              *ngIf="canEdit && (selectedMember.userId ) != authenticateService.getCurrentUserValue().id" (click)="removeSelectedMember()">
         Xóa thành viên !
       </button>
-      <span *ngIf="canEdit && (selectedMember.userId)">
+      <span *ngIf="canEdit && (selectedMember.userId) != authenticateService.getCurrentUserValue().id">
         <button class="button is-secondary is-light"
                 *ngIf="selectedMember.canEdit"
                 (click)="makeSelectedMemberObserver()">

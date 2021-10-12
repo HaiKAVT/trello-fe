@@ -31,12 +31,12 @@ export class NavbarBoardHeaderComponent implements OnInit {
   @Input() isInWorkspace: boolean = false;
   @Output() updateMemberEvent = new EventEmitter<DetailedMember[]>();
   selectedMember: DetailedMember = {boardId: -1, canEdit: false, id: -1, userId: -1, username: ""};
-  currentUser: UserToken = this.authenticationService.getCurrentUserValue();
+  currentUser: UserToken = this.authenticateService.getCurrentUserValue();
   searchBarIsShown: boolean = false;
   userSearch: string = ``;
   userResult: User[] = [];
 
-  constructor(private authenticationService: AuthenticateService,
+  constructor(public authenticateService: AuthenticateService,
               private userService: UserService,
               private router: Router,
               private boardService: BoardService,
