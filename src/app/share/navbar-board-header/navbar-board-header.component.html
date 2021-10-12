@@ -1,5 +1,5 @@
 <!--board-header-->
-<nav class="navbar" role="navigation" aria-label="main navigation">
+<nav class="navbar" role="navigation" aria-label="main navigation" >
   <div class="navbar-brand">
     <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
       <span aria-hidden="true"></span>
@@ -8,7 +8,7 @@
     </a>
   </div>
 
-  <div id="navbarBasicExample" class="navbar-menu">
+  <div id="navbarBasicExample" class="navbar-menu" >
     <div class="navbar-item">
       <div class="buttons">
         <input *ngIf="canEdit" [(ngModel)]="currentBoard.title" class="button is-primary" (change)="updateBoardTitle()">
@@ -30,7 +30,6 @@
           <i class="fas fa-user-plus"></i>Mời
         </button>
         <div>
-          <div>
           <span *ngFor="let member of members; index as i">
             <a (click)="showDetail(member)" (mouseover)="showUserPreview(member)"
                (mouseout)="closeUserPreviews()"
@@ -39,7 +38,6 @@
               <img *ngIf="member.image" [src]="member.image" class="img-circle"/>
 
               <img *ngIf="!member.image"
-                   src="https://firebasestorage.googleapis.com/v0/b/trello-h3k.appspot.com/o/h3k.png?alt=media&token=575e3071-bd05-44f2-89fb-04851d21af49"
                    class="img-circle"/>
               <span id="user-preview-text-{{member.userId}}"
                     class="user-preview-text is-hidden tag is-info is-light"
@@ -48,13 +46,13 @@
               </span>
             </a>
           </span>
-            <span *ngIf="members.length > 5">
+          <span *ngIf="members.length > 5">
             <a>
               <img src="./assets/img/three-dots.png" (click)="showAllMembers()" class="img-circle"
                    style="width: 15px; height: 15px;margin-bottom: 20px;"/>
             </a>
           </span>
-          </div>
+
         </div>
       </div>
     </div>
@@ -100,9 +98,10 @@
                             </div>
                           </a>
                           <a class="header__notify-link" routerLink="{{activity.url}}" *ngIf="!activity.card">
-                            <img src="https://firebasestorage.googleapis.com/v0/b/trello-h3k.appspot.com/o/h3k.png?alt=media&token=575e3071-bd05-44f2-89fb-04851d21af49"
-                                 alt=""
-                                 class="header__notify-img">
+                            <img
+                              src="https://firebasestorage.googleapis.com/v0/b/trello-h3k.appspot.com/o/h3k.png?alt=media&token=575e3071-bd05-44f2-89fb-04851d21af49"
+                              alt=""
+                              class="header__notify-img">
                             <div class="header__notify-info">
                               <span class="header__notify-name">{{activity.title}}</span>
                               <span class="header__notify-description">{{activity.content}}</span>
@@ -162,9 +161,11 @@
             </div>
           </div>
           <div class="content">
-            <div *ngIf="selectedMember.canEdit" class="notification is-success is-light">Người dùng này có quyền chỉnh sửa bản này
+            <div *ngIf="selectedMember.canEdit" class="notification is-success is-light">Người dùng này có quyền chỉnh
+              sửa bản này
             </div>
-            <div *ngIf="!selectedMember.canEdit" class="notification is-info is-light">Người dùng này không có quyền chỉnh sửa bản này
+            <div *ngIf="!selectedMember.canEdit" class="notification is-info is-light">Người dùng này không có quyền
+              chỉnh sửa bản này
             </div>
           </div>
         </div>
