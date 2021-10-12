@@ -3,36 +3,11 @@
   <div class="container column is-10">
     <div class="navbar-end" *ngIf="allowEdit || loggedInUser.id == workspace.owner?.id">
       <div class="navbar-item">
-        <div class="buttons" style="margin-right: 200px">
-          <div class="dropdown is-active">
-            <div class="dropdown-trigger">
-              <input #searchUser class="input is-link" type="text" placeholder="Invite user"
-                     (change)="findAllUserByUsername(searchUser.value)">
-            </div>
-            <div class="dropdown-menu" id="dropdown-menu" role="menu" *ngIf="searchUser.value">
-              <div class="dropdown-content">
-                <div *ngFor="let user of userSearchResult" class="dropdown-item" (click)="selectUser(searchUser, user)">
-              <span *ngIf="workspace.owner.id != user.id">
-              @{{user.username}}({{user.nickname}})
-            </span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <button class="button is-primary" (click)="addMemberToWorkspace()" style="width: 100px">
+        <div class="buttons">
+          <button class="button is-primary" (click)="showInvite()" style="width: 100px">
             <i class="fas fa-user-plus"></i>
             Invite
           </button>
-          <div class="dropdown is-active">
-            <div class="dropdown-menu" role="menu" *ngIf="pendingAddMember.length !=0" style="top: -24px">
-              <div class="dropdown-content">
-            <span *ngFor="let user of pendingAddMember" class="dropdown-item user-invite"
-                  (click)="removePendingUser(pendingAddMember.indexOf(user))">
-              @{{user.username}}({{user.nickname}})
-            </span>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </div>
@@ -80,7 +55,7 @@
         <!--                *ngIf="member.user?.id == currentUser.id && member.role != 'Admin'">-->
         <!--          <i class="fas fa-user-minus" style="color: red"></i>-->
         <!--        </button>-->
-        <button class="button is-primary" style="width: 40px" (click)="removeMembers(i)"
+        <button class="button is-primary" style="width: 40px" (click)="removeMembers(i,member)"
                 *ngIf="allowEdit">
           <i class="fas fa-user-minus" style="color: red"></i>
         </button>
@@ -104,7 +79,7 @@
 
 <div class="modal" id="invite">
   <div class="modal-background">
-    <div class="modal-card">
+    <div class="modal-card" style="margin-top: 300px">
       <header class="modal-card-head">
         <p class="modal-card-title">Thêm thành viên vào nhóm</p>
         <button class="delete" aria-label="close" (click)="hideInvite()"></button>
@@ -112,7 +87,7 @@
       <section class="modal-card-body">
         <div class="control">
           <input #searchUser class="input is-link" type="text" placeholder="Nhập email"
-                 (change)="findAllUserByUsername(searchUser.value)">
+                 (keyup)="findAllUserByUsername(searchUser.value)">
         </div>
         <div class="control">
           <div *ngFor="let user of userSearchResult" class="dropdown-item" (click)="selectUser(searchUser, user)">
@@ -121,9 +96,10 @@
             </span>
           </div>
         </div>
-        <div class="dropdown-menu" role="menu" *ngIf="pendingAddMember.length !=0" style="top: -24px">
-          <div class="dropdown-content">
-            <span *ngFor="let user of pendingAddMember" class="dropdown-item user-invite"
+        <p>Danh sách thêm thành viên</p>
+        <div class="control">
+          <div *ngIf="pendingAddMember.length !=0">
+            <span *ngFor="let user of pendingAddMember" class="button is-info is-light"
                   (click)="removePendingUser(pendingAddMember.indexOf(user))">
               @{{user.username}}({{user.nickname}})
             </span>
@@ -132,10 +108,62 @@
       </section>
       <footer class="modal-card-foot">
         <div class=" is-right">
-          <button [disabled]="pendingAddMember.length == 0" class="button is-dark is-right" (click)="addMemberToWorkspace()">Thêm</button>
+          <button [disabled]="pendingAddMember.length == 0" class="button is-dark is-right"
+                  (click)="addMemberToWorkspace()">Thêm
+          </button>
         </div>
         <button class="button is-light is-right" (click)="hideInvite()">Hủy</button>
       </footer>
     </div>
+  </div>
+</div>
+<div class="modal" id="create-workspace">
+  <div class="modal-background"></div>
+  <div class="modal-card" (click)="hideCreateWorkspaceModal()" style="margin-left: 600px">
+    <header class="modal-card-head">
+      <p class="modal-card-title">Tạo một nhóm mới</p>
+      <button class="delete" aria-label="close" (click)="hideCreateWorkspaceModal()"></button>
+    </header>
+    <section class="modal-card-body">
+      <div class="field" style="position: relative">
+        <label class="label">Title</label>
+        <div class="control">
+          <input class="input" type="text" required [(ngModel)]="newWorkspace.title" #workspaceTitle="ngModel">
+        </div>
+        <label class="label">Phân loại nhóm:</label>
+        <div class="control">
+          <select class="input" [(ngModel)]="newWorkspace.type" required #workspaceType="ngModel">
+            <option value="IT">IT</option>
+            <option value="Accountant">Kế toán</option>
+            <option value="HR">Nhân sự</option>
+            <option value="Other">Khác</option>
+          </select>
+        </div>
+        <label class="label">Quyền hạn</label>
+        <div class="control">
+          <select class="input" [(ngModel)]="newWorkspace.privacy" required #workspacePrivacy="ngModel">
+            <option value="Private">Riêng tư</option>
+            <option value="Public">Công khai</option>
+          </select>
+        </div>
+        <div *ngIf="workspaceTitle.invalid && workspaceTitle.touched" class="alert">
+          <div *ngIf="workspaceTitle.errors?.required" style="color: red">
+            Hãy nhập tiêu đề
+          </div>
+        </div>
+      </div>
+      <div class="control">
+        <label class="label">Người tạo: <span
+          class="is-info user-button is-light">{{loggedInUser.username}}</span></label>
+      </div>
+    </section>
+    <footer class="modal-card-foot">
+      <div class="alert">
+        <button [disabled]="workspaceTitle.invalid || workspaceType.invalid || workspacePrivacy.invalid"
+                class="button is-dark" (click)="createWorkspace()">Tạo
+        </button>
+      </div>
+      <button class="button is-light" (click)="hideCreateWorkspaceModal()">Hủy</button>
+    </footer>
   </div>
 </div>

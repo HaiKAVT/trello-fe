@@ -28,6 +28,7 @@ export class WorkspaceHomeComponent implements OnInit {
     columns: [],
     type: '',
   };
+  newWorkspace:Workspace = {boards: [], id: 0, members: [], owner: undefined, title: "", type: "", privacy: ""};
 
   constructor(private workspaceService: WorkspaceService,
               private userService: UserService,
@@ -40,11 +41,11 @@ export class WorkspaceHomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.loggedInUser = this.authenticateService.getCurrentUserValue()
+    this.getAllWorkspace();
     this.activatedRoute.paramMap.subscribe(paramMap => {
       this.currentWorkspaceId = parseInt(paramMap.get('id')!)
       if (this.currentWorkspaceId != null) {
         this.getCurrentWorkspace(this.currentWorkspaceId);
-        this.getAllWorkspace();
       }
     });
   }
@@ -108,5 +109,28 @@ export class WorkspaceHomeComponent implements OnInit {
       columns: [],
       type: ''
     };
+  }
+
+  showCreateWorkspaceModal() {
+    document.getElementById('create-workspace')!.classList.add('is-active');
+  }
+
+  hideCreateWorkspaceModal() {
+    this.resetWorkspaceInput()
+    document.getElementById('create-workspace')!.classList.remove('is-active');
+  }
+
+
+  createWorkspace() {
+    this.newWorkspace.owner = this.loggedInUser;
+    this.workspaceService.createWorkspace(this.newWorkspace).subscribe(()=>{
+      this.getAllWorkspace();
+      this.toastService.showMessage("Nhóm đã được tạo", 'is-success');
+      this.hideCreateWorkspaceModal();
+    })
+  }
+
+  resetWorkspaceInput() {
+    this.newWorkspace = {boards: [], id: 0, members: [], owner: undefined, title: "", type: "", privacy: ""};
   }
 }
