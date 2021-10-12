@@ -511,6 +511,15 @@ export class BoardViewComponent implements OnInit {
       if(this.currentWorkspace.owner.id == this.loggedInUser.id){
         this.canEdit = true;
       }
+      if(this.currentBoard.type == "Private") {
+        for (let member of this.members) {
+          if (member.userId == this.loggedInUser.id) {
+            if (member.canEdit) {
+              this.canEdit = true;
+            }
+          }
+        }
+      }
       for (let member of this.memberInWorkspace) {
         if (member.user?.id == this.loggedInUser.id) {
           if (member.role == "Quản trị" || member.role == "Chỉnh sửa") {
@@ -518,12 +527,12 @@ export class BoardViewComponent implements OnInit {
           }
         }
       }
-    } else {
+    }
+    if(this.currentBoard.type == "Private") {
       for (let member of this.members) {
         if (member.userId == this.loggedInUser.id) {
           if (member.canEdit) {
             this.canEdit = true;
-            console.log(this.canEdit)
           }
         }
       }
