@@ -903,7 +903,7 @@ export class BoardViewComponent implements OnInit {
     for (let existingUser of this.redirectService.card.users) {
       if (existingUser.id == member.userId) {
         isValid = false;
-        break;
+        return;
       }
     }
     if (isValid) {
@@ -915,7 +915,21 @@ export class BoardViewComponent implements OnInit {
       this.redirectService.card.users.push(user);
       this.createNoticeCard(`add user "${user.username}" to card "${this.redirectService.card.title}"`, this.redirectService.card)
     }
-    this.saveChanges();
+  }
 
+  removeUserFromCard(user: User) {
+    this.updateSelectedCard()
+    // @ts-ignore
+    for (let existingUser of this.redirectService.card.users) {
+      if (existingUser.id == user.id) {
+        let username = user.username;
+        // @ts-ignore
+        let deleteIndex = this.redirectService.card.users.indexOf(existingUser);
+        // @ts-ignore
+        this.redirectService.card.users.splice(deleteIndex, 1);
+        // @ts-ignore
+        this.createNoticeInBoard(`delete user ${username} from card ${this.redirectService.card.title}`, this.redirectService.card)
+      }
+    }
   }
 }
