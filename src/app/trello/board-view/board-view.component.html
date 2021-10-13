@@ -142,7 +142,7 @@
 
           <div class="column is-one-third">
             <div>
-              <button class="small-button" (click)="switchCreateTagsForm()">Nhãn</button>
+              <button class="button members-button" (click)="switchCreateTagsForm()">Nhãn</button>
               <br>
               <div class="is-hidden" id="createTags">
                 <label class="label">Các nhãn:</label>
@@ -315,8 +315,22 @@
             </span>
 
             <div class="column is-one-third">
+              <div class="member-section">
+                <button class="button members-button" (click)="toggleMemberForm()">Thành viên</button>
+                <div id="member-form" class="is-hidden">
+                  <span style="font-size: small">Thêm thành viên:</span>
+                  <ul>
+                    <li *ngFor="let member of this.members">
+                  <span class="tag" style="cursor: pointer" (click)="addUserToCard(member)">
+                    <span style="font-size: small">@{{member.username}}</span>
+                    <span style="font-size: small" *ngIf="member.nickname">({{member.nickname}})</span>
+                  </span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
               <div>
-                <button class="small-button" (click)="switchEditTagsForm()">Nhãn</button>
+                <button class="button members-button" (click)="switchEditTagsForm()">Nhãn</button>
                 <br>
                 <div class="is-hidden" id="editTags">
                   <label class="label">Các nhãn:</label>
@@ -372,7 +386,7 @@
               <div class="content">
                 <form #uploadFileCard="ngForm" (ngSubmit)="showPreview($event)">
                   <div class="update-info">
-                    Đính kèm : <input type="file" #preview (change)="showPreview($event)">
+                    Đính kèm : <input  type="file" #preview (change)="showPreview($event)">
                     <!--                    <button (click)="uploadFile()">Thêm file</button>-->
                   </div>
                 </form>

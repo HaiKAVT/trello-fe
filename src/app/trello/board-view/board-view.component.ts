@@ -870,4 +870,63 @@ export class BoardViewComponent implements OnInit {
       }
     }
   }
+
+  toggleMemberForm() {
+    let memberFormEle = document.getElementById('member-form');
+    // @ts-ignore
+    if (memberFormEle.classList.contains('is-hidden')) {
+      // @ts-ignore
+      memberFormEle.classList.remove('is-hidden');
+    } else {
+      // @ts-ignore
+      memberFormEle.classList.add('is-hidden');
+    }
+  }
+
+
+  private updateSelectedCard() {
+    for (let column of this.currentBoard.columns) {
+      for (let card of column.cards) {
+        if (card.id == this.redirectService.card.id) {
+          this.redirectService.card = card;
+        }
+      }
+    }
+  }
+
+  createNoticeCard(activityText: string, card: Card) {
+    let activity: ActivityLog = {
+      title: "Board: " + this.currentBoard.title,
+      content: `${this.currentUser.username} ${activityText} at ${this.notificationService.getTime()}`,
+      url: "/trello/board/" + this.currentBoard.id,
+      status: false,
+      board: this.currentBoard,
+      card: card
+    }
+    this.activityLogService.saveNotification(activity, this.currentBoardId)
+
+  }
+
+  addUserToCard(member: DetailedMember) {
+    this.updateSelectedCard();
+    let isValid = true;
+    // @ts-ignore
+    for (let existingUser of this.redirectService.card.users) {
+      if (existingUser.id == member.userId) {
+        isValid = false;
+        break;
+      }
+    }
+    if (isValid) {
+      let user: User = {
+        id: member.userId,
+        username: member.username,
+      }
+      // @ts-ignore
+      this.redirectService.card.users.push(user);
+      this.createNoticeCard(`add user "${user.username}" to card "${this.redirectService.card.title}"`, this.redirectService.card)
+    }
+    this.saveChanges();
+
+  }
 }
