@@ -12,6 +12,7 @@ import { WorkspaceHomeComponent } from './workspace/workspacehome/workspace-home
 import { WorkspaceMembersComponent } from './workspace/workspacemembers/workspace-members.component';
 import {AngularMaterialModule} from "../angular-material.module";
 import {NgxPaginationModule} from "ngx-pagination";
+import { WorkspaceSettingComponent } from './workspace/workspace-setting/workspace-setting.component';
 
 
 @NgModule({
@@ -21,6 +22,7 @@ import {NgxPaginationModule} from "ngx-pagination";
     BoardViewComponent,
     WorkspaceHomeComponent,
     WorkspaceMembersComponent,
+    WorkspaceSettingComponent,
   ],
   imports: [
     CommonModule,
