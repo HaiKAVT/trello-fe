@@ -30,6 +30,7 @@ import {CommentCardService} from "../../service/comment/comment-card.service";
 import {ActivityLog} from "../../model/activity-log";
 import {NotificationService} from "../../service/notification/notification.service";
 import {ActivityLogService} from "../../service/activityLog/activity-log.service";
+import {Notification} from "../../model/notification";
 
 @Component({
   selector: 'app-board-view',
@@ -43,6 +44,7 @@ export class BoardViewComponent implements OnInit {
   selectedFile: any | undefined = null;
   isSubmitted = false;
   members: DetailedMember[] = [];
+  membersUser: User[] = [];
   currentBoardId: number = -1;
   commentId = -1;
   tags: Tag[] = [];
@@ -150,6 +152,10 @@ export class BoardViewComponent implements OnInit {
     }
     this.setPreviousColumn(event);
     this.saveChange()
+    if (this.previousColumn.id != column.id) {
+      this.createNoticeInBoard(`di chuyển thẻ ${event.container.data[0].title} từ ${this.previousColumn.title} sang ${column.title}`)
+      this.createNotification(` di chuyển thẻ ${event.container.data[0].title} từ ${this.previousColumn.title} sang ${column.title}`)
+    }
   }
 
   updateCards() {
@@ -185,6 +191,8 @@ export class BoardViewComponent implements OnInit {
         }
         this.selectedColumn.cards.push(data)
         this.columnService.updateAColumn(this.selectedColumn.id, this.selectedColumn).subscribe()
+        this.createNoticeCard(`đã thêm thẻ ${data.title}`, data)
+        this.createNotification(` đã thêm thẻ ${data.title}`)
         this.closeCreateCardModal()
       })
     }
@@ -284,19 +292,20 @@ export class BoardViewComponent implements OnInit {
     this.commentCardService.deleteComment(this.commentId).subscribe(() => {
         this.toastService.showMessage("Xóa thành công", 'is-success');
         this.getAllCommentByCardId();
-        this.closeDeleteCommentModal()
-        this.createNoticeInBoard(`delete comment`)
+        this.closeDeleteCommentModal();
+        this.createNoticeInBoard(`xóa bình luận`);
       }
     )
   }
 
   createNoticeInBoard(activityText: string) {
     let activity: ActivityLog = {
-      title: "Board: " + this.currentBoard.title,
-      content: `${this.loggedInUser.username} ${activityText} at ${this.notificationService.getTime()}`,
+      title: "Bảng: " + this.currentBoard.title,
+      content: `${this.loggedInUser.username} ${activityText} lúc ${this.notificationService.getTime()}`,
       url: "/trello/boards/" + this.currentBoard.id,
       status: false,
-      board: this.currentBoard
+      board: this.currentBoard,
+      user: this.currentUser
     }
     this.activityLogService.saveNotification(activity, this.currentBoardId)
   }
@@ -328,9 +337,7 @@ export class BoardViewComponent implements OnInit {
 
   addNewTag() {
     let tag: Tag = this.newTagForm.value;
-    console.log(tag)
     this.tagService.add(tag).subscribe(tag => {
-      console.log(tag.name)
       this.currentBoard.tags?.push(tag);
       this.boardDataUpdate();
       this.newTagForm = new FormGroup({
@@ -493,7 +500,6 @@ export class BoardViewComponent implements OnInit {
             this.newAttachment.source = url;
             this.newAttachment.name = `${this.selectedFile.name}`;
             this.newAttachment.card = this.selectedCard;
-            console.log(this.newAttachment)
             this.attachmentService.addNewFile(this.newAttachment).subscribe(() => {
                 this.toastService.showMessage("Upload success", 'is-success');
                 this.getSelectedCardAttachment()
@@ -555,13 +561,25 @@ export class BoardViewComponent implements OnInit {
   getMembers() {
     this.memberService.getMembersByBoardId(this.currentBoard.id).subscribe(members => {
       this.members = members;
+      for (let members of this.members) {
+        this.getMemberUser(members.userId)
+      }
       this.checkEditAllow()
     });
+  }
+
+  getMemberUser(id: any) {
+    this.userService.getUserById(id).subscribe(data => {
+      this.membersUser.push(data)
+    })
   }
 
   getCurrentBoard() {
     this.boardService.getBoardById(this.currentBoardId).subscribe(board => {
       this.currentBoard = board;
+      this.activityLogService.findAllByBoardId(this.currentBoardId).subscribe(data => {
+        this.activityLogService.activities = data;
+      })
       this.checkWorkspace(board);
       this.getMembers()
       this.checkEditAllow();
@@ -570,15 +588,13 @@ export class BoardViewComponent implements OnInit {
 
   checkEditAllow() {
     let userId = this.loggedInUser.id
-    if (this.currentBoard.type == "Public") {
-      this.canEdit = true;
-      return;
-    }
     if (this.loggedInUser.id == this.currentBoard.owner.id) {
       this.canEdit = true;
-      console.log(this.canEdit)
     }
     if (this.isBoardInWorkspace) {
+      if (this.currentBoard.type == "Private") {
+        return;
+      }
       if (this.currentWorkspace.owner.id == this.loggedInUser.id) {
         this.canEdit = true;
         return;
@@ -598,15 +614,6 @@ export class BoardViewComponent implements OnInit {
             if (member.role == "Quản trị" || member.role == "Chỉnh sửa") {
               this.canEdit = true;
             }
-          }
-        }
-      }
-    }
-    if (this.currentBoard.type == "Private") {
-      for (let member of this.members) {
-        if (member.userId == this.loggedInUser.id) {
-          if (member.canEdit) {
-            this.canEdit = true;
           }
         }
       }
@@ -649,6 +656,8 @@ export class BoardViewComponent implements OnInit {
       this.columnService.createAColumn(newColumn).subscribe(data => {
         this.currentBoard.columns.push(data)
         this.boardDataUpdate()
+        this.createNoticeInBoard(`đã thêm danh sách ${data.title}`)
+        this.createNotification(` đã thêm danh sách ${data.title}`)
         this.closeCreateColumnModal()
       })
     }
@@ -673,6 +682,9 @@ export class BoardViewComponent implements OnInit {
     }
     moveItemInArray(this.currentBoard.columns, event.previousIndex, event.currentIndex);
     this.saveChange()
+    if (event.previousIndex != event.currentIndex) {
+      this.createNoticeInBoard(`thay đổi vị trí của cột ${this.currentBoard.columns[event.previousIndex].title} với cột ${this.currentBoard.columns[event.currentIndex].title}`)
+    }
   }
 
 
@@ -731,8 +743,9 @@ export class BoardViewComponent implements OnInit {
       if (this.currentBoard.columns[i].id == this.selectedColumnID) {
         this.selectedIndex = this.currentBoard.columns.indexOf(this.currentBoard.columns[i])
         this.currentBoard.columns.splice(this.selectedIndex, 1);
-        console.log(this.currentBoard.columns);
         this.columnService.deleteAColumn(this.selectedColumnID).subscribe(() => {
+          this.createNoticeInBoard(`xóa danh sách ${this.currentBoard.columns[i].title}`)
+          this.createNotification(` xóa danh sách ${this.currentBoard.columns[i].title}`)
           this.saveChange()
           this.closeDeleteColumnModal();
         })
@@ -771,6 +784,8 @@ export class BoardViewComponent implements OnInit {
       });
       this.commentCardService.saveComment(commentCard).subscribe(() => {
         this.redirectService.showModal(this.selectedCard)
+        this.createNoticeCard(`đã bình luận vào thẻ ${this.selectedCard.title}`, this.selectedCard)
+        this.createNotification(` đã bình luận vào thẻ ${this.selectedCard.title}`)
       })
     }
   }
@@ -822,8 +837,10 @@ export class BoardViewComponent implements OnInit {
             // @ts-ignore
             card.users.splice(deleteIndex, 1);
             // @ts-ignore
-            this.createNoticeInBoard(`delete member ${card.users[deleteIndex].username}
-                                      from card "${card.title}"`)
+            this.createNoticeInBoard(`xóa thành viên ${card.users[deleteIndex].username}
+                                      khỏi thẻ "${card.title}"`)
+            this.createNotification(` xóa thành viên ${card.users![deleteIndex].username}
+                                      khỏi thẻ "${card.title}"`)
           }
         }
       }
@@ -885,12 +902,13 @@ export class BoardViewComponent implements OnInit {
 
   createNoticeCard(activityText: string, card: Card) {
     let activity: ActivityLog = {
-      title: "Board: " + this.currentBoard.title,
-      content: `${this.currentUser.username} ${activityText} at ${this.notificationService.getTime()}`,
+      title: "Bảng: " + this.currentBoard.title,
+      content: `${this.currentUser.username} ${activityText} lúc ${this.notificationService.getTime()}`,
       url: "/trello/board/" + this.currentBoard.id,
       status: false,
       board: this.currentBoard,
-      card: card
+      card: card,
+      user: this.currentUser
     }
     this.activityLogService.saveNotification(activity, this.currentBoardId)
 
@@ -911,9 +929,11 @@ export class BoardViewComponent implements OnInit {
         id: member.userId,
         username: member.username,
       }
-      // @ts-ignore
-      this.redirectService.card.users.push(user);
-      this.createNoticeCard(`add user "${user.username}" to card "${this.redirectService.card.title}"`, this.redirectService.card)
+      this.selectedCard.users?.push(user);
+      this.cardService.updateCard(this.selectedCard.id, this.selectedCard).subscribe(() => {
+      })
+      this.createNoticeCard(`đã thêm "${user.username}" vào thẻ "${this.redirectService.card.title}"`, this.redirectService.card)
+      this.createNotification(` đã thêm "${user.username}" vào thẻ "${this.redirectService.card.title}"`)
     }
   }
 
@@ -928,9 +948,33 @@ export class BoardViewComponent implements OnInit {
         // @ts-ignore
         this.redirectService.card.users.splice(deleteIndex, 1);
         // @ts-ignore
-        this.createNoticeInBoard(`delete user ${username} from card ${this.redirectService.card.title}`, this.redirectService.card)
+        this.createNoticeInBoard(`xóa thành viên ${username} khỏi thẻ ${this.redirectService.card.title}`, this.redirectService.card)
+        this.createNotification(` xóa thành viên ${username} khỏi thẻ ${this.redirectService.card.title}`)
       }
     }
+  }
+
+  createNotification(activity: any) {
+    let receivers: User[] = [];
+    if (this.currentUser.id != this.currentBoard.owner.id) {
+      receivers.push(this.currentUser)
+    }
+    for (let member of this.membersUser) {
+      if (this.currentUser.id == member.id) {
+        continue
+      }
+      receivers.push(member)
+    }
+    console.log(receivers)
+    let notification: Notification = {
+      title: this.currentBoard.title,
+      content: this.loggedInUser.username + activity + this.notificationService.getTime(),
+      status: false,
+      url: "/trello/board/" + this.currentBoard.id,
+      receiver: receivers,
+      user: this.loggedInUser
+    }
+    this.notificationService.saveNotification(notification)
   }
 
   filterBoard(event: number[][]) {

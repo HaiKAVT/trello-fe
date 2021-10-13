@@ -331,11 +331,4 @@ h1.app-name {
   background: #6d7fcc;
   color: white;
 }
-.modal-card-foot {
-  align-items: center;
-  background-color: whitesmoke;
-  display: flex;
-  justify-content: right;
-  padding: 20px;
-  position: relative;
-}
+

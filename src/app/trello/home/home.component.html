@@ -82,7 +82,7 @@
       <button class="delete" aria-label="close" (click)="hideCreateBoard()"></button>
     </header>
     <section class="modal-card-body">
-      <label class="label">Tiêu đề</label>
+      <label class="label">Tên bảng</label>
       <input class="input" type="text" required [(ngModel)]="newBoard.title" #boardTitle="ngModel">
       <div *ngIf="boardTitle.invalid && boardTitle.touched" class="alert">
         <div *ngIf="boardTitle.errors?.required" style="color: red;">Tiêu đề cần được nhập.</div>
@@ -118,7 +118,7 @@
     </header>
     <section class="modal-card-body">
       <div class="field" style="position: relative">
-        <label class="label">Title</label>
+        <label class="label">Tên nhóm</label>
         <div class="control">
           <input class="input" type="text" required [(ngModel)]="workspace.title" #workspaceTitle="ngModel">
         </div>

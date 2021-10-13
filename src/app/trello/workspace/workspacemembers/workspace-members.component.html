@@ -57,35 +57,16 @@
         </div>
       </div>
       <div>
-        <button class="button is-primary">
-          {{member.role}}
-        </button>
+        <select style="width: 110px; border: 0px" class="button is-primary" [ngModel]="member.role"
+                #newRole="ngModel" (change)="updateMember(member,newRole.value)" [disabled]="!(isOwner||isAdmin)">
+          <option class="" value="Chỉ xem">Chỉ xem</option>
+          <option value="Chỉnh sửa">Chỉnh sửa</option>
+          <option value="Quản trị">Quản trị</option>
+        </select>
         <button class="button is-primary" style="width: 40px" (click)="removeMembers(i,member)"
                 *ngIf="(isAdmin||isOwner) && loggedInUser.id != member.user?.id">
           <i class="fas fa-user-minus" style="color: red"></i>
         </button>
-        <div>
-          <button class="button is-success" (click)="updateMember(member,'Quản trị')"
-                  *ngIf="member.role !== 'Quản trị' && isOwner">Quản trị
-          </button>
-          <button class="button is-success"
-                  (click)="updateMember(member,'Chỉ xem')"
-                  *ngIf="isOwner && member.role != 'Chỉ xem' && loggedInUser.id != member.user?.id">Chỉ xem
-          </button>
-          <button class="button is-success"
-                  (click)="updateMember(member,'Chỉnh sửa')"
-                  *ngIf="isOwner && member.role != 'Chỉnh sửa' && loggedInUser.id != member.user?.id">Chỉnh sửa
-          </button>
-        </div>
-        <button class="button is-success"  (click)="updateMember(member,'Chỉ xem')"
-                *ngIf="isAdmin && member.role == 'Chỉnh sửa' && loggedInUser.id != member.user?.id">Chỉ xem
-        </button>
-        <button class="button is-success"  (click)="updateMember(member,'Chỉnh sửa')"
-                *ngIf="isAdmin && member.role == 'Chỉ xem' && loggedInUser.id != member.user?.id">Chỉnh sửa
-        </button>
-        <!--        <button class="button is-success" style="top: 10px" (click)="updateMember(member,'Member')"-->
-        <!--                *ngIf="workspace.owner.id == currentUser.id && member.role == 'Admin'">Set Member-->
-        <!--        </button>-->
       </div>
     </div>
     <pagination-controls class="my-pagination"
@@ -145,7 +126,7 @@
     </header>
     <section class="modal-card-body">
       <div class="field" style="position: relative">
-        <label class="label">Title</label>
+        <label class="label">Tên bảng</label>
         <div class="control">
           <input class="input" type="text" required [(ngModel)]="newWorkspace.title" #workspaceTitle="ngModel">
         </div>

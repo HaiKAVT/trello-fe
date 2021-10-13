@@ -1,5 +1,5 @@
 <!--board-header-->
-<nav class="navbar" role="navigation" aria-label="main navigation" >
+<nav class="navbar" role="navigation" aria-label="main navigation">
   <div class="navbar-brand">
     <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
       <span aria-hidden="true"></span>
@@ -8,7 +8,7 @@
     </a>
   </div>
 
-  <div id="navbarBasicExample" class="navbar-menu" >
+  <div id="navbarBasicExample" class="navbar-menu">
     <div class="navbar-item">
       <div class="buttons">
         <input *ngIf="canEdit" [(ngModel)]="currentBoard.title" class="button is-primary" (change)="updateBoardTitle()">
@@ -25,7 +25,7 @@
         <button class="button is-primary">
           <i class="far fa-star"></i>
         </button>
-        <button *ngIf="canEdit" class="button is-primary"
+        <button *ngIf="canEdit && isInWorkspace" class="button is-primary"
                 (click)="toggleUserSearchBar()">
           <i class="fas fa-user-plus"></i>Mời
         </button>
@@ -79,7 +79,8 @@
                 Thành viên
                 <ul class="checkbox">
                   <li *ngFor="let member of members">
-                    <input class="form-check-label" type="checkbox" [value]="member.userId" class="member-filter-option filter-option">
+                    <input class="form-check-label" type="checkbox" [value]="member.userId"
+                           class="member-filter-option filter-option">
                     <span class="tag is-light">@{{member.username}}</span>
                   </li>
                 </ul>
@@ -91,75 +92,88 @@
             <i class="fas fa-filter"></i>
             Tìm Kiếm
           </button>
-
-          <div style="position: relative">
-            <div id="menu-btn-dropdown" class="is-hidden" style="position: absolute; top: 25px">
-              <button *ngIf="canEdit" class="button is-danger is-light" (click)="toggleDeleteBoardModal()">Xóa Bảng
-              </button>
-            </div>
-          </div>
-          <button class="button is-primary" (click)="toggleMenu()">
-            <i class="fas fa-ellipsis-h"></i>
-            Menu
-          </button>
-          <div class="icon-item">
-            <div class="dropdown is-hoverable is-right">
+          <div class="icon-item" style="margin-right: 10px">
+            <div class="dropdown is-hoverable ">
               <div class="dropdown-trigger">
-                <button class="button is-primary" (click)="toggleMenu()">
-                  <i class="fas fa-list"></i>
-                  Thông báo
+                <button class="button is-primary">
+                  <i class="fas fa-ellipsis-h"></i>
+                  Menu
                 </button>
               </div>
-              <div class="dropdown-menu" id="dropdown-menu5" role="menu">
-                <div class="dropdown-content" style="padding: 0">
-                  <div class="header__navbar-item header__navbar-item--has-notify">
-                    <div class="header__notify">
-                      <header class="header__notify-header">
-                        <h3>Thông báo</h3>
-                      </header>
-                      <ul class="header__notify-list">
-                        <li class="header__notify-item" *ngFor="let activity of activityLogService.activities"
-                            [class.mark-read]="activity.status">
-                          <a class="header__notify-link" routerLink="{{activity.url}}" *ngIf="activity.card"
-                             (click)="redirectService.showModal(activity.card)">
-                            <img src="https://dizibrand.com/wp-content/uploads/2019/07/trello-la-gi-dizibrand-1.png"
-                                 alt=""
-                                 class="header__notify-img">
-                            <div class="header__notify-info">
-                              <span class="header__notify-name">{{activity.title}}</span>
-                              <span class="header__notify-description">{{activity.content}}</span>
-                            </div>
-                          </a>
-                          <a class="header__notify-link" routerLink="{{activity.url}}" *ngIf="!activity.card">
-                            <img
-                              src="https://firebasestorage.googleapis.com/v0/b/trello-h3k.appspot.com/o/h3k.png?alt=media&token=575e3071-bd05-44f2-89fb-04851d21af49"
-                              alt=""
-                              class="header__notify-img">
-                            <div class="header__notify-info">
-                              <span class="header__notify-name">{{activity.title}}</span>
-                              <span class="header__notify-description">{{activity.content}}</span>
-                            </div>
-                          </a>
-                        </li>
-                      </ul>
+              <div class="dropdown-menu" role="menu" style="width: 100px">
+                <div>
+                  <button *ngIf="canEdit" class="button is-danger is-light" (click)="toggleDeleteBoardModal()">Xóa bảng
+                  </button>
+                </div>
+              </div>
+              <div style="position: relative">
+                <div id="menu-btn-dropdown" class="is-hidden" style="position: absolute; top: 25px">
+                  <button *ngIf="canEdit" class="button is-danger is-light" (click)="toggleDeleteBoardModal()">Xóa Bảng
+                  </button>
+                </div>
+              </div>
+
+              <div class="icon-item" style="margin-left: 10px">
+                <div class="dropdown is-hoverable is-right">
+                  <div class="dropdown-trigger">
+                    <button class="button is-primary" (click)="toggleMenu()">
+                      <i class="fas fa-list"></i>
+                      Thông báo
+                    </button>
+                  </div>
+                  <div class="dropdown-menu" id="dropdown-menu5" role="menu">
+                    <div class="dropdown-content" style="padding: 0">
+                      <div class="header__navbar-item header__navbar-item--has-notify">
+                        <div class="header__notify">
+                          <header class="header__notify-header">
+                            <h3>Thông báo</h3>
+                          </header>
+                          <ul class="header__notify-list">
+                            <li class="header__notify-item" *ngFor="let activity of activityLogService.activities"
+                                [class.mark-read]="activity.status">
+                              <a class="header__notify-link" routerLink="{{activity.url}}" *ngIf="activity.card"
+                                 (click)="redirectService.showModal(activity.card)">
+                                <img
+                                  [src]="activity.user!.image!"
+                                  alt=""
+                                  class="header__notify-img">
+                                <div class="header__notify-info">
+                                  <span class="header__notify-name">{{activity.title}}</span>
+                                  <span class="header__notify-description">{{activity.content}}</span>
+                                </div>
+                              </a>
+                              <a class="header__notify-link" routerLink="{{activity.url}}" *ngIf="!activity.card">
+                                <img
+                                  [src]="activity.user!.image!"
+                                  alt=""
+                                  class="header__notify-img">
+                                <div class="header__notify-info">
+                                  <span class="header__notify-name">{{activity.title}}</span>
+                                  <span class="header__notify-description">{{activity.content}}</span>
+                                </div>
+                              </a>
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
-          <div class="search-bar">
-            <div *ngIf="searchBarIsShown" class="search-bar-input">
-              <input class="input" type="text" placeholder="Tìm kiếm thành viên" [(ngModel)]="userSearch"
-                     (keyup)="searchUsers()">
-              <div *ngIf="userResult.length" class="dropdown-content">
-                <a *ngFor="let result of userResult" class="dropdown-item" (click)="addMember(result)">
-                  <img *ngIf="!result.image"
-                       src="https://i.pinimg.com/originals/57/fb/31/57fb3190d0cc1726d782c4e25e8561e9.png"
-                       class="img-circle is-48x48">
-                  <img *ngIf="result.image" [src]="result.image" class="img-circle is-48x48">
-                  @{{result.username}} <span *ngIf="result.nickname">({{result.nickname}})</span>
-                </a>
+              <div class="search-bar">
+                <div *ngIf="searchBarIsShown" class="search-bar-input">
+                  <input class="input" type="text" placeholder="Tìm kiếm thành viên" [(ngModel)]="userSearch"
+                         (keyup)="searchUsers()">
+                  <div *ngIf="userResult.length" class="dropdown-content">
+                    <a *ngFor="let result of userResult" class="dropdown-item" (click)="addMember(result)">
+                      <img *ngIf="!result.image"
+                           src="https://i.pinimg.com/originals/57/fb/31/57fb3190d0cc1726d782c4e25e8561e9.png"
+                           class="img-circle is-48x48">
+                      <img *ngIf="result.image" [src]="result.image" class="img-circle is-48x48">
+                      @{{result.username}} <span *ngIf="result.nickname">({{result.nickname}})</span>
+                    </a>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -206,7 +220,8 @@
     </section>
     <footer class="modal-card-foot">
       <button class="button is-danger is-light"
-              *ngIf="canEdit && (selectedMember.userId ) != authenticateService.getCurrentUserValue().id" (click)="removeSelectedMember()">
+              *ngIf="canEdit && (selectedMember.userId ) != authenticateService.getCurrentUserValue().id"
+              (click)="removeSelectedMember()">
         Xóa thành viên !
       </button>
       <span *ngIf="canEdit && (selectedMember.userId) != authenticateService.getCurrentUserValue().id">

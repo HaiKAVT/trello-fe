@@ -40,6 +40,7 @@ export class NavbarBoardHeaderComponent implements OnInit {
   userResult: User[] = [];
   tagFilter: number[] = [];
   memberFilter: number[] = [];
+  @Input()loggedInUser?:User
 
   constructor(public authenticateService: AuthenticateService,
               private userService: UserService,
@@ -65,7 +66,7 @@ export class NavbarBoardHeaderComponent implements OnInit {
       this.resetSearch();
       this.getMembers();
     });
-    this.createNoticeInBoard(`add ${member.user.username}`)
+    this.createNoticeInBoard(`thêm ${member.user.username} vào bảng`)
     document.getElementById('addMember')!.classList.add('is-active');
   }
 
@@ -88,7 +89,8 @@ export class NavbarBoardHeaderComponent implements OnInit {
       content: this.currentUser.username + " " + activityText + " trong " + this.currentBoard.title + " " + "Vào : " + this.notificationService.getTime(),
       url: "/trello/board/" + this.currentBoard.id,
       status: false,
-      board: this.currentBoard
+      board: this.currentBoard,
+      user:this.currentUser
     }
     if (this.currentBoard.id != null) {
       this.activityLogService.saveNotification(activity, this.currentBoard.id)
@@ -211,7 +213,7 @@ export class NavbarBoardHeaderComponent implements OnInit {
     let username = this.selectedMember.username;
     this.memberService.deleteMember(this.selectedMember.id).subscribe(() => {
       // @ts-ignore
-      this.createNoticeInBoard(`delete ${username}`)
+      this.createNoticeInBoard(`đã xóa ${username} khỏi bảng`)
       this.getMembers();
       this.closeModal();
     });
@@ -220,13 +222,13 @@ export class NavbarBoardHeaderComponent implements OnInit {
   makeSelectedMemberObserver() {
     this.selectedMember.canEdit = false;
     this.updateSelectedMember();
-    this.createNoticeInBoard("delete edit permissions of " + this.selectedMember.username)
+    this.createNoticeInBoard("đã tước quyền " + this.selectedMember.username)
   }
 
   makeSelectedMemberEditor() {
     this.selectedMember.canEdit = true;
     this.updateSelectedMember();
-    this.createNoticeInBoard("allow " + this.selectedMember.username + "edit board")
+    this.createNoticeInBoard("cho phép " + this.selectedMember.username + "chỉnh sửa")
   }
 
   updateSelectedMember() {
@@ -247,7 +249,7 @@ export class NavbarBoardHeaderComponent implements OnInit {
     if (this.currentBoard.id != null) {
       this.boardService.deleteBoard(this.currentBoard.id).subscribe(() => this.router.navigateByUrl('/trello'));
     }
-    this.createNoticeInBoard("delete board")
+    this.createNoticeInBoard("xóa bảng")
   }
 
   filterBoard() {
