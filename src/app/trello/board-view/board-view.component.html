@@ -238,7 +238,7 @@
         <header class="modal-card-head">
           <p class="modal-card-title">
             <input class="input is-light" type="text" style="font-weight: bold; font-size: larger"
-                   formControlName="title" placeholder="Nhập tiêu đề" [disabled]="!canEdit">
+                   formControlName="title" placeholder="Nhập tiêu đề">
             <span style="font-size: medium; color: red"
                   *ngIf="(createCardForm.get('title')!.dirty || createCardForm.get('title')!.touched) && createCardForm.get('title')!.invalid">
             Trường bắt buộc</span> <br>
