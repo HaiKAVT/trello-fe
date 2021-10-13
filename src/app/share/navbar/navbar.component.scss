@@ -550,3 +550,29 @@ button:focus {
 .modal-card-user {
   border-radius: 5px;
 }
+
+.my-pagination ::ng-deep .ngx-pagination {
+  margin-left: 7%;
+  margin-top: 30px;
+  //justify-content: space-evenly;
+}
+
+.my-pagination ::ng-deep .ngx-pagination .pagination-previous {
+  background: #6d7fcc;
+  color: white;
+  width: 100px;
+  margin-right: 5px;
+  margin-top: -5px;
+}
+
+.my-pagination ::ng-deep .ngx-pagination .pagination-next {
+  background: #6d7fcc;
+  color: white;
+  width: 100px;
+  margin-top: -5px;
+}
+
+.my-pagination ::ng-deep .ngx-pagination .current {
+  background: #6d7fcc;
+  color: white;
+}

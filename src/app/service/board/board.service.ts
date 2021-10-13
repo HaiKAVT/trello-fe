@@ -64,7 +64,7 @@ export class BoardService {
   deleteAllByWorkspace(boards: Board[]): Observable<Board> {
     return this.http.post<Board>(`${API_URL}boards/delete`,boards);
   }
-  findAllAvailableToSearcher( searcherId: number | undefined): Observable<Board[]> {
-    return this.http.get<Board[]>(`${API_URL}boards/available-to/${searcherId}`);
+  findAllAvailableToSearcher( searcherId: number | undefined,keyword:string, params:any): Observable<any> {
+    return this.http.get<any>(`${API_URL}boards/available-to/${searcherId}/${keyword}`,{ params });
   }
 }

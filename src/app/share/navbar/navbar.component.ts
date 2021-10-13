@@ -10,6 +10,9 @@ import {AngularFireStorage} from "@angular/fire/compat/storage";
 import {finalize} from "rxjs/operators";
 import {NotificationService} from "../../service/notification/notification.service";
 import {Notification} from "../../model/notification";
+import {SearchResult} from "../../model/search-result";
+import {BoardService} from "../../service/board/board.service";
+import {RedirectService} from "../../service/redirect/redirect.service";
 
 @Component({
   selector: 'app-navbar',
@@ -23,6 +26,11 @@ export class NavbarComponent implements OnInit {
   imgSrc: any;
   isSubmitted = false;
   selectedImage: any | undefined = null;
+  searchResults: SearchResult[] = [];
+  searchString: string = '';
+  page = 1;
+  count = 0;
+  pageSize = 10;
 
   constructor(public navbarService: NavbarService,
               private toast: ToastService,
@@ -31,7 +39,9 @@ export class NavbarComponent implements OnInit {
               private storage: AngularFireStorage,
               private userService: UserService,
               private toastService: ToastService,
-              public notificationService: NotificationService
+              public notificationService: NotificationService,
+              private boardService: BoardService,
+              private redirectService:RedirectService
   ) {
     this.authenticateService.currentUserSubject.subscribe(data => {
       this.currentUser = data;
@@ -140,7 +150,7 @@ export class NavbarComponent implements OnInit {
     }
   }
 
-  markReadNotification(notification: Notification){
+  markReadNotification(notification: Notification) {
     if (notification.id != null && !notification.status) {
       notification.status = true;
       this.notificationService.updateNotification(notification.id, notification).subscribe(() => this.notificationService.unreadNotice--)
@@ -156,4 +166,78 @@ export class NavbarComponent implements OnInit {
     }
   }
 
+  search() {
+    const params = this.getRequestParam(this.page, this.pageSize)
+    if (this.searchString == '') {
+      this.searchResults = [];
+    } else {
+      if (this.currentUser != null) {
+        this.boardService.findAllAvailableToSearcher(this.currentUser.id, this.searchString, params).subscribe(data => {
+          let searchResults:SearchResult[] = [];
+          for (let board of data.boards) {
+            for (let column of board.columns) {
+              for (let card of column.cards) {
+                let keywordInCardTitle = card.title.toLowerCase().includes(this.searchString.toLowerCase());
+                let keywordInCardContent = card.content.toLowerCase().includes(this.searchString.toLowerCase());
+                if (keywordInCardTitle || keywordInCardContent) {
+                  let searchResult: SearchResult = {
+                    board: board,
+                    column: column,
+                    card: card,
+                    preview: []
+                  }
+                  let exist:boolean = false
+                  if(searchResults.length > 0){
+                    for(let search of searchResults){
+                      if (searchResult.card.id == search.card.id){
+                        exist = true
+                      }
+                      if(exist){
+                        break
+                      }
+                    }
+                    if(!exist){
+                      searchResults.push(searchResult);
+                    }
+                  } else {
+                    searchResults.push(searchResult);
+                  }
+                }
+              }
+            }
+          }
+          this.searchResults = searchResults;
+        });
+      }
+    }
+  }
+
+  getRequestParam(page: number, pageSize: number) {
+    let params: any = {};
+    if (page) {
+      params[`page`] = page - 1;
+    }
+    if (pageSize) {
+      params[`size`] = pageSize;
+    }
+    return params
+  }
+
+  clearSearch(searchResult: SearchResult) {
+    this.searchString = '';
+    this.searchResults = [];
+    this.redirectService.showModal(searchResult.card);
+  }
+
+  handlePageChange(event: any) {
+    this.page = event;
+  }
+
+  private createPreview(content: string, searchString: string): string[] {
+    let index = content.toLowerCase().indexOf(searchString.toLowerCase());
+    let beforeKeyword: string = content.substring(0, index);
+    let keyword: string = content.substring(index, index + searchString.length);
+    let afterKeyword: string = content.substring(index + searchString.length, content.length);
+    return [beforeKeyword, keyword, afterKeyword]
+  }
 }
