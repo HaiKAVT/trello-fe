@@ -37,7 +37,6 @@
                class="user-preview" style="position: relative"
                [ngClass]="{'is-hidden': i >= 5}">
               <img *ngIf="member.image" [src]="member.image" class="img-circle"/>
-
               <img *ngIf="!member.image"
                    class="img-circle"/>
               <span id="user-preview-text-{{member.userId}}"

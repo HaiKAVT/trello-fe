@@ -257,7 +257,7 @@
                 </span>
               </li>
               <li>
-                <span *ngFor="let user of redirectService.card.users" class="tag is-light"
+                <span *ngFor="let user of selectedCard.users" class="tag is-light"
                       (click)="removeUserFromCard(user)">
                   @{{user.username}}
                 </span>

@@ -252,7 +252,7 @@ export class BoardViewComponent implements OnInit {
 
   deleteCard(id: any) {
     this.deleteAllComment();
-    this.cardService.deleteCard(id).subscribe(() => {
+    this.cardService.deleteCard(id).subscribe(data => {
         this.closeDeleteCardModal();
         this.closeEditCardModal();
         this.getCurrentBoard()
@@ -599,21 +599,10 @@ export class BoardViewComponent implements OnInit {
         this.canEdit = true;
         return;
       }
-      if (this.currentBoard.type == "Private") {
-        for (let member of this.members) {
-          if (member.userId == this.loggedInUser.id) {
-            if (member.canEdit) {
-              this.canEdit = true;
-              return;
-            }
-          }
-        }
-      } else {
-        for (let member of this.memberInWorkspace) {
-          if (member.user?.id == this.loggedInUser.id) {
-            if (member.role == "Quản trị" || member.role == "Chỉnh sửa") {
-              this.canEdit = true;
-            }
+      for (let member of this.memberInWorkspace) {
+        if (member.user?.id == this.loggedInUser.id) {
+          if (member.role == "Quản trị" || member.role == "Chỉnh sửa") {
+            this.canEdit = true;
           }
         }
       }
@@ -999,6 +988,7 @@ export class BoardViewComponent implements OnInit {
       }
     })
   }
+
   isValidMember(card: Card, memberFilter: number[]) {
     if (memberFilter.length == 0) return true;
     for (let userId of memberFilter) {
