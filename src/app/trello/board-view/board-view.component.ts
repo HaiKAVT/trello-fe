@@ -929,8 +929,9 @@ export class BoardViewComponent implements OnInit {
         id: member.userId,
         username: member.username,
       }
-      // @ts-ignore
-      this.redirectService.card.users.push(user);
+      this.selectedCard.users?.push(user);
+      this.cardService.updateCard(this.selectedCard.id, this.selectedCard).subscribe(() => {
+      })
       this.createNoticeCard(`đã thêm "${user.username}" vào thẻ "${this.redirectService.card.title}"`, this.redirectService.card)
       this.createNotification(` đã thêm "${user.username}" vào thẻ "${this.redirectService.card.title}"`)
     }

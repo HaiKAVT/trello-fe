@@ -334,7 +334,7 @@
                   <span style="font-size: small">Thêm thành viên:</span>
                   <ul>
                     <li *ngFor="let member of this.members">
-                  <span class="tag" style="cursor: pointer" (click)="addUserToCard(member)">
+                  <span class="tag" (click)="addUserToCard(member)">
                     <span style="font-size: small">@{{member.username}}</span>
                     <span style="font-size: small" *ngIf="member.nickname">({{member.nickname}})</span>
                   </span>
