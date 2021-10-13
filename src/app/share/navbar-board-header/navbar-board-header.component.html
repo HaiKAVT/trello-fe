@@ -75,65 +75,107 @@
               </div>
             </div>
           </div>
-          <div class="icon-item">
-            <div class="dropdown is-hoverable is-right">
-              <div class="dropdown-trigger">
-                <button class="button is-primary" (click)="toggleMenu()">
-                  <i class="fas fa-list"></i>
-                  Thông báo
-                </button>
+          <div style="position: relative">
+            <div id="filter-btn-dropdown" class="columns has-background-white is-hidden">
+              <div class="column is-one-fifth" style="width: 22%;">
+                <button class="button members-button" (click)="filterBoard()">Tìm</button>
+                <button class="button members-button" (click)="clearFilterBoard()">Xóa</button>
               </div>
-              <div class="dropdown-menu" id="dropdown-menu5" role="menu">
-                <div class="dropdown-content" style="padding: 0">
-                  <div class="header__navbar-item header__navbar-item--has-notify">
-                    <div class="header__notify">
-                      <header class="header__notify-header">
-                        <h3>Thông báo</h3>
-                      </header>
-                      <ul class="header__notify-list">
-                        <li class="header__notify-item" *ngFor="let activity of activityLogService.activities"
-                            [class.mark-read]="activity.status">
-                          <a class="header__notify-link" routerLink="{{activity.url}}" *ngIf="activity.card"
-                             (click)="redirectService.showModal(activity.card)">
-                            <img
-                              [src]="activity.user!.image!"
-                              alt=""
-                              class="header__notify-img">
-                            <div class="header__notify-info">
-                              <span class="header__notify-name">{{activity.title}}</span>
-                              <span class="header__notify-description">{{activity.content}}</span>
-                            </div>
-                          </a>
-                          <a class="header__notify-link" routerLink="{{activity.url}}" *ngIf="!activity.card">
-                            <img
-                              [src]="activity.user!.image!"
-                              alt=""
-                              class="header__notify-img">
-                            <div class="header__notify-info">
-                              <span class="header__notify-name">{{activity.title}}</span>
-                              <span class="header__notify-description">{{activity.content}}</span>
-                            </div>
-                          </a>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
+              <div class="column" style="width: max-content">
+                <ul class="checkbox">
+                  <li *ngFor="let tag of tags">
+                    <input type="checkbox" [value]="tag.id" class="tag-filter-option filter-option">
+                    <span class="tag is-light" [ngClass]="tag.color">{{tag.name}}</span>
+                  </li>
+                </ul>
+              </div>
+              <div style=" padding-left: 10px;">
+                Thành viên
+                <ul class="checkbox">
+                  <li *ngFor="let member of members">
+                    <input class="form-check-label" type="checkbox" [value]="member.userId"
+                           class="member-filter-option filter-option">
+                    <span class="tag is-light">@{{member.username}}</span>
+                  </li>
+                </ul>
               </div>
             </div>
           </div>
-          <div class="search-bar">
-            <div *ngIf="searchBarIsShown" class="search-bar-input">
-              <input class="input" type="text" placeholder="Tìm kiếm thành viên" [(ngModel)]="userSearch"
-                     (keyup)="searchUsers()">
-              <div *ngIf="userResult.length" class="dropdown-content">
-                <a *ngFor="let result of userResult" class="dropdown-item" (click)="addMember(result)">
-                  <img *ngIf="!result.image"
-                       src="https://i.pinimg.com/originals/57/fb/31/57fb3190d0cc1726d782c4e25e8561e9.png"
-                       class="img-circle is-48x48">
-                  <img *ngIf="result.image" [src]="result.image" class="img-circle is-48x48">
-                  @{{result.username}} <span *ngIf="result.nickname">({{result.nickname}})</span>
-                </a>
+          <button class="button is-primary" (click)="toggleElement('filter-btn-dropdown')">
+            <i class="fas fa-filter"></i>
+            Tìm Kiếm
+          </button>
+          <div style="position: relative">
+            <div id="menu-btn-dropdown" class="is-hidden" style="position: absolute; top: 25px">
+              <button *ngIf="canEdit" class="button is-danger is-light" (click)="toggleDeleteBoardModal()">Xóa Bảng
+              </button>
+            </div>
+          </div>
+          <div class="icon-item" style="margin-right: 10px">
+            <div class="dropdown is-hoverable ">
+              <div class="dropdown-trigger">
+                <div class="icon-item">
+                  <div class="dropdown is-hoverable is-right">
+                    <div class="dropdown-trigger">
+                      <button class="button is-primary" (click)="toggleMenu()">
+                        <i class="fas fa-list"></i>
+                        Thông báo
+                      </button>
+                    </div>
+                    <div class="dropdown-menu" id="dropdown-menu5" role="menu">
+                      <div class="dropdown-content" style="padding: 0">
+                        <div class="header__navbar-item header__navbar-item--has-notify">
+                          <div class="header__notify">
+                            <header class="header__notify-header">
+                              <h3>Thông báo</h3>
+                            </header>
+                            <ul class="header__notify-list">
+                              <li class="header__notify-item" *ngFor="let activity of activityLogService.activities"
+                                  [class.mark-read]="activity.status">
+                                <a class="header__notify-link" routerLink="{{activity.url}}" *ngIf="activity.card"
+                                   (click)="redirectService.showModal(activity.card)">
+                                  <img
+                                    [src]="activity.user!.image!"
+                                    alt=""
+                                    class="header__notify-img">
+                                  <div class="header__notify-info">
+                                    <span class="header__notify-name">{{activity.title}}</span>
+                                    <span class="header__notify-description">{{activity.content}}</span>
+                                  </div>
+                                </a>
+                                <a class="header__notify-link" routerLink="{{activity.url}}" *ngIf="!activity.card">
+                                  <img
+                                    [src]="activity.user!.image!"
+                                    alt=""
+                                    class="header__notify-img">
+                                  <div class="header__notify-info">
+                                    <span class="header__notify-name">{{activity.title}}</span>
+                                    <span class="header__notify-description">{{activity.content}}</span>
+                                  </div>
+                                </a>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="search-bar">
+                  <div *ngIf="searchBarIsShown" class="search-bar-input">
+                    <input class="input" type="text" placeholder="Tìm kiếm thành viên" [(ngModel)]="userSearch"
+                           (keyup)="searchUsers()">
+                    <div *ngIf="userResult.length" class="dropdown-content">
+                      <a *ngFor="let result of userResult" class="dropdown-item" (click)="addMember(result)">
+                        <img *ngIf="!result.image"
+                             src="https://i.pinimg.com/originals/57/fb/31/57fb3190d0cc1726d782c4e25e8561e9.png"
+                             class="img-circle is-48x48">
+                        <img *ngIf="result.image" [src]="result.image" class="img-circle is-48x48">
+                        @{{result.username}} <span *ngIf="result.nickname">({{result.nickname}})</span>
+                      </a>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

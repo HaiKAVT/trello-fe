@@ -32,12 +32,15 @@ export class NavbarBoardHeaderComponent implements OnInit {
   @Input() tags: Tag[] = [];
   @Input() isInWorkspace: boolean = false;
   @Output() updateMemberEvent = new EventEmitter<DetailedMember[]>();
+  @Output() filterEvent = new EventEmitter<number[][]>();
   selectedMember: DetailedMember = {boardId: -1, canEdit: false, id: -1, userId: -1, username: ""};
   currentUser: UserToken = this.authenticateService.getCurrentUserValue();
   searchBarIsShown: boolean = false;
   userSearch: string = ``;
   userResult: User[] = [];
   @Input()loggedInUser?:User
+  tagFilter: number[] = [];
+  memberFilter: number[] = [];
 
   constructor(public authenticateService: AuthenticateService,
               private userService: UserService,
@@ -247,5 +250,57 @@ export class NavbarBoardHeaderComponent implements OnInit {
       this.boardService.deleteBoard(this.currentBoard.id).subscribe(() => this.router.navigateByUrl('/trello'));
     }
     this.createNoticeInBoard("xóa bảng")
+  }
+
+  filterBoard() {
+    this.updateFilterDto();
+    this.filterEvent.emit([this.tagFilter, this.memberFilter]);
+  }
+
+  private updateFilterDto() {
+    this.tagFilter = [];
+    this.memberFilter = [];
+
+    let tagOptionElements = document.getElementsByClassName('tag-filter-option');
+    // @ts-ignore
+    for (let tagOptionElement of tagOptionElements) {
+      if (tagOptionElement.checked) {
+        this.tagFilter.push(tagOptionElement.value);
+      }
+    }
+    let memberOptionElements = document.getElementsByClassName('member-filter-option');
+    // @ts-ignore
+    for (let memberOptionElement of memberOptionElements) {
+      if (memberOptionElement.checked) {
+        this.memberFilter.push(memberOptionElement.value);
+      }
+    }
+  }
+  clearFilterBoard() {
+    this.filterEvent.emit([[], []]);
+    this.clearCheckedOptions();
+  }
+
+  private clearCheckedOptions() {
+    let optionElements = document.getElementsByClassName('filter-option');
+    // @ts-ignore
+    for (let optionElement of optionElements) {
+      if (optionElement.checked) {
+        optionElement.checked = false;
+      }
+    }
+  }
+
+
+  toggleElement(elementId: string) {
+    let element = document.getElementById(elementId);
+    // @ts-ignore
+    if (element.classList.contains('is-hidden')) {
+      // @ts-ignore
+      element.classList.remove('is-hidden');
+    } else {
+      // @ts-ignore
+      element.classList.add('is-hidden');
+    }
   }
 }
