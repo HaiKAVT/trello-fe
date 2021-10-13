@@ -583,6 +583,9 @@ export class BoardViewComponent implements OnInit {
       console.log(this.canEdit)
     }
     if (this.isBoardInWorkspace) {
+      if (this.currentBoard.type == "Private"){
+        return;
+      }
       if (this.currentWorkspace.owner.id == this.loggedInUser.id) {
         this.canEdit = true;
         return;

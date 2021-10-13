@@ -10,12 +10,14 @@
           <a><i class="fas fa-plus-circle"></i></a>
         </div>
       </div>
-      <div class="card" *ngFor="let board of workspace.boards" routerLink="/board/{{board.id}}">
-        <div class="card-header"><p class="card-header-title">{{board.title}}</p></div>
-        <div class="card-content">
-          <div class="content">
-            <span style="font-size: small"><b>Id: </b>{{board.id}}</span> <br>
-            <span style="font-size: small"><b>Owner: </b>{{board.owner.username}}</span>
+      <div *ngFor="let board of workspace.boards" routerLink="/board/{{board.id}}">
+        <div class="card" *ngIf="board.type != 'Private' || currentUser.id == board.owner.id">
+          <div class="card-header"><p class="card-header-title">{{board.title}}</p></div>
+          <div class="card-content">
+            <div class="content">
+              <span style="font-size: small"><b>Id: </b>{{board.id}}</span> <br>
+              <span style="font-size: small"><b>Owner: </b>{{board.owner.username}}</span>
+            </div>
           </div>
         </div>
       </div>

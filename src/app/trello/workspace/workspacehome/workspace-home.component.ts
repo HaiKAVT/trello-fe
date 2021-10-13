@@ -32,6 +32,7 @@ export class WorkspaceHomeComponent implements OnInit {
     columns: [],
     type: '',
   };
+  currentUser!:User;
   newWorkspace: Workspace = {boards: [], id: 0, members: [], owner: undefined, title: "", type: "", privacy: ""};
 
   constructor(private workspaceService: WorkspaceService,
@@ -53,6 +54,10 @@ export class WorkspaceHomeComponent implements OnInit {
       if (this.currentWorkspaceId != null) {
         this.getCurrentWorkspace(this.currentWorkspaceId);
       }
+      this.userService.getUserById(this.loggedInUser.id!).subscribe(data=>{
+        this.currentUser = data;
+        console.log(this.currentUser)
+      })
     });
   }
 
@@ -60,6 +65,7 @@ export class WorkspaceHomeComponent implements OnInit {
     this.workspaceService.findById(id).subscribe(data => {
       this.workspace = data;
       this.checkRole(data);
+
     })
   }
 
@@ -151,7 +157,8 @@ export class WorkspaceHomeComponent implements OnInit {
       content: `${this.loggedInUser.username} ${notification} vào lúc ${this.notificationService.getTime()}`,
       url: `trello/board/${boardId}`,
       status: false,
-      receiver: receiver
+      receiver: receiver,
+      user: this.currentUser
     }
     this.notificationService.saveNotification(notify)
   }

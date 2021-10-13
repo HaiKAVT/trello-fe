@@ -63,7 +63,7 @@ export class NavbarBoardHeaderComponent implements OnInit {
       this.resetSearch();
       this.getMembers();
     });
-    this.createNoticeInBoard(`add ${member.user.username}`)
+    this.createNoticeInBoard(`thêm ${member.user.username} vào bảng`)
     document.getElementById('addMember')!.classList.add('is-active');
   }
 
