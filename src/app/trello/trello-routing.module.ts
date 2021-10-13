@@ -6,6 +6,7 @@ import {BoardsComponent} from "./boards/boards.component";
 import {BoardViewComponent} from "./board-view/board-view.component";
 import {WorkspaceHomeComponent} from "./workspace/workspacehome/workspace-home.component";
 import {WorkspaceMembersComponent} from "./workspace/workspacemembers/workspace-members.component";
+import {WorkspaceSettingComponent} from "./workspace/workspace-setting/workspace-setting.component";
 
 const routes: Routes = [
   {
@@ -27,6 +28,10 @@ const routes: Routes = [
   {
     path:'workspaces/:id/members',
     component:WorkspaceMembersComponent
+  },
+  {
+    path:'workspaces/:id/setting',
+    component:WorkspaceSettingComponent
   }
 ];
 

@@ -61,4 +61,10 @@ export class BoardService {
   isBoardInWorkspace(id: number): Observable<boolean> {
     return this.http.get<boolean>(`${API_URL}boards/${id}/is-in-workspace`);
   }
+  deleteAllByWorkspace(boards: Board[]): Observable<Board> {
+    return this.http.post<Board>(`${API_URL}boards/delete`,boards);
+  }
+  findAllAvailableToSearcher( searcherId: number | undefined): Observable<Board[]> {
+    return this.http.get<Board[]>(`${API_URL}boards/available-to/${searcherId}`);
+  }
 }
