@@ -821,4 +821,53 @@ export class BoardViewComponent implements OnInit {
     this.closeDeleteCommentModal();
     this.hiddenDeleteConfirm();
   }
+
+  updateMembers(event: DetailedMember[]) {
+    this.members = event;
+    this.removeNonMembersFromCards();
+  }
+  private removeNonMembersFromCards() {
+    for (let column of this.currentBoard.columns) {
+      for (let card of column.cards) {
+        // @ts-ignore
+        for (let user of card.users) {
+          if (!this.isBoardMember(user)) {
+            // @ts-ignore
+            let deleteIndex = card.users.indexOf(user);
+            // @ts-ignore
+            card.users.splice(deleteIndex, 1);
+            // @ts-ignore
+            this.createNoticeInBoard(`delete member "${card.users[deleteIndex].username}" from card "${card.title}"`)
+          }
+        }
+      }
+    }
+    this.saveChanges();
+  }
+  private isBoardMember(user: User): boolean {
+    let isBoardMember = false;
+    for (let member of this.members) {
+      if (member.userId == user.id) {
+        isBoardMember = true;
+        break;
+      }
+    }
+    return isBoardMember;
+  }
+  public saveChanges() {
+    this.updatePositions();
+    this.updateDto();
+    this.updateCards();
+  }
+  private updatePositions() {
+    let columns = this.currentBoard.columns;
+    for (let i = 0; i < columns.length; i++) {
+      let column = columns[i];
+      column.position = i;
+      let cards = column.cards;
+      for (let j = 0; j < cards.length; j++) {
+        cards[j].position = j;
+      }
+    }
+  }
 }

@@ -26,4 +26,5 @@ export class CommentCardService {
   deleteComment(id: any): Observable<CommentCard>{
     return this.http.delete(`${API_URL}comments/${id}`);
   }
+
 }
