@@ -25,6 +25,11 @@ import {MemberService} from "../../service/member/member.service";
 import {Workspace} from "../../model/workspace";
 import {WorkspaceService} from "../../service/workspace/workspace.service";
 import {MemberWorkspace} from "../../model/member-workspace";
+import {CommentCard} from "../../model/comment-card";
+import {CommentCardService} from "../../service/comment/comment-card.service";
+import {ActivityLog} from "../../model/activity-log";
+import {NotificationService} from "../../service/notification/notification.service";
+import {ActivityLogService} from "../../service/activityLog/activity-log.service";
 
 @Component({
   selector: 'app-board-view',
@@ -32,13 +37,19 @@ import {MemberWorkspace} from "../../model/member-workspace";
   styleUrls: ['./board-view.component.scss']
 })
 export class BoardViewComponent implements OnInit {
+  commentCard: CommentCard = {}
   currentUser: UserToken = {};
   fileSrc: any | undefined = null;
   selectedFile: any | undefined = null;
   isSubmitted = false;
   members: DetailedMember[] = [];
   currentBoardId: number = -1;
+  commentId = -1;
   tags: Tag[] = [];
+  commentForm: FormGroup = new FormGroup({
+    content: new FormControl('', Validators.required),
+    cardId: new FormControl()
+  })
   currentBoard: Board = {
     id: -1,
     owner: {},
@@ -113,7 +124,10 @@ export class BoardViewComponent implements OnInit {
               public redirectService: RedirectService,
               private attachmentService: AttachmentService,
               private memberService: MemberService,
-              private workspaceService: WorkspaceService) {
+              private workspaceService: WorkspaceService,
+              private commentCardService: CommentCardService,
+              private notificationService: NotificationService,
+              private activityLogService: ActivityLogService) {
   }
 
   ngOnInit(): void {
@@ -227,6 +241,7 @@ export class BoardViewComponent implements OnInit {
   }
 
   deleteCard(id: any) {
+    this.deleteAllComment();
     this.cardService.deleteCard(id).subscribe(() => {
         this.closeDeleteCardModal();
         this.closeEditCardModal();
@@ -235,8 +250,59 @@ export class BoardViewComponent implements OnInit {
     )
   }
 
+  deleteAllComment() {
+    for (let comment of this.redirectService.comments) {
+      this.commentCardService.deleteComment(comment.id).subscribe()
+    }
+  }
+
   closeDeleteCardModal() {
     document.getElementById("delete-card-modal")!.classList.remove("is-active")
+  }
+
+  showDeleteCommentModal(id: any) {
+    // @ts-ignore
+    document.getElementById("deleteCommentModal").classList.add("is-active")
+    this.commentId = id;
+  }
+
+  deleteComment() {
+    let newCommentCard: CommentCard = {};
+    for (let comment of this.redirectService.comments) {
+      if (comment.id == this.commentId) {
+        newCommentCard = comment;
+        break;
+      }
+    }
+    // @ts-ignore
+    for (let reply of newCommentCard.replies) {
+      // @ts-ignore
+      this.replyService.deleteReplyById(reply.id).subscribe()
+    }
+    this.commentCardService.deleteComment(this.commentId).subscribe(() => {
+        this.toastService.showMessage("Xóa thành công", 'is-success');
+        this.getAllCommentByCardId();
+        this.closeDeleteCommentModal()
+        this.createNoticeInBoard(`delete comment`)
+      }
+    )
+  }
+
+  createNoticeInBoard(activityText: string) {
+    let activity: ActivityLog = {
+      title: "Board: " + this.currentBoard.title,
+      content: `${this.currentUser.username} ${activityText} at ${this.notificationService.getTime()}`,
+      url: "/trello/boards/" + this.currentBoard.id,
+      status: false,
+      board: this.currentBoard
+    }
+    this.activityLogService.saveNotification(activity, this.currentBoardId)
+  }
+
+
+  closeDeleteCommentModal() {
+    // @ts-ignore
+    document.getElementById("deleteCommentModal").classList.remove("is-active")
   }
 
   //END CARD
@@ -508,11 +574,11 @@ export class BoardViewComponent implements OnInit {
       console.log(this.canEdit)
     }
     if (this.isBoardInWorkspace) {
-      if(this.currentWorkspace.owner.id == this.loggedInUser.id){
+      if (this.currentWorkspace.owner.id == this.loggedInUser.id) {
         this.canEdit = true;
         return;
       }
-      if(this.currentBoard.type == "Private") {
+      if (this.currentBoard.type == "Private") {
         for (let member of this.members) {
           if (member.userId == this.loggedInUser.id) {
             if (member.canEdit) {
@@ -531,7 +597,7 @@ export class BoardViewComponent implements OnInit {
         }
       }
     }
-    if(this.currentBoard.type == "Private") {
+    if (this.currentBoard.type == "Private") {
       for (let member of this.members) {
         if (member.userId == this.loggedInUser.id) {
           if (member.canEdit) {
@@ -688,4 +754,71 @@ export class BoardViewComponent implements OnInit {
     document.getElementById('createColumnModal')!.classList.remove("is-active")
   }
 
+  addComment() {
+    let currentUserId = this.authenticationService.getCurrentUserValue().id;
+    let member: DetailedMember = {boardId: 0, canEdit: false, id: 0, userId: 0, username: ""}
+    for (let m of this.members) {
+      if (m.userId == currentUserId) {
+        member = m;
+      }
+      // @ts-ignore
+      let memberDto: Member = {
+        board: {id: member.id},
+        canEdit: member.canEdit,
+        id: member.id,
+        user: {id: member.userId}
+      }
+      if (this.commentForm.valid) {
+        let commentCard: CommentCard = {
+          content: this.commentForm.value.content,
+          card: this.redirectService.card,
+          member: memberDto
+        };
+        this.commentForm = new FormGroup({
+          content: new FormControl('', Validators.required)
+        });
+        this.commentCardService.saveComment(commentCard).subscribe(() => {
+          this.getAllCommentByCardId();
+        })
+      }
+    }
+  }
+
+  getAllCommentByCardId() {
+    this.commentCardService.findAllByCardId(this.redirectService.card.id).subscribe(comments => {
+      // @ts-ignore
+      this.redirectService.comments = comments;
+    })
+  }
+
+  displaySubmitCommentButton() {
+    // @ts-ignore
+    document.getElementById("submitComment-" + this.redirectService.card.id).classList.remove('is-hidden')
+  }
+
+  showSubmitCommentButton() {
+    // @ts-ignore
+    document.getElementById("submitComment-" + this.redirectService.card.id).classList.add('is-hidden')
+  }
+
+  get content() {
+    return this.commentForm.get('content');
+  }
+
+  hiddenDeleteAttachmentConfirm() {
+    // @ts-ignore
+    document.getElementById('delete-attachment-confirm').classList.remove('is-active');
+  }
+
+  hiddenDeleteConfirm() {
+    // @ts-ignore
+    document.getElementById('delete-card-modal').classList.remove('is-active');
+  }
+
+  closeModalUpdateCard() {
+    this.redirectService.hideCardModal();
+    this.hiddenDeleteAttachmentConfirm();
+    this.closeDeleteCommentModal();
+    this.hiddenDeleteConfirm();
+  }
 }
