@@ -570,10 +570,6 @@ export class BoardViewComponent implements OnInit {
 
   checkEditAllow() {
     let userId = this.loggedInUser.id
-    if (this.currentBoard.type == "Public") {
-      this.canEdit = true;
-      return;
-    }
     if (this.loggedInUser.id == this.currentBoard.owner.id) {
       this.canEdit = true;
       console.log(this.canEdit)
@@ -598,15 +594,6 @@ export class BoardViewComponent implements OnInit {
             if (member.role == "Quản trị" || member.role == "Chỉnh sửa") {
               this.canEdit = true;
             }
-          }
-        }
-      }
-    }
-    if (this.currentBoard.type == "Private") {
-      for (let member of this.members) {
-        if (member.userId == this.loggedInUser.id) {
-          if (member.canEdit) {
-            this.canEdit = true;
           }
         }
       }

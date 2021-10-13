@@ -19,7 +19,7 @@
             cdkDragHandle
             cdkDragLockAxis="x" class="board-column"
             *ngFor="let column of currentBoard.columns; index as i" cdkDrag>
-            <div class="window-close" (click)="showDeleteColumnModal(column.id!)">
+            <div class="window-close" *ngIf="canEdit" (click)="showDeleteColumnModal(column.id!)">
               <i class="far fa-trash-alt"></i>
             </div>
             <div class="column-title">
@@ -43,7 +43,7 @@
                   </li>
                 </ul>
               </div>
-              <div>
+              <div *ngIf="canEdit">
                 <button class="button button-add-new-card is-light" (click)="showCreateCardModal(column)">
                   + Thêm thẻ
                 </button>
@@ -235,7 +235,7 @@
         <header class="modal-card-head">
           <p class="modal-card-title">
             <input class="input is-light" type="text" style="font-weight: bold; font-size: larger"
-                   formControlName="title" placeholder="Nhập tiêu đề">
+                   formControlName="title" placeholder="Nhập tiêu đề" [disabled]="!canEdit">
             <span style="font-size: medium; color: red"
                   *ngIf="(createCardForm.get('title')!.dirty || createCardForm.get('title')!.touched) && createCardForm.get('title')!.invalid">
             Trường bắt buộc</span> <br>
@@ -255,65 +255,12 @@
             </ul>
           </div>
           <div class="columns columns-card-body">
-            <div class="column column-card-body">
+            <div class="column column-card-body left">
               <label class="label">Nội dung:</label>
-              <textarea style="font-size: large" cols="70" rows="10" formControlName="content"
+              <textarea style="font-size: large" rows="8" formControlName="content"
                         placeholder="Nhập nội dung">{{selectedCard.content}}</textarea>
-              <div class="model-card-body-content">
-                <article class="media">
-                  <figure class="media-left">
-                    <img [src]="currentUser.image" class="user-img img-circle"/>
-                  </figure>
-                  <form [formGroup]="commentForm" (ngSubmit)="addComment()">
-                    <div class="media-content">
-                      <div class="field">
-                        <p class="control">
-                         <textarea (click)="displaySubmitCommentButton()" class="textarea" formControlName="content"
-                                   placeholder="Bình luận..."></textarea>
-                        </p>
-                        <div class="col alert alert-danger" role="alert" *ngIf="(content?.dirty || content?.touched)">
-                          <div *ngIf="content?.errors?.required" style="color: red" class="col alert alert-danger">
-                            Bình luận không được để trống !
-                          </div>
-                        </div>
-                      </div>
-                      <nav class="level">
-                        <div class="level-left">
-                          <div class="level-item">
-                            <button class="button is-primary is-light submitComment is-hidden"
-                                    id="submitComment-{{this.selectedCard.id}}" type="submit">Gửi
-                            </button>
-                          </div>
-                        </div>
-                      </nav>
-                    </div>
-                  </form>
-                </article>
-              </div>
-              <div *ngFor="let comment of redirectService.comments">
-                <div class="model-card-body-content comment-body">
-                  <article class="media media-comment-body">
-                    <figure class="media-left">
-                      <img src="{{comment.user?.image}}" class="user-img img-circle"/>
-                    </figure>
-                    <div class="media-content">
-                      <div class="content">
-                        <p>
-                          <strong>{{comment.user?.username}}</strong><br/>
-                          {{comment.content}}
-                        </p>
-                      </div>
-                    </div>
-                    <div class="media-right button-delete-comment" *ngIf="canEdit">
-                      <button class="delete" (click)="showDeleteCommentModal(comment.id)"></button>
-                    </div>
-                  </article>
-                </div>
-              </div>
             </div>
-            <!--comment body-->
-
-            <div class="column is-one-third">
+            <div class="column is-one-third" *ngIf="canEdit">
               <div>
                 <button class="small-button" (click)="switchEditTagsForm()">Nhãn</button>
                 <br>
@@ -376,6 +323,52 @@
                   </div>
                 </form>
               </div>
+            </div>
+          </div>
+          <div class="model-card-body-content">
+            <article class="media">
+              <figure class="media-left">
+                <img [src]="currentUser.image" class="user-img img-circle"/>
+              </figure>
+              <form [formGroup]="commentForm" (ngSubmit)="addComment()">
+                <div class="media-content">
+                  <div class="field">
+                    <p class="control">
+                         <textarea (click)="displaySubmitCommentButton()" class="textarea" formControlName="content"
+                                   placeholder="Bình luận..."></textarea>
+                    </p>
+                  </div>
+                  <nav class="level">
+                    <div class="level-left">
+                      <div class="level-item">
+                        <button class="button is-primary is-light submitComment is-hidden"
+                                id="submitComment-{{this.selectedCard.id}}" [disabled]="commentForm.invalid" type="submit">Gửi
+                        </button>
+                      </div>
+                    </div>
+                  </nav>
+                </div>
+              </form>
+            </article>
+          </div>
+          <div *ngFor="let comment of redirectService.comments">
+            <div class="model-card-body-content comment-body">
+              <article class="media media-comment-body">
+                <figure class="media-left">
+                  <img src="{{comment.user?.image}}" class="user-img img-circle"/>
+                </figure>
+                <div class="media-content">
+                  <div class="content">
+                    <p>
+                      <strong>{{comment.user?.username}}</strong><br/>
+                      {{comment.content}}
+                    </p>
+                  </div>
+                </div>
+                <div class="media-right button-delete-comment" *ngIf="canEdit">
+                  <button class="delete" (click)="showDeleteCommentModal(comment.id)"></button>
+                </div>
+              </article>
             </div>
           </div>
           <div id="attachments" class="media-attachment-body" style="margin-left: 40px"

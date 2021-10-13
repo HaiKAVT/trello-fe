@@ -424,6 +424,14 @@ h1.app-name {
   padding: 20px;
   position: relative;
 }
+.left {
+  display: flex;
+  flex-direction: column;
+}
+
+.left > textarea {
+  flex: 1;
+}
 
 
 
