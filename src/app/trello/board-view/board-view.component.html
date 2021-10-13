@@ -6,6 +6,7 @@
     [members]="members"
     [isInWorkspace]="isBoardInWorkspace"
     [workspace]="currentWorkspace"
+    (updateMemberEvent)="updateMembers($event)"
   ></app-navbar-board-header>
   <div class="board">
     <div class="board-wrapper">
@@ -227,7 +228,7 @@
   </div>
 </div>
 
-<div class="modal" id="editCardModal">
+<div class="modal" id="editCardModal" [ngClass]="redirectService.modalClass">
   <div class="modal-background">
     <div class="modal-card">
       <form [formGroup]="createCardForm">
@@ -420,16 +421,33 @@
   <div class="modal-background">
     <div class="modal-card">
       <header class="modal-card-head">
-        <h1>Delete Attachment</h1>
+        <h1>Thông báo</h1>
         <button class="delete" aria-label="close" (click)="hideDeleteAttachment()"></button>
       </header>
       <section class="modal-card-body">
         <p>Bạn chắc chắn muốn xóa file đính kèm này chứ?</p>
       </section>
       <footer class="modal-card-foot">
-        <button class="button is-danger" (click)="deleteAttachment()">Delete</button>
-        <button class="button is-light" (click)="hideDeleteAttachment()">Cancel</button>
+        <button class="button is-danger" (click)="deleteAttachment()">Xóa</button>
+        <button class="button is-light" (click)="hideDeleteAttachment()">Hủy</button>
       </footer>
     </div>
+  </div>
+</div>
+
+<div class="modal" id="deleteCommentModal">
+  <div class="modal-background"></div>
+  <div class="modal-card" style="width: 500px; height: 215px;">
+    <header class="modal-card-head">
+      <p class="modal-card-title">Thông báo</p>
+      <button class="delete" aria-label="close" (click)="closeDeleteCommentModal()"></button>
+    </header>
+    <section class="modal-card-body">
+      Bạn có muốn xóa bình luận?
+    </section>
+    <footer class="modal-card-foot">
+      <button class="button is-danger is-light" (click)="deleteComment()">Xóa</button>
+      <button class="button is-light" (click)="closeDeleteCommentModal()">Hủy</button>
+    </footer>
   </div>
 </div>
