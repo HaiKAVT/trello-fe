@@ -19,8 +19,8 @@ export class CommentCardService {
     return this.http.post<CommentCard>(`${API_URL}comments`, commentCard);
   }
 
-  findAllByCardId(cardID: any): Observable<CommentCard> {
-    return this.http.get<CommentCard>(`${API_URL}comments/comment-card/${cardID}`);
+  findAllByCardId(cardID: any): Observable<CommentCard[]> {
+    return this.http.get<CommentCard[]>(`${API_URL}comments/comment-card/${cardID}`);
   }
 
   deleteComment(id: any): Observable<CommentCard>{
