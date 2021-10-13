@@ -1,3 +1,4 @@
+
 <!--board-header-->
 <nav class="navbar" role="navigation" aria-label="main navigation">
   <div class="navbar-brand">
@@ -56,9 +57,43 @@
         </div>
       </div>
     </div>
+
+
     <div class="navbar-end">
       <div class="navbar-item">
         <div class="buttons">
+          <div style="position: relative">
+            <div id="filter-btn-dropdown" class="columns has-background-white is-hidden">
+              <div class="column is-one-fifth" style="width: 22%;">
+                <button class="button members-button" (click)="filterBoard()">Tìm</button>
+                <button class="button members-button" (click)="clearFilterBoard()">Xóa</button>
+              </div>
+              <div class="column" style="width: max-content">
+                <ul class="checkbox">
+                  <li *ngFor="let tag of tags">
+                    <input type="checkbox" [value]="tag.id" class="tag-filter-option filter-option">
+                    <span class="tag is-light" [ngClass]="tag.color">{{tag.name}}</span>
+                  </li>
+                </ul>
+              </div>
+              <div style=" padding-left: 10px;">
+                Thành viên
+                <ul class="checkbox">
+                  <li *ngFor="let member of members">
+                    <input class="form-check-label" type="checkbox" [value]="member.userId"
+                           class="member-filter-option filter-option">
+                    <span class="tag is-light">@{{member.username}}</span>
+                  </li>
+                </ul>
+              </div>
+
+            </div>
+          </div>
+          <button class="button is-primary" (click)="toggleElement('filter-btn-dropdown')">
+            <i class="fas fa-filter"></i>
+            Tìm Kiếm
+          </button>
+
           <div class="icon-item" style="margin-right: 10px">
             <div class="dropdown is-hoverable ">
               <div class="dropdown-trigger">
@@ -75,10 +110,10 @@
               </div>
             </div>
           </div>
-          <div class="icon-item">
+          <div class="icon-item" >
             <div class="dropdown is-hoverable is-right">
               <div class="dropdown-trigger">
-                <button class="button is-primary" (click)="toggleMenu()">
+                <button class="button is-primary">
                   <i class="fas fa-list"></i>
                   Thông báo
                 </button>
