@@ -30,7 +30,7 @@ export class WorkspaceMembersComponent implements OnInit {
   currentWorkspaceId!: number;
   pendingAddMember: User[] = [];
   pendingMember: User = {};
-  pendingMemberRole: string = '';
+  pendingMemberRole: string = "Chỉ xem";
   isOwner: Boolean = false;
   workspaceOwner!: User;
   memberInWorkspace: MemberWorkspace[] = [];
@@ -217,7 +217,7 @@ export class WorkspaceMembersComponent implements OnInit {
 
   hideSingleInvite() {
     this.pendingMember = {};
-    this.pendingMemberRole = '';
+    this.pendingMemberRole = 'Chỉ xem';
     document.getElementById('single-invite')!.classList.remove('is-active');
   }
 
