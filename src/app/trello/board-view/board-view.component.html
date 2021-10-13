@@ -259,18 +259,17 @@
               <label class="label">Nội dung:</label>
               <textarea style="font-size: large" cols="70" rows="10" formControlName="content"
                         placeholder="Nhập nội dung">{{selectedCard.content}}</textarea>
-
-              <div class="model-card-body-content" *ngIf="canEdit">
+              <div class="model-card-body-content">
                 <article class="media">
                   <figure class="media-left">
-                    <img [src]="redirectService.user.image" class="user-img img-circle"/>
+                    <img [src]="currentUser.image" class="user-img img-circle"/>
                   </figure>
                   <form [formGroup]="commentForm" (ngSubmit)="addComment()">
                     <div class="media-content">
                       <div class="field">
                         <p class="control">
                          <textarea (click)="displaySubmitCommentButton()" class="textarea" formControlName="content"
-                            placeholder="Bình luận..."></textarea>
+                                   placeholder="Bình luận..."></textarea>
                         </p>
                         <div class="col alert alert-danger" role="alert" *ngIf="(content?.dirty || content?.touched)">
                           <div *ngIf="content?.errors?.required" style="color: red" class="col alert alert-danger">
@@ -282,7 +281,7 @@
                         <div class="level-left">
                           <div class="level-item">
                             <button class="button is-primary is-light submitComment is-hidden"
-                                    id="submitComment-{{this.redirectService.card.id}}" type="submit">Gửi
+                                    id="submitComment-{{this.selectedCard.id}}" type="submit">Gửi
                             </button>
                           </div>
                         </div>
@@ -291,28 +290,28 @@
                   </form>
                 </article>
               </div>
+              <div *ngFor="let comment of redirectService.comments">
+                <div class="model-card-body-content comment-body">
+                  <article class="media media-comment-body">
+                    <figure class="media-left">
+                      <img src="{{comment.user?.image}}" class="user-img img-circle"/>
+                    </figure>
+                    <div class="media-content">
+                      <div class="content">
+                        <p>
+                          <strong>{{comment.user?.username}}</strong><br/>
+                          {{comment.content}}
+                        </p>
+                      </div>
+                    </div>
+                    <div class="media-right button-delete-comment" *ngIf="canEdit">
+                      <button class="delete" (click)="showDeleteCommentModal(comment.id)"></button>
+                    </div>
+                  </article>
+                </div>
+              </div>
             </div>
             <!--comment body-->
-            <span *ngFor="let comment of redirectService.comments">
-            <div class="model-card-body-content comment-body" *ngIf="canEdit">
-              <article class="media media-comment-body">
-                <figure class="media-left">
-                  <img src="{{comment.member?.user?.image}}" class="user-img img-circle"/>
-                </figure>
-                <div class="media-content">
-                  <div class="content">
-                    <p>
-                      <strong>{{comment.member?.user?.username}}</strong><br/>
-                      {{comment.content}}
-                    </p>
-                  </div>
-                </div>
-                <div class="media-right button-delete-comment" *ngIf="canEdit">
-                  <button class="delete" (click)="showDeleteCommentModal(comment.id)"></button>
-                </div>
-              </article>
-            </div>
-            </span>
 
             <div class="column is-one-third">
               <div class="member-section">

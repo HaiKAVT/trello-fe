@@ -38,7 +38,7 @@ import {ActivityLogService} from "../../service/activityLog/activity-log.service
 })
 export class BoardViewComponent implements OnInit {
   commentCard: CommentCard = {}
-  currentUser: UserToken = {};
+  currentUser: User = {};
   fileSrc: any | undefined = null;
   selectedFile: any | undefined = null;
   isSubmitted = false;
@@ -214,6 +214,7 @@ export class BoardViewComponent implements OnInit {
     this.selectedColumn = column;
     this.createCardForm.get('title')?.setValue(card.title);
     this.createCardForm.get('content')?.setValue(card.content);
+    this.redirectService.showModal(card)
     this.getSelectedCardAttachment();
     document.getElementById('editCardModal')!.classList.add('is-active')
   }
@@ -229,6 +230,7 @@ export class BoardViewComponent implements OnInit {
   }
 
   closeEditCardModal() {
+    this.redirectService.hideCardModal();
     this.resetCreateCardForm();
     if (this.isTagsIsShown) {
       this.switchEditTagsForm()
@@ -291,7 +293,7 @@ export class BoardViewComponent implements OnInit {
   createNoticeInBoard(activityText: string) {
     let activity: ActivityLog = {
       title: "Board: " + this.currentBoard.title,
-      content: `${this.currentUser.username} ${activityText} at ${this.notificationService.getTime()}`,
+      content: `${this.loggedInUser.username} ${activityText} at ${this.notificationService.getTime()}`,
       url: "/trello/boards/" + this.currentBoard.id,
       status: false,
       board: this.currentBoard
@@ -541,6 +543,9 @@ export class BoardViewComponent implements OnInit {
   //BOARD
   getCurrentBoardByURL() {
     this.loggedInUser = this.authenticationService.getCurrentUserValue();
+    this.userService.getUserById(this.loggedInUser.id!).subscribe(data => {
+      this.currentUser = data
+    })
     this.activatedRoute.paramMap.subscribe((param: ParamMap) => {
       this.currentBoardId = parseInt(param.get('id')!)
       this.getCurrentBoard()
@@ -755,32 +760,18 @@ export class BoardViewComponent implements OnInit {
   }
 
   addComment() {
-    let currentUserId = this.authenticationService.getCurrentUserValue().id;
-    let member: DetailedMember = {boardId: 0, canEdit: false, id: 0, userId: 0, username: ""}
-    for (let m of this.members) {
-      if (m.userId == currentUserId) {
-        member = m;
-      }
-      // @ts-ignore
-      let memberDto: Member = {
-        board: {id: member.id},
-        canEdit: member.canEdit,
-        id: member.id,
-        user: {id: member.userId}
-      }
-      if (this.commentForm.valid) {
-        let commentCard: CommentCard = {
-          content: this.commentForm.value.content,
-          card: this.redirectService.card,
-          member: memberDto
-        };
-        this.commentForm = new FormGroup({
-          content: new FormControl('', Validators.required)
-        });
-        this.commentCardService.saveComment(commentCard).subscribe(() => {
-          this.getAllCommentByCardId();
-        })
-      }
+    if (this.commentForm.valid) {
+      let commentCard: CommentCard = {
+        content: this.commentForm.value.content,
+        card: this.selectedCard,
+        user: this.currentUser
+      };
+      this.commentForm = new FormGroup({
+        content: new FormControl('', Validators.required)
+      });
+      this.commentCardService.saveComment(commentCard).subscribe(() => {
+        this.redirectService.showModal(this.selectedCard)
+      })
     }
   }
 
@@ -815,17 +806,11 @@ export class BoardViewComponent implements OnInit {
     document.getElementById('delete-card-modal').classList.remove('is-active');
   }
 
-  closeModalUpdateCard() {
-    this.redirectService.hideCardModal();
-    this.hiddenDeleteAttachmentConfirm();
-    this.closeDeleteCommentModal();
-    this.hiddenDeleteConfirm();
-  }
-
   updateMembers(event: DetailedMember[]) {
     this.members = event;
     this.removeNonMembersFromCards();
   }
+
   private removeNonMembersFromCards() {
     for (let column of this.currentBoard.columns) {
       for (let card of column.cards) {
@@ -837,13 +822,15 @@ export class BoardViewComponent implements OnInit {
             // @ts-ignore
             card.users.splice(deleteIndex, 1);
             // @ts-ignore
-            this.createNoticeInBoard(`delete member "${card.users[deleteIndex].username}" from card "${card.title}"`)
+            this.createNoticeInBoard(`delete member ${card.users[deleteIndex].username}
+                                      from card "${card.title}"`)
           }
         }
       }
     }
     this.saveChanges();
   }
+
   private isBoardMember(user: User): boolean {
     let isBoardMember = false;
     for (let member of this.members) {
@@ -854,11 +841,13 @@ export class BoardViewComponent implements OnInit {
     }
     return isBoardMember;
   }
+
   public saveChanges() {
     this.updatePositions();
     this.updateDto();
     this.updateCards();
   }
+
   private updatePositions() {
     let columns = this.currentBoard.columns;
     for (let i = 0; i < columns.length; i++) {

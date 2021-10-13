@@ -29,12 +29,10 @@ export class RedirectService {
     this.getUser();
     this.getAttachments();
     this.getComments();
-    this.modalClass = 'is-active';
   }
 
   private getComments() {
     this.commentCardService.findAllByCardId(this.card.id).subscribe(comments => {
-      // @ts-ignore
       this.comments = comments;
     })
   }
@@ -51,6 +49,7 @@ export class RedirectService {
   }
 
   hideCardModal() {
+    this.comments = [];
     this.modalClass = '';
   }
 
