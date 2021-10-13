@@ -6,5 +6,6 @@ export interface Notification {
   content?: string;
   url?: string;
   status?: boolean;
-  receiver?: User[]
+  receiver?: User[];
+  user?: User;
 }

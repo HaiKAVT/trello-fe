@@ -7,11 +7,11 @@
       <h1><i class="fab fa-trello logo-icon" style="margin-left: 300px"></i>Trello H3K</h1>
     </div>
   </div>
-  <div id="search-section" class="">
+  <div id="search-section" class="" *ngIf="currentUser != null">
     <div style="position: relative" id="search-results">
       <div *ngIf="searchResults.length" style="position: absolute; top: 40px; width: 300px; z-index: 1"
            class="dropdown-content">
-        <span class="dropdown-item" style="font-weight: bold">CARDS:</span>
+        <span class="dropdown-item" style="font-weight: bold">Kết quả:</span>
         <a routerLink="/trello/board/{{searchResult.board.id}}"
            *ngFor="let searchResult of this.searchResults | paginate:{
     itemsPerPage:pageSize,
@@ -41,7 +41,7 @@
                              (pageChange)="handlePageChange($event)"></pagination-controls>
       </div>
     </div>
-    <input id="search-input" class="input" type="text" placeholder="Search..." style="width: 200px"
+    <input id="search-input" class="input" type="text" placeholder="Tìm thẻ" style="width: 200px"
            [(ngModel)]="searchString" (keyup)="search()">
   </div>
   <div class="icon-item" *ngIf="currentUser">
@@ -55,16 +55,15 @@
           <div class="header__navbar-item header__navbar-item--has-notify">
             <div class="header__notify">
               <header class="header__notify-header">
-                <h3>Notifications</h3>
+                <h3>Thông báo</h3>
                 <a (click)="markAllAsRead()"
-                   style="color: white; font-size: 14px; margin-right: 16px; border-bottom: 1px solid">Mark all as
-                  read</a>
+                   style="color: white; font-size: 14px; margin-right: 16px; border-bottom: 1px solid">Đánh dấu tất cả là đã đọc</a>
               </header>
               <ul class="header__notify-list">
                 <li class="header__notify-item" *ngFor="let notification of notificationService.notification"
                     (click)="markReadNotification(notification)" [class.mark-read]="notification.status">
                   <a class="header__notify-link" routerLink="{{notification.url}}">
-                    <img src="https://dizibrand.com/wp-content/uploads/2019/07/trello-la-gi-dizibrand-1.png" alt=""
+                    <img [src]="notification.user!.image!" alt=""
                          class="header__notify-img">
                     <div class="header__notify-info">
                       <span class="header__notify-name" style="color: white">{{notification.title}}</span>

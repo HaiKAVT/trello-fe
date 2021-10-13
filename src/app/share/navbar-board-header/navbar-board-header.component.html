@@ -1,5 +1,5 @@
 <!--board-header-->
-<nav class="navbar" role="navigation" aria-label="main navigation" >
+<nav class="navbar" role="navigation" aria-label="main navigation">
   <div class="navbar-brand">
     <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
       <span aria-hidden="true"></span>
@@ -8,7 +8,7 @@
     </a>
   </div>
 
-  <div id="navbarBasicExample" class="navbar-menu" >
+  <div id="navbarBasicExample" class="navbar-menu">
     <div class="navbar-item">
       <div class="buttons">
         <input *ngIf="canEdit" [(ngModel)]="currentBoard.title" class="button is-primary" (change)="updateBoardTitle()">
@@ -59,16 +59,22 @@
     <div class="navbar-end">
       <div class="navbar-item">
         <div class="buttons">
-          <div style="position: relative">
-            <div id="menu-btn-dropdown" class="is-hidden" style="position: absolute; top: 25px">
-              <button *ngIf="canEdit" class="button is-danger is-light" (click)="toggleDeleteBoardModal()">Xóa bảng
-              </button>
+          <div class="icon-item" style="margin-right: 10px">
+            <div class="dropdown is-hoverable ">
+              <div class="dropdown-trigger">
+                <button class="button is-primary">
+                  <i class="fas fa-ellipsis-h"></i>
+                  Menu
+                </button>
+              </div>
+              <div class="dropdown-menu" role="menu" style="width: 100px">
+                <div>
+                  <button *ngIf="canEdit" class="button is-danger is-light" (click)="toggleDeleteBoardModal()">Xóa bảng
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
-          <button class="button is-primary" (click)="toggleMenu()">
-            <i class="fas fa-ellipsis-h"></i>
-            Menu
-          </button>
           <div class="icon-item">
             <div class="dropdown is-hoverable is-right">
               <div class="dropdown-trigger">
@@ -89,9 +95,10 @@
                             [class.mark-read]="activity.status">
                           <a class="header__notify-link" routerLink="{{activity.url}}" *ngIf="activity.card"
                              (click)="redirectService.showModal(activity.card)">
-                            <img src="https://dizibrand.com/wp-content/uploads/2019/07/trello-la-gi-dizibrand-1.png"
-                                 alt=""
-                                 class="header__notify-img">
+                            <img
+                              [src]="activity.user!.image!"
+                              alt=""
+                              class="header__notify-img">
                             <div class="header__notify-info">
                               <span class="header__notify-name">{{activity.title}}</span>
                               <span class="header__notify-description">{{activity.content}}</span>
@@ -99,7 +106,7 @@
                           </a>
                           <a class="header__notify-link" routerLink="{{activity.url}}" *ngIf="!activity.card">
                             <img
-                              src="https://firebasestorage.googleapis.com/v0/b/trello-h3k.appspot.com/o/h3k.png?alt=media&token=575e3071-bd05-44f2-89fb-04851d21af49"
+                              [src]="activity.user!.image!"
                               alt=""
                               class="header__notify-img">
                             <div class="header__notify-info">
@@ -173,7 +180,8 @@
     </section>
     <footer class="modal-card-foot">
       <button class="button is-danger is-light"
-              *ngIf="canEdit && (selectedMember.userId ) != authenticateService.getCurrentUserValue().id" (click)="removeSelectedMember()">
+              *ngIf="canEdit && (selectedMember.userId ) != authenticateService.getCurrentUserValue().id"
+              (click)="removeSelectedMember()">
         Xóa thành viên !
       </button>
       <span *ngIf="canEdit && (selectedMember.userId) != authenticateService.getCurrentUserValue().id">

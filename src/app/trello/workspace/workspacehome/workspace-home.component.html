@@ -26,7 +26,7 @@
   <div class="modal-background" (click)="hideCreateBoard()"></div>
   <div class="modal-card">
     <header class="modal-card-head">
-      <p class="modal-card-title">Tạo một bảng</p>
+      <p class="modal-card-title">Tên bảng</p>
       <button class="delete" aria-label="close" (click)="hideCreateBoard()"></button>
     </header>
     <section class="modal-card-body">
@@ -66,7 +66,7 @@
     </header>
     <section class="modal-card-body">
       <div class="field" style="position: relative">
-        <label class="label">Title</label>
+        <label class="label">Tiêu đề</label>
         <div class="control">
           <input class="input" type="text" required [(ngModel)]="newWorkspace.title" #workspaceTitle="ngModel">
         </div>

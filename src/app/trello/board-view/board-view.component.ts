@@ -150,6 +150,9 @@ export class BoardViewComponent implements OnInit {
     }
     this.setPreviousColumn(event);
     this.saveChange()
+    if (this.previousColumn.id != column.id) {
+      this.createNoticeInBoard(`di chuyển thẻ ${event.container.data[0].title} từ ${this.previousColumn.title} sang ${column.title}`)
+    }
   }
 
   updateCards() {
@@ -185,6 +188,7 @@ export class BoardViewComponent implements OnInit {
         }
         this.selectedColumn.cards.push(data)
         this.columnService.updateAColumn(this.selectedColumn.id, this.selectedColumn).subscribe()
+        this.createNoticeCard(`đã thêm thẻ ${data.title}`, data)
         this.closeCreateCardModal()
       })
     }
@@ -285,18 +289,19 @@ export class BoardViewComponent implements OnInit {
         this.toastService.showMessage("Xóa thành công", 'is-success');
         this.getAllCommentByCardId();
         this.closeDeleteCommentModal()
-        this.createNoticeInBoard(`delete comment`)
+        this.createNoticeInBoard(`xóa bình luận`)
       }
     )
   }
 
   createNoticeInBoard(activityText: string) {
     let activity: ActivityLog = {
-      title: "Board: " + this.currentBoard.title,
-      content: `${this.loggedInUser.username} ${activityText} at ${this.notificationService.getTime()}`,
+      title: "Bảng: " + this.currentBoard.title,
+      content: `${this.loggedInUser.username} ${activityText} lúc ${this.notificationService.getTime()}`,
       url: "/trello/boards/" + this.currentBoard.id,
       status: false,
-      board: this.currentBoard
+      board: this.currentBoard,
+      user: this.currentUser
     }
     this.activityLogService.saveNotification(activity, this.currentBoardId)
   }
@@ -562,6 +567,9 @@ export class BoardViewComponent implements OnInit {
   getCurrentBoard() {
     this.boardService.getBoardById(this.currentBoardId).subscribe(board => {
       this.currentBoard = board;
+      this.activityLogService.findAllByBoardId(this.currentBoardId).subscribe(data=>{
+        this.activityLogService.activities = data;
+      })
       this.checkWorkspace(board);
       this.getMembers()
       this.checkEditAllow();
@@ -636,6 +644,7 @@ export class BoardViewComponent implements OnInit {
       this.columnService.createAColumn(newColumn).subscribe(data => {
         this.currentBoard.columns.push(data)
         this.boardDataUpdate()
+        this.createNoticeInBoard(`đã thêm danh sách ${data.title}`)
         this.closeCreateColumnModal()
       })
     }
@@ -660,6 +669,9 @@ export class BoardViewComponent implements OnInit {
     }
     moveItemInArray(this.currentBoard.columns, event.previousIndex, event.currentIndex);
     this.saveChange()
+    if (event.previousIndex != event.currentIndex) {
+      this.createNoticeInBoard(`thay đổi vị trí của cột ${this.currentBoard.columns[event.previousIndex].title} với cột ${this.currentBoard.columns[event.currentIndex].title}`)
+    }
   }
 
 
@@ -758,6 +770,7 @@ export class BoardViewComponent implements OnInit {
       });
       this.commentCardService.saveComment(commentCard).subscribe(() => {
         this.redirectService.showModal(this.selectedCard)
+        this.createNoticeCard(`đã bình luận vào thẻ ${this.selectedCard.title}`,this.selectedCard)
       })
     }
   }
@@ -809,8 +822,8 @@ export class BoardViewComponent implements OnInit {
             // @ts-ignore
             card.users.splice(deleteIndex, 1);
             // @ts-ignore
-            this.createNoticeInBoard(`delete member ${card.users[deleteIndex].username}
-                                      from card "${card.title}"`)
+            this.createNoticeInBoard(`xóa thành viên ${card.users[deleteIndex].username}
+                                      khỏi thẻ "${card.title}"`)
           }
         }
       }
@@ -843,6 +856,80 @@ export class BoardViewComponent implements OnInit {
       let cards = column.cards;
       for (let j = 0; j < cards.length; j++) {
         cards[j].position = j;
+      }
+    }
+  }
+
+  toggleMemberForm() {
+    let memberFormEle = document.getElementById('member-form');
+    // @ts-ignore
+    if (memberFormEle.classList.contains('is-hidden')) {
+      // @ts-ignore
+      memberFormEle.classList.remove('is-hidden');
+    } else {
+      // @ts-ignore
+      memberFormEle.classList.add('is-hidden');
+    }
+  }
+
+
+  private updateSelectedCard() {
+    for (let column of this.currentBoard.columns) {
+      for (let card of column.cards) {
+        if (card.id == this.redirectService.card.id) {
+          this.redirectService.card = card;
+        }
+      }
+    }
+  }
+
+  createNoticeCard(activityText: string, card: Card) {
+    let activity: ActivityLog = {
+      title: "Bảng: " + this.currentBoard.title,
+      content: `${this.currentUser.username} ${activityText} lúc ${this.notificationService.getTime()}`,
+      url: "/trello/board/" + this.currentBoard.id,
+      status: false,
+      board: this.currentBoard,
+      card: card,
+      user: this.currentUser
+    }
+    this.activityLogService.saveNotification(activity, this.currentBoardId)
+
+  }
+
+  addUserToCard(member: DetailedMember) {
+    this.updateSelectedCard();
+    let isValid = true;
+    // @ts-ignore
+    for (let existingUser of this.redirectService.card.users) {
+      if (existingUser.id == member.userId) {
+        isValid = false;
+        return;
+      }
+    }
+    if (isValid) {
+      let user: User = {
+        id: member.userId,
+        username: member.username,
+      }
+      // @ts-ignore
+      this.redirectService.card.users.push(user);
+      this.createNoticeCard(`đã thêm "${user.username}" vào thẻ "${this.redirectService.card.title}"`, this.redirectService.card)
+    }
+  }
+
+  removeUserFromCard(user: User) {
+    this.updateSelectedCard()
+    // @ts-ignore
+    for (let existingUser of this.redirectService.card.users) {
+      if (existingUser.id == user.id) {
+        let username = user.username;
+        // @ts-ignore
+        let deleteIndex = this.redirectService.card.users.indexOf(existingUser);
+        // @ts-ignore
+        this.redirectService.card.users.splice(deleteIndex, 1);
+        // @ts-ignore
+        this.createNoticeInBoard(`xóa thành viên ${username} khỏi thẻ ${this.redirectService.card.title}`, this.redirectService.card)
       }
     }
   }

@@ -237,7 +237,7 @@ export class WorkspaceMembersComponent implements OnInit {
         this.workspace.members.push(data)
         this.workspaceService.updateWorkspace(this.workspace.id, this.workspace).subscribe()
       })
-      this.createNotificationInvitedToWorkspace()
+      this.createNotificationInvitedToWorkspace(newMember)
       this.toastService.showMessage("Mời thành công", "is-success");
       this.pendingMember = {};
       this.hideSingleInvite()
@@ -251,25 +251,27 @@ export class WorkspaceMembersComponent implements OnInit {
     }
     let notification: Notification = {
       title: this.workspace.title,
-      content: this.loggedInUser.username + ` đã thêm bạn vào nhóm ${this.workspace.title} vào lúc ` + this.notificationService.getTime(),
+      content: this.loggedInUser.username + ` đã thêm bạn vào nhóm ${this.workspace.title} với quyền chỉ xem vào lúc ` + this.notificationService.getTime(),
       status: false,
       url: "/trello/workspaces/" + this.workspace.id,
-      receiver: receivers
+      receiver: receivers,
+      user:this.loggedInUser
     }
     this.notificationService.saveNotification(notification)
   }
 
-  createNotificationInvitedToWorkspace() {
+  createNotificationInvitedToWorkspace(member: MemberWorkspace) {
     let receivers: User[] = [];
     if (this.pendingMember != null) {
       receivers.push(this.pendingMember)
     }
     let notification: Notification = {
       title: this.workspace.title,
-      content: this.loggedInUser.username + ` đã thêm bạn vào nhóm ${this.workspace.title} vào lúc ` + this.notificationService.getTime(),
+      content: this.loggedInUser.username + ` đã thêm bạn vào nhóm ${this.workspace.title} với quyền ${member.role} vào lúc ` + this.notificationService.getTime(),
       status: false,
       url: "/trello/workspaces/" + this.workspace.id,
-      receiver: receivers
+      receiver: receivers,
+      user:this.loggedInUser
     }
     this.notificationService.saveNotification(notification)
   }
@@ -282,7 +284,8 @@ export class WorkspaceMembersComponent implements OnInit {
       content: this.loggedInUser.username + ` đã đá bạn ra khỏi nhóm ${this.workspace.title} vào lúc ` + this.notificationService.getTime(),
       status: false,
       url: "",
-      receiver: receivers
+      receiver: receivers,
+      user:this.loggedInUser
     }
     this.notificationService.saveNotification(notification)
   }

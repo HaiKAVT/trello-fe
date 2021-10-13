@@ -1,5 +1,6 @@
 import {Board} from "./board";
 import {Card} from "./card";
+import {User} from "./user";
 
 export interface ActivityLog {
   id?: number;
@@ -9,4 +10,5 @@ export interface ActivityLog {
   status?: boolean;
   board?: Board;
   card?: Card;
+  user?: User;
 }
