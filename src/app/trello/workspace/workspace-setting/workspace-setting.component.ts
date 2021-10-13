@@ -9,6 +9,10 @@ import {MemberService} from "../../../service/member/member.service";
 import {NotificationService} from "../../../service/notification/notification.service";
 import {UserService} from "../../../service/user/user.service";
 import {UserToken} from "../../../model/user-token";
+import {BoardService} from "../../../service/board/board.service";
+import {User} from "../../../model/user";
+import {Notification} from "../../../model/notification";
+import {MemberWorkspace} from "../../../model/member-workspace";
 
 @Component({
   selector: 'app-workspace-setting',
@@ -20,7 +24,10 @@ export class WorkspaceSettingComponent implements OnInit {
   workspaces: Workspace[] = [];
   loggedInUser!: UserToken;
   currentWorkspaceId: any;
-
+  isAdmin:Boolean= false;
+  isOwner:Boolean=false;
+  workspaceOwner: User= {};
+  workspaceMember: MemberWorkspace[] = []
   constructor(private workspaceService: WorkspaceService,
               private userService: UserService,
               private activatedRoute: ActivatedRoute,
@@ -29,37 +36,34 @@ export class WorkspaceSettingComponent implements OnInit {
               private toastService: ToastService,
               private workspaceMemberService: MemberWorkspaceService,
               private memberService: MemberService,
-              private notificationService: NotificationService) { }
+              private notificationService: NotificationService,
+              private boardService:BoardService) { }
 
   ngOnInit(): void {
     this.loggedInUser = this.authenticateService.getCurrentUserValue()
-    this.getAllWorkspace();
     this.activatedRoute.paramMap.subscribe(paramMap => {
       this.currentWorkspaceId = parseInt(paramMap.get('id')!)
       if (this.currentWorkspaceId != null) {
         this.getCurrentWorkspace(this.currentWorkspaceId);
-        this.getAllWorkspace();
       }
     });
   }
   getCurrentWorkspace(id: any) {
     this.workspaceService.findById(id).subscribe(data => {
       this.workspace = data;
-      // this.workspaceOwner = data.owner
-      // this.memberInWorkspace = data.members
-      // this.checkRole(data);
-    })
-  }
-  getAllWorkspace() {
-    this.workspaceService.findAllByOwnerId(this.loggedInUser.id).subscribe(data => {
-      this.workspaces = data;
+      this.workspaceOwner = data.owner;
+      this.workspaceMember = data.members;
+      this.checkRole();
     })
   }
 
   deleteWorkspace(id: number) {
+    this.boardService.deleteAllByWorkspace(this.workspace.boards).subscribe()
     this.workspaceService.deleteWorkspace(id).subscribe(() => {
       this.router.navigateByUrl(`/trello`)
     })
+    this.createNotification(`đã xóa nhóm ${this.workspace.title}`)
+    this.toastService.showMessage("Nhóm đã được xóa", "is-success")
   }
 
   showEditModal(){
@@ -89,5 +93,33 @@ export class WorkspaceSettingComponent implements OnInit {
       this.hideEditModal();
       this.hideEditPrivacyModal()
     })
+  }
+
+  createNotification(notificationText: string) {
+    let receivers: User[] = [];
+    for (let member of this.workspace.members) {
+      if (member.user) {
+        receivers.push(member.user)
+      }
+    }
+    let notification: Notification = {
+      title: this.workspace.title,
+      content: `${this.loggedInUser.username} ${notificationText} vào lúc ${this.notificationService.getTime()}`,
+      url: "/trello",
+      status: false,
+      receiver: receivers
+    }
+    this.notificationService.saveNotification(notification)
+  }
+
+  checkRole() {
+    if (this.loggedInUser.id == this.workspaceOwner.id) {
+      this.isOwner = true;
+    }
+    for (let member of this.workspace.members) {
+      if ((this.loggedInUser.id == member.user?.id && member.role == "Quản trị")) {
+        this.isAdmin = true;
+      }
+    }
   }
 }

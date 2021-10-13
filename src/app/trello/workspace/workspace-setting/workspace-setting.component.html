@@ -4,7 +4,7 @@
       <h1 style="font-size: xxx-large; font-weight: bold">{{workspace.title}}</h1>
     </div>
     <div style="justify-content: center;display:flex">
-      <button class="button is-light" (click)="showEditModal()">Thay đổi thông tin nhóm</button>
+      <button *ngIf="isOwner||isAdmin" class="button is-light" (click)="showEditModal()">Thay đổi thông tin nhóm</button>
     </div>
     <hr>
     <div>
@@ -20,7 +20,7 @@
             <p style="color:white;font-weight: bold"><i class="fas fa-globe" style="color: green"></i> Công khai <span
               style="font-weight: normal"> - Đây là một nhóm công khai</span></p>
           </div>
-          <button class="button is-light" style="height: 25px;width: 70px" (click)="showEditPrivacyModal()">Thay đổi
+          <button *ngIf="isOwner||isAdmin" class="button is-light" style="height: 25px;width: 70px" (click)="showEditPrivacyModal()">Thay đổi
           </button>
         </div>
         <hr>
@@ -33,7 +33,7 @@
       </div>
     </div>
     <br>
-    <div id="sidebar">
+    <div id="sidebar" *ngIf="isOwner">
       <ul class="list-group">
         <li>
           <div class="list-group-item">
