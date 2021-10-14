@@ -340,7 +340,7 @@
                              *ngFor="let attachment of selectedCardAttachment, index as i">
             <span class="media link-file">
               <a target="_blank" href="{{attachment.source}}">{{attachment.name}}</a>
-               <a (click)="showDeleteAttachment(attachment.id)">
+               <a *ngIf="canEdit" (click)="showDeleteAttachment(attachment.id)">
               <span class="tag is-danger" style="margin-left: 20px">
                 <i class="far fa-trash-alt"></i></span>
             </a>

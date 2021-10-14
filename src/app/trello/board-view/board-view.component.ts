@@ -228,6 +228,11 @@ export class BoardViewComponent implements OnInit {
   }
 
   editCard() {
+    if(!this.canEdit){
+      this.getCurrentBoard()
+      this.closeEditCardModal()
+      return
+    }
     this.selectedCard.title = this.createCardForm.get('title')?.value;
     this.selectedCard.content = this.createCardForm.get('content')?.value;
     this.resetCreateCardForm();
@@ -370,6 +375,9 @@ export class BoardViewComponent implements OnInit {
   }
 
   removeTagFromCard(tag: Tag) {
+    if(!this.canEdit){
+      return
+    }
     for (let tags of this.selectedCard.tags!) {
       if (tags.id == tag.id) {
         let index = this.selectedCard.tags?.indexOf(tags);
@@ -660,6 +668,10 @@ export class BoardViewComponent implements OnInit {
 
 
   onFocusOut(column: Column) {
+    if(!this.canEdit){
+      this.getCurrentBoard()
+      return
+    }
     this.columnService.updateAColumn(column.id, column).subscribe(() => {
       this.boardDataUpdate()
     })
@@ -927,6 +939,9 @@ export class BoardViewComponent implements OnInit {
   }
 
   removeUserFromCard(user: User) {
+    if(!this.canEdit){
+      return
+    }
     this.updateSelectedCard()
     // @ts-ignore
     for (let existingUser of this.redirectService.card.users) {
