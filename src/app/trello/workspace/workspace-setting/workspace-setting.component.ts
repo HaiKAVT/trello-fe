@@ -27,7 +27,8 @@ export class WorkspaceSettingComponent implements OnInit {
   isAdmin:Boolean= false;
   isOwner:Boolean=false;
   workspaceOwner: User= {};
-  workspaceMember: MemberWorkspace[] = []
+  workspaceMember: MemberWorkspace[] = [];
+  currentUser!:User;
   constructor(private workspaceService: WorkspaceService,
               private userService: UserService,
               private activatedRoute: ActivatedRoute,
@@ -47,6 +48,7 @@ export class WorkspaceSettingComponent implements OnInit {
         this.getCurrentWorkspace(this.currentWorkspaceId);
       }
     });
+    this.getCurrentUser()
   }
   getCurrentWorkspace(id: any) {
     this.workspaceService.findById(id).subscribe(data => {
@@ -56,7 +58,11 @@ export class WorkspaceSettingComponent implements OnInit {
       this.checkRole();
     })
   }
-
+  getCurrentUser(){
+    this.userService.getUserById(this.loggedInUser.id!).subscribe(data=>{
+      this.currentUser = data
+    })
+  }
   deleteWorkspace(id: number) {
     this.boardService.deleteAllByWorkspace(this.workspace.boards).subscribe()
     this.workspaceService.deleteWorkspace(id).subscribe(() => {
@@ -107,7 +113,8 @@ export class WorkspaceSettingComponent implements OnInit {
       content: `${this.loggedInUser.username} ${notificationText} vào lúc ${this.notificationService.getTime()}`,
       url: "/trello",
       status: false,
-      receiver: receivers
+      receiver: receivers,
+      user: this.currentUser,
     }
     this.notificationService.saveNotification(notification)
   }

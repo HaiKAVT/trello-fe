@@ -15,6 +15,10 @@ export class WorkspaceService {
   constructor(private httpClient: HttpClient) {
   }
 
+  findAll():Observable<Workspace[]> {
+    return this.httpClient.get<Workspace[]>(`${API_URL}workspaces`)
+  }
+
   findAllByOwnerId(id: any):Observable<Workspace[]> {
     return this.httpClient.get<Workspace[]>(`${API_URL}workspaces/owner/${id}`)
   }
