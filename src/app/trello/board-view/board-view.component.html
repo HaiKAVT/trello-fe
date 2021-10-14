@@ -21,14 +21,17 @@
             cdkDragHandle
             cdkDragLockAxis="x" class="board-column"
             *ngFor="let column of currentBoard.columns; index as i" cdkDrag>
-            <div class="window-close" *ngIf="canEdit" (click)="showDeleteColumnModal(column.id!)">
-              <i class="far fa-trash-alt"></i>
-            </div>
-            <div class="column-title">
-              <input class="input title-column" type="text"
-                     (focusout)="onFocusOut(column)"
-                     [(ngModel)]="this.currentBoard.columns[i].title"
-                     value="{{column.title}}">
+            <div class="column-title" style="display:flex; justify-content: left">
+              <div>
+                <input class="input title-column" type="text"
+                       (focusout)="onFocusOut(column)"
+                       [(ngModel)]="this.currentBoard.columns[i].title"
+                       value="{{column.title}}">
+              </div>
+              <div class="button is-hoverable" style="max-width: 50px; margin-top: 5px; background: inherit; border: 0" *ngIf="canEdit"
+                   (click)="showDeleteColumnModal(column.id!)">
+                <i class="far fa-trash-alt"></i>
+              </div>
             </div>
             <div class="tasks-container"
                  id="{{column.id}}"
@@ -286,7 +289,8 @@
                         <div class="level-left">
                           <div class="level-item">
                             <button class="button is-primary is-light submitComment is-hidden"
-                                    id="submitComment-{{this.selectedCard.id}}" [disabled]="commentForm.invalid" type="submit">Gửi
+                                    id="submitComment-{{this.selectedCard.id}}" [disabled]="commentForm.invalid"
+                                    type="submit">Gửi
                             </button>
                           </div>
                         </div>

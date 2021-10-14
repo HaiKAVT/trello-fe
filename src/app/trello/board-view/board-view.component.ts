@@ -731,10 +731,10 @@ export class BoardViewComponent implements OnInit {
     for (let i = 0; i < this.currentBoard.columns.length; i++) {
       if (this.currentBoard.columns[i].id == this.selectedColumnID) {
         this.selectedIndex = this.currentBoard.columns.indexOf(this.currentBoard.columns[i])
+        this.createNoticeInBoard(`xóa danh sách ${this.currentBoard.columns[i].title}`)
+        this.createNotification(` xóa danh sách ${this.currentBoard.columns[i].title}`)
         this.currentBoard.columns.splice(this.selectedIndex, 1);
         this.columnService.deleteAColumn(this.selectedColumnID).subscribe(() => {
-          this.createNoticeInBoard(`xóa danh sách ${this.currentBoard.columns[i].title}`)
-          this.createNotification(` xóa danh sách ${this.currentBoard.columns[i].title}`)
           this.saveChange()
           this.closeDeleteColumnModal();
         })
@@ -957,7 +957,7 @@ export class BoardViewComponent implements OnInit {
     console.log(receivers)
     let notification: Notification = {
       title: this.currentBoard.title,
-      content: this.loggedInUser.username + activity + this.notificationService.getTime(),
+      content: this.loggedInUser.username + activity + " lúc " + this.notificationService.getTime(),
       status: false,
       url: "/trello/board/" + this.currentBoard.id,
       receiver: receivers,

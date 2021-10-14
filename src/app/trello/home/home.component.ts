@@ -31,6 +31,7 @@ export class HomeComponent implements OnInit {
 
   createdBoard?: Board
   workspaces: Workspace[] = [];
+  workspacesPublic:Workspace[] = [];
   workspace: Workspace = {boards: [], id: 0, members: [], owner: undefined, title: "", type: "", privacy: ""};
 
   constructor(private modalService: ModalService,
@@ -119,7 +120,10 @@ export class HomeComponent implements OnInit {
   }
 
   getAllWorkspace() {
-    this.workspaceService.findAllByOwnerId(this.loggedInUser.id).subscribe(data => {
+    this.workspaceService.findAll().subscribe(data => {
+      this.workspacesPublic = data;
+    })
+    this.workspaceService.findAllByOwnerId(this.loggedInUser.id).subscribe(data=>{
       this.workspaces = data;
     })
   }
