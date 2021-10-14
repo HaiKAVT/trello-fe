@@ -88,7 +88,7 @@
               <div style=" padding-left: 10px;">
                 Nhãn
                 <ul class="checkbox">
-                  <li *ngFor="let tag of this.currentBoard.tags">
+                  <li *ngFor="let tag of this.currentBoard.tags" style="width: 100px">
                     <input class="form-check-label" type="checkbox" [value]="tag.id"
                            class="label-filter-option filter-option">
                     <span class="tag is-light">@{{tag.name}}</span>
