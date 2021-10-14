@@ -133,7 +133,7 @@ export class WorkspaceMembersComponent implements OnInit {
           user: user,
           role: "Chỉ xem"
         }
-        this.workspaceMemberService.addWorkspaceMember(newMember).subscribe(data => {
+        this.workspaceMemberService.addWorkspaceMember(newMember,this.loggedInUser.id!,this.workspace.id).subscribe(data => {
           this.workspace.members.push(data)
           this.workspaceService.updateWorkspace(this.workspace.id, this.workspace).subscribe()
         })
@@ -233,7 +233,7 @@ export class WorkspaceMembersComponent implements OnInit {
         user: this.pendingMember,
         role: role
       }
-      this.workspaceMemberService.addWorkspaceMember(newMember).subscribe(data => {
+      this.workspaceMemberService.addWorkspaceMember(newMember,this.loggedInUser.id!,this.workspace.id).subscribe(data => {
         this.workspace.members.push(data)
         this.workspaceService.updateWorkspace(this.workspace.id, this.workspace).subscribe()
       })
