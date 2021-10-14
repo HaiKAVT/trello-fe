@@ -834,7 +834,7 @@ export class BoardViewComponent implements OnInit {
         }
       }
     }
-    this.saveChanges();
+    // this.saveChanges();
   }
 
   private isBoardMember(user: User): boolean {
