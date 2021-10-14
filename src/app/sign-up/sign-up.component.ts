@@ -38,8 +38,6 @@ export class SignUpComponent implements OnInit {
   }
 
   register() {
-    console.log(this.registerForm.value)
-    console.log(this.registerForm.valid)
     if (this.registerForm.valid) {
       this.userService.getAllUser().subscribe(users => {
         // @ts-ignore
