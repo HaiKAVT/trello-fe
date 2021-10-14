@@ -5,7 +5,7 @@
 export const environment = {
   production: false,
   apiURL: 'http://localhost:8081/',
-  api_url: 'http://localhost:8080/',
+  api_url: 'https://trelloh3k2.herokuapp.com',
   firebaseConfig: {
     apiKey: "AIzaSyD9P8dOuqTRKL-Esc-25coo9P0XqDO7cLo",
     authDomain: "trello-h3k.firebaseapp.com",
