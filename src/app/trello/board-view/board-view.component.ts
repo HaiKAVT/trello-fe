@@ -731,10 +731,10 @@ export class BoardViewComponent implements OnInit {
     for (let i = 0; i < this.currentBoard.columns.length; i++) {
       if (this.currentBoard.columns[i].id == this.selectedColumnID) {
         this.selectedIndex = this.currentBoard.columns.indexOf(this.currentBoard.columns[i])
+        this.createNoticeInBoard(`xóa danh sách ${this.currentBoard.columns[i].title}`)
+        this.createNotification(` xóa danh sách ${this.currentBoard.columns[i].title}`)
         this.currentBoard.columns.splice(this.selectedIndex, 1);
         this.columnService.deleteAColumn(this.selectedColumnID).subscribe(() => {
-          this.createNoticeInBoard(`xóa danh sách ${this.currentBoard.columns[i].title}`)
-          this.createNotification(` xóa danh sách ${this.currentBoard.columns[i].title}`)
           this.saveChange()
           this.closeDeleteColumnModal();
         })
