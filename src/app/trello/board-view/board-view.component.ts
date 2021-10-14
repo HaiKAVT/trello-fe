@@ -957,7 +957,7 @@ export class BoardViewComponent implements OnInit {
     console.log(receivers)
     let notification: Notification = {
       title: this.currentBoard.title,
-      content: this.loggedInUser.username + activity + this.notificationService.getTime(),
+      content: this.loggedInUser.username + activity + " lúc " + this.notificationService.getTime(),
       status: false,
       url: "/trello/board/" + this.currentBoard.id,
       receiver: receivers,
