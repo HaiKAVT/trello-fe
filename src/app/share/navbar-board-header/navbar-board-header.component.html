@@ -210,14 +210,6 @@
               <p class="subtitle is-6">@{{selectedMember.username}}</p>
             </div>
           </div>
-          <div class="content">
-            <div *ngIf="selectedMember.canEdit" class="notification is-success is-light">Người dùng này có quyền chỉnh
-              sửa bản này
-            </div>
-            <div *ngIf="!selectedMember.canEdit" class="notification is-info is-light">Người dùng này không có quyền
-              chỉnh sửa bản này
-            </div>
-          </div>
         </div>
       </div>
     </section>
@@ -227,19 +219,7 @@
               (click)="removeSelectedMember()">
         Xóa thành viên !
       </button>
-      <span *ngIf="canEdit && (selectedMember.userId) != authenticateService.getCurrentUserValue().id">
-        <button class="button is-secondary is-light"
-                *ngIf="selectedMember.canEdit"
-                (click)="makeSelectedMemberObserver()">
-        Cấp quyền thành viên
-      </button>
-      <button class="button is-success is-light"
-              *ngIf="!selectedMember.canEdit"
-              (click)="makeSelectedMemberEditor()">
-        Cấp quyền chỉnh sửa
-      </button>
-      </span>
-      <button class="button is-light" (click)="closeModal()">Hủy</button>
+      <button class="button is-light" (click)="closeModal()">Tắt</button>
     </footer>
   </div>
 </div>
