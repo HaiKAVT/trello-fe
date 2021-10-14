@@ -26,10 +26,6 @@
         <button class="button is-primary">
           <i class="far fa-star"></i>
         </button>
-        <button *ngIf="canEdit && isInWorkspace" class="button is-primary"
-                (click)="toggleUserSearchBar()">
-          <i class="fas fa-user-plus"></i>Mời
-        </button>
         <div>
           <span *ngFor="let member of members; index as i">
             <a (click)="showDetail(member)" (mouseover)="showUserPreview(member)"
@@ -118,6 +114,10 @@
               </div>
             </div>
           </div>
+          <button *ngIf="canEdit && isInWorkspace" class="button is-primary"
+                  (click)="toggleUserSearchBar()">
+            <i class="fas fa-user-plus"></i>Mời
+          </button>
           <div class="icon-item" >
             <div class="dropdown is-hoverable is-right">
               <div class="dropdown-trigger">
