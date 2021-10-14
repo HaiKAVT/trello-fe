@@ -969,7 +969,8 @@ export class BoardViewComponent implements OnInit {
   filterBoard(event: number[][]) {
     let tagFilter: number[] = event[0];
     let memberFilter: number[] = event[1];
-    let hasFilter = !(tagFilter.length == 0 && memberFilter.length == 0)
+    let labelFilter: number[] = event[2];
+    let hasFilter = !(tagFilter.length == 0 && memberFilter.length == 0 && labelFilter.length == 0)
     this.boardService.getBoardById(this.currentBoardId).subscribe(board => {
       this.currentBoard = board;
       if (hasFilter) {
@@ -980,6 +981,9 @@ export class BoardViewComponent implements OnInit {
               column.cards.splice(i, 1);
               i--;
             } else if (!this.isValidMember(card, memberFilter)) {
+              column.cards.splice(i, 1);
+              i--;
+            } else if (!this.isValidLabel(card, labelFilter)) {
               column.cards.splice(i, 1);
               i--;
             }
@@ -1012,6 +1016,22 @@ export class BoardViewComponent implements OnInit {
       // @ts-ignore
       for (let tag of card.tags) {
         if (tagId == tag.id) {
+          isInCard = true;
+          break;
+        }
+      }
+      if (!isInCard) return false;
+    }
+    return true;
+  }
+
+  isValidLabel(card: Card, labelFilter: number[]) {
+    if (labelFilter.length == 0) return true;
+    for (let labelId of labelFilter) {
+      let isInCard: boolean = false;
+      // @ts-ignore
+      for (let tag of card.tags) {
+        if (labelId == tag.id) {
           isInCard = true;
           break;
         }

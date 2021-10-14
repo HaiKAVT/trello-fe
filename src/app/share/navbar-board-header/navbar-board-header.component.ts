@@ -41,7 +41,7 @@ export class NavbarBoardHeaderComponent implements OnInit {
   @Input()loggedInUser?:User
   tagFilter: number[] = [];
   memberFilter: number[] = [];
-
+  labelFilter: number[] =[];
   constructor(public authenticateService: AuthenticateService,
               private userService: UserService,
               private router: Router,
@@ -254,12 +254,13 @@ export class NavbarBoardHeaderComponent implements OnInit {
 
   filterBoard() {
     this.updateFilterDto();
-    this.filterEvent.emit([this.tagFilter, this.memberFilter]);
+    this.filterEvent.emit([this.tagFilter, this.memberFilter, this.labelFilter]);
   }
 
   private updateFilterDto() {
     this.tagFilter = [];
     this.memberFilter = [];
+    this.labelFilter = [] ;
 
     let tagOptionElements = document.getElementsByClassName('tag-filter-option');
     // @ts-ignore
@@ -275,7 +276,15 @@ export class NavbarBoardHeaderComponent implements OnInit {
         this.memberFilter.push(memberOptionElement.value);
       }
     }
+    let labelOptionElements = document.getElementsByClassName('label-filter-option');
+    // @ts-ignore
+    for (let labelOptionElement of labelOptionElements) {
+      if (labelOptionElement.checked) {
+        this.labelFilter.push(labelOptionElement.value);
+      }
+    }
   }
+
   clearFilterBoard() {
     this.filterEvent.emit([[], []]);
     this.clearCheckedOptions();
