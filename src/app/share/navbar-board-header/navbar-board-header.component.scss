@@ -11,8 +11,7 @@
   clip-path: circle(50%);
 }
 .search-bar{
-  position: fixed;
-  right: 64.5%;
+  position: relative;
 }
 .search-bar-input{
   position: absolute; top: 25px; left: -210px
