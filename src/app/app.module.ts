@@ -19,7 +19,6 @@ import {AngularFireStorageModule} from "@angular/fire/compat/storage";
 import {AngularFireModule} from "@angular/fire/compat";
 // import {AngularA}
 import {environment} from "../environments/environment";
-import {WebsocketService} from "./service/socket/websocket.service";
 
 
 @NgModule({
@@ -45,7 +44,6 @@ import {WebsocketService} from "./service/socket/websocket.service";
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true},
     {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true},
-    WebsocketService
   ],
   bootstrap: [AppComponent]
 })
