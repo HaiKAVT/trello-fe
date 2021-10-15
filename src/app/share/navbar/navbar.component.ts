@@ -13,6 +13,9 @@ import {Notification} from "../../model/notification";
 import {SearchResult} from "../../model/search-result";
 import {BoardService} from "../../service/board/board.service";
 import {RedirectService} from "../../service/redirect/redirect.service";
+import * as Stomp from '@stomp/stompjs';
+import * as SockJS from 'sockjs-client';
+
 
 @Component({
   selector: 'app-navbar',
@@ -31,7 +34,8 @@ export class NavbarComponent implements OnInit {
   page = 1;
   count = 0;
   pageSize = 10;
-
+  private stompClient:any;
+  disabled = true;
   constructor(public navbarService: NavbarService,
               private toast: ToastService,
               private authenticateService: AuthenticateService,
@@ -53,6 +57,29 @@ export class NavbarComponent implements OnInit {
     this.navbarService.getCurrentUser()
     this.getUserById()
   }
+  setConnected(connected: boolean) {
+    this.disabled = !connected;
+  }
+
+  connect(){
+    const socket = new SockJS('http://localhost:8080/endpoint');
+    this.stompClient = Stomp.Stomp.over(socket);
+    const _this = this;
+    this.stompClient.connect({}, function (frame:any) {
+      _this.setConnected(true);
+      console.log('Connected: ' + frame);
+      _this.stompClient.subscribe('/test',()=>{
+        _this.findAllNotificationByUserId();
+      })
+    });
+  }
+
+  sendName() {
+    this.stompClient.send(
+      '/gkz/send',
+      {},
+    );
+  }
 
   getUserById() {
     if (this.authenticateService.getCurrentUserValue() != null) {
@@ -63,6 +90,7 @@ export class NavbarComponent implements OnInit {
           this.loggedInUser.image = "https://firebasestorage.googleapis.com/v0/b/trello-h3k.appspot.com/o/h3k.png?alt=media&token=2f7182c6-69b5-47a5-a9ab-5e6ad9e7bd91";
         }
         this.imgSrc = this.navbarService.loggedInUser.image;
+        this.connect()
       })
       this.findAllNotificationByUserId()
     }

@@ -31,6 +31,8 @@ import {ActivityLog} from "../../model/activity-log";
 import {NotificationService} from "../../service/notification/notification.service";
 import {ActivityLogService} from "../../service/activityLog/activity-log.service";
 import {Notification} from "../../model/notification";
+import * as SockJS from "sockjs-client";
+import * as Stomp from "@stomp/stompjs";
 
 @Component({
   selector: 'app-board-view',
@@ -38,6 +40,8 @@ import {Notification} from "../../model/notification";
   styleUrls: ['./board-view.component.scss']
 })
 export class BoardViewComponent implements OnInit {
+  private stompClient:any;
+  disabled = true;
   commentCard: CommentCard = {}
   currentUser: User = {};
   fileSrc: any | undefined = null;
@@ -559,6 +563,7 @@ export class BoardViewComponent implements OnInit {
     this.loggedInUser = this.authenticationService.getCurrentUserValue();
     this.userService.getUserById(this.loggedInUser.id!).subscribe(data => {
       this.currentUser = data
+      this.connect()
     })
     this.activatedRoute.paramMap.subscribe((param: ParamMap) => {
       this.currentBoardId = parseInt(param.get('id')!)
@@ -600,7 +605,7 @@ export class BoardViewComponent implements OnInit {
       this.canEdit = true;
     }
     if (this.isBoardInWorkspace) {
-      if (this.currentBoard.type == "Private") {
+      if (this.currentBoard.type == "Riêng tư") {
         return;
       }
       if (this.currentWorkspace.owner.id == this.loggedInUser.id) {
@@ -979,6 +984,7 @@ export class BoardViewComponent implements OnInit {
       user: this.loggedInUser
     }
     this.notificationService.saveNotification(notification)
+    this.sendName()
   }
 
   filterBoard(event: number[][]) {
@@ -1054,5 +1060,27 @@ export class BoardViewComponent implements OnInit {
       if (!isInCard) return false;
     }
     return true;
+  }
+  setConnected(connected: boolean) {
+    this.disabled = !connected;
+  }
+
+  connect(){
+    const socket = new SockJS('http://localhost:8080/endpoint');
+    this.stompClient = Stomp.Stomp.over(socket);
+    const _this = this;
+    this.stompClient.connect({}, function (frame:any) {
+      _this.setConnected(true);
+      console.log('Connected: ' + frame);
+      _this.stompClient.subscribe('/test',()=>{
+      })
+    });
+  }
+
+  sendName() {
+    this.stompClient.send(
+      '/app/send',
+      {},
+    );
   }
 }

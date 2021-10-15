@@ -22,6 +22,11 @@
           crossorigin="anonymous"></script>
   <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+  <script>
+    if (global === undefined) {
+      var global = window;
+    }
+  </script>
 </head>
 <body>
 <app-root></app-root>

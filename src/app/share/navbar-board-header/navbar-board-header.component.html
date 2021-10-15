@@ -58,6 +58,21 @@
       <div class="navbar-item">
         <div class="buttons">
           <div style="position: relative">
+            <div id="visibility-dropdown" class="columns has-background-white is-hidden">
+              <div class="column" style="width: max-content">
+                <select class="input" [(ngModel)]="currentBoard.type" required #workspaceType="ngModel" (change)="updateBoardTitle()">
+                  <option value="Công khai">Công khai</option>
+                  <option *ngIf="isInWorkspace" value="Nhóm">Nhóm</option>
+                  <option value="Riêng tư">Riêng tư</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <button class="button is-primary" (click)="toggleElement('visibility-dropdown')">
+            <i class="fas fa-eye"></i>
+            {{currentBoard.type}}
+          </button>
+          <div style="position: relative">
             <div id="filter-btn-dropdown" class="columns has-background-white is-hidden">
               <div class="column is-one-fifth" style="width: 22%;">
                 <button class="button members-button" (click)="filterBoard()">Tìm</button>

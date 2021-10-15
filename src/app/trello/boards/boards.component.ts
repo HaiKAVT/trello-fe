@@ -55,13 +55,13 @@ export class BoardsComponent implements OnInit {
   }
 
   getPrivateBoard() {
-    this.boardService.getBoardByTypeAndUser('Private', this.loggedInUser.id!).subscribe(data => {
+    this.boardService.getBoardByTypeAndUser('Riêng tư', this.loggedInUser.id!).subscribe(data => {
       this.privateBoards = data
     })
   }
 
   getPublicBoard() {
-    this.boardService.getBoardByType('Public').subscribe(data => {
+    this.boardService.getBoardByType('Công khai').subscribe(data => {
       this.publicBoards = data
     })
   }
